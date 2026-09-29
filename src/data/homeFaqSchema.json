@@ -1,0 +1,70 @@
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "What is a tire size calculator and what does it calculate?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "A tire size calculator computes the overall tire diameter, circumference, sidewall height, poke (outer clearance), inset (inner clearance), speedometer error, and ride height change when you compare two different wheel and tire size combinations. Enter your current setup as Wheel 1 and your proposed new size as Wheel 2 to see a full side-by-side comparison."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How much speedo error is acceptable when changing tire size?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Most automotive engineers consider ±3% speedo error to be acceptable for road use. Most automotive engineers and SAE International recommend keeping your tire diameter within 3% of OEM spec to avoid affecting ABS, traction control, and odometer accuracy., and a maximum of +10% + 4 km/h over is permitted by law. Beyond 3%, your ABS, traction control, and odometer may also be affected. Use the speedo error calculator above to check your specific size change."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What is wheel offset (ET) and how does it affect fitment?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Wheel offset (ET from German Einpress Tiefe) is the distance in mm from the wheel’s mounting face to its geometric centre line. A higher ET pushes the wheel further into the arch (more inset, less poke). A lower ET pulls the wheel outward (more poke, less inset). Changing ET affects both inner and outer clearances simultaneously. Our wheel offset calculator shows the impact in mm."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Can I fit a wider tire on my existing wheels?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes, within limits. As a general rule, you can go 10–20mm wider than the OEM tire width on the same rim. Going too wide causes “tyre stretch”  the sidewall becomes more upright or even angled inward, reducing stability and risking bead unseating. Use our ideal rim range metric in the results to check compatibility. NHTSA recommends only fitting tires matching your OEM spec or a manufacturer-approved size  NHTSA tire buying guide"
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What does \"plus sizing\" mean in tire sizes?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Plus sizing means fitting a larger rim diameter with a lower-profile tire, keeping the overall tire diameter the same as OEM. For example, upgrading from 205/55R16 to 225/45R17 is “plus one” sizing. The benefits include sportier appearance, improved lateral stiffness, and better handling. The trade-off is a harsher ride due to less sidewall cushioning."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How do I read a tire size code like 205/55R16?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "205 = section width in mm (sidewall to sidewall). 55 = aspect ratio — the sidewall height is 55% of 205mm = 112.75mm. R = radial construction. 16 = the rim diameter in inches the tire is designed to fit. You may also see a load index and speed rating after (e.g. 91V). Enter the three main numbers into our tire size calculator to get full dimensional data."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Will changing tire size affect my fuel economy?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes. Wider and taller tires have higher rolling resistance, which slightly reduces fuel economy. A 3% increase in rolling radius typically causes a 1–2% reduction in mpg. However, the effect depends heavily on tire compound, inflation pressure, and driving style. The bigger practical concern for most drivers is speedo error and fitment clearance. Learn more at FuelEconomy.gov."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Does this wheel and tire calculator work for trucks and SUVs?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes — the calculator works for any vehicle. For trucks and SUVs, pay special attention to ride height change and speedo error, as larger off-road tires (e.g. 265/70R17 to 285/75R17) cause significant diameter changes. A 3-inch diameter increase causes roughly a 5% speedo error — you will need a speedo recalibration tool or ECU tune to correct it."
+      }
+    }
+  ]
+}

@@ -1,0 +1,20 @@
+---
+interface Props {
+  eyebrow?: string;
+  title: string;
+  lead?: string;
+  /** Heading level for the title (default h2). */
+  as?: 'h1' | 'h2';
+}
+const { eyebrow, title, lead, as: H = 'h2' } = Astro.props;
+---
+<header class="section-head">
+  {eyebrow && <p class="eyebrow">{eyebrow}</p>}
+  <H class="section-title">{title}</H>
+  {lead && <p class="lead">{lead}</p>}
+</header>
+
+<style>
+  .section-head { margin-bottom: 36px; }
+  .eyebrow { margin: 0 0 10px; }
+</style>

@@ -1,7 +1,391 @@
 ---
+import { Image, getImage } from 'astro:assets';
 import BaseLayout from '../layouts/BaseLayout.astro';
-import WheelOffsetCalculator from '../components/calculators/WheelOffsetCalculator.astro';
+import WheelTireCalculator from '../components/calculators/WheelTireCalculator.astro';
+import SectionHead from '../components/SectionHead.astro';
+import TrustBar from '../components/TrustBar.astro';
+import Faq from '../components/Faq.astro';
+import Tabs from '../components/Tabs.astro';
+import PostGrid from '../components/PostGrid.astro';
+import heroImg from '../assets/images/hero-dealership.jpg';
+import sidewallImg from '../assets/images/tire-sidewall-code.webp';
+import { ICONS } from '../data/icons';
+import { POSTS } from '../data/posts';
+import { SITE, organizationSchema, websiteSchema } from '../data/site';
+import faqSchema from '../data/homeFaqSchema.json';
+import {
+  CAN_CALCULATE, COMMON_CHANGES, FAQ, FEATURES, FITMENT, GLOSSARY, SPEEDO_COPY, STEPS,
+  TIRE_CODE_PARTS, TRUST_BOTTOM, TRUST_TOP, USERS,
+} from '../data/home';
+import { DIAMETER_TABS, WHEEL_TABS, diameterColumns, wheelSizeColumns } from '../data/tireCharts';
+import { speedoResult } from '../lib/calc/speedo';
+
+const hero = await getImage({ src: heroImg, width: 1600, format: 'webp', quality: 70 });
+const heroSmall = await getImage({ src: heroImg, width: 800, format: 'webp', quality: 65 });
+const ogImage = await getImage({ src: heroImg, width: 1200, format: 'jpeg' });
+
+const toTire = (s: string) => {
+  const [, w, a, r] = s.match(/^(\d+)\/(\d+)R(\d+)$/)!;
+  return { w: Number(w), a: Number(a), r: Number(r) };
+};
+const speedoRows = COMMON_CHANGES.map(([from, to]) => {
+  const r = speedoResult(toTire(from), toTire(to));
+  return { from, to, err: r.errText, level: r.verdict.level, at60: r.speeds.find((s) => s.indicated === 60)!.actual };
+});
+
+const webApp = {
+  '@context': 'https://schema.org',
+  '@type': 'WebApplication',
+  name: 'Wheel & Tire Calculator',
+  url: `${SITE.url}/`,
+  applicationCategory: 'UtilitiesApplication',
+  operatingSystem: 'Any',
+  browserRequirements: 'Requires JavaScript',
+  offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },
+  publisher: { '@id': `${SITE.url}/#organization` },
+};
 ---
-<BaseLayout title="test" path="/">
-  <section class="section section--gray"><div class="container"><WheelOffsetCalculator /></div></section>
+<BaseLayout
+  title="Tire Size Calculator | Free Tire Size Fitment Tool"
+  description="Free tire size calculator. Compare sizes, check speedo error, wheel offset (ET), poke, inset & circumference for any car, truck or SUV. Instant results."
+  path="/"
+  ogImage={ogImage.src}
+  schema={[organizationSchema, websiteSchema, webApp, faqSchema]}
+>
+  <link slot="head" rel="preload" as="image" href={hero.src} imagesrcset={`${heroSmall.src} 800w, ${hero.src} 1600w`} imagesizes="100vw" fetchpriority="high" />
+
+  <!-- HERO -->
+  <section class="hero" style={`--hero: url(${hero.src}); --hero-sm: url(${heroSmall.src});`}>
+    <div class="container hero-inner">
+      <h1>Tire <span>Size</span> Calculator</h1>
+      <p class="hero-sub">Free Tire Size Calculator: Compare Two Sizes, Calculate Poke, Inset &amp; Speedo Error</p>
+      <p class="hero-text">Use our free tire size calculator to check if your new wheels and tires will fit your vehicle. Calculate poke, inset, speedo error, ride height change, and circumference — instantly.</p>
+      <a class="cta" href="#calculate">Calculate Now</a>
+    </div>
+  </section>
+
+  <!-- CALCULATOR -->
+  <section class="calc-section" aria-label="Wheel and tire calculator">
+    <div class="container container-wide"><WheelTireCalculator /></div>
+  </section>
+
+  <!-- WHAT IS -->
+  <section class="section">
+    <div class="container two-col">
+      <div>
+        <SectionHead eyebrow="Free Online Tool" title="What is the Wheel & Tire Calculator?" />
+        <div class="prose">
+          <p>The <strong>Wheel &amp; Tire Calculator</strong> is a free online tire size calculator that lets you compare two different wheel and tire combinations side by side. Enter your current setup as Wheel 1 (base) and your proposed new size as Wheel 2, and instantly see the full fitment data — no button click needed.</p>
+          <p>It calculates <strong>diameter, circumference, poke, inset, speedometer error, ride height change,</strong> arch gap change, and <strong>ideal rim range</strong> — everything you need to check before ordering new wheels or tires.</p>
+        </div>
+        <div class="features">
+          {FEATURES.map((f) => (
+            <div class={`feature feature--${f.tone}`}>
+              <h3>{f.title}</h3>
+              <p>{f.desc}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+      <aside class="calc-list">
+        <h3>What you can calculate:</h3>
+        <ul>
+          {CAN_CALCULATE.map((it) => (
+            <li>
+              <span class="check" set:html={ICONS.check} />
+              {it.href ? <a href={it.href}>{it.text}</a> : it.text}
+            </li>
+          ))}
+        </ul>
+      </aside>
+    </div>
+  </section>
+
+  <TrustBar items={TRUST_TOP} />
+
+  <!-- HOW TO USE -->
+  <section class="section section--gray">
+    <div class="container">
+      <SectionHead eyebrow="Getting Started" title="How to Use the Tire Size Calculator" lead="Three simple steps to check your wheel and tire fitment, compare sizes, and calculate speedo error — all in one tool." />
+      <ol class="steps">
+        {STEPS.map((s, i) => (
+          <li class="step">
+            <span class="step-num" aria-hidden="true">{String(i + 1).padStart(2, '0')}</span>
+            <span class="step-label">Step {i + 1}</span>
+            <h3>{s.title}</h3>
+            <p>{s.desc}</p>
+          </li>
+        ))}
+      </ol>
+    </div>
+  </section>
+
+  <!-- HOW TO READ A TIRE SIZE -->
+  <section class="section">
+    <div class="container two-col two-col--top">
+      <div>
+        <SectionHead eyebrow="Tire Size Calculator Guide" title="How to Read a Tire Size" lead="Every tire has an alphanumeric code on its sidewall. Understanding what each part means lets you use the tire size calculator correctly and choose the right replacement tires." />
+        <p class="tire-code" aria-label="Example tire code P215/65R15 95H">
+          <span class="r">P</span><span class="n">215/</span> <span class="r">65</span><span class="n">R15 95H</span>
+        </p>
+        <dl class="code-parts">
+          {TIRE_CODE_PARTS.map((p) => (
+            <div class="code-part">
+              <dt>{p.code}</dt>
+              <dd><strong>{p.title}</strong><span>{p.desc}</span></dd>
+            </div>
+          ))}
+        </dl>
+      </div>
+      <figure class="sidewall">
+        <Image src={sidewallImg} alt="Tire sidewall code diagram labelling aspect ratio, load/speed and section width on P215/65R15 95H" loading="lazy" />
+      </figure>
+    </div>
+  </section>
+
+  <!-- GLOSSARY -->
+  <section class="section section--navy">
+    <div class="container">
+      <SectionHead eyebrow="Key Terms" title="Wheel & Tire Calculator — Glossary" lead="Understanding these terms will help you read your tire size calculator results correctly and make the right fitment decisions." />
+      <dl class="glossary">
+        {GLOSSARY.map((g) => (
+          <div class="term"><dt>{g.term}</dt><dd>{g.def}</dd></div>
+        ))}
+      </dl>
+    </div>
+  </section>
+
+  <!-- FITMENT -->
+  <section class="section section--light">
+    <div class="container">
+      <SectionHead eyebrow="Fitment Guide" title="Poke, Inset & Rubbing — Explained" lead="Three critical fitment measurements you need to understand before changing wheel size or offset. Our wheel offset calculator shows all three instantly." />
+      <div class="cards-3">
+        {FITMENT.map((f) => (
+          <div class="fit-card">
+            <span class="icon-tile" set:html={ICONS[f.icon]} />
+            <h3>{f.title}</h3>
+            <p>{f.desc}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- SPEEDOMETER -->
+  <section class="section section--dark">
+    <div class="container two-col two-col--center">
+      <div>
+        <SectionHead eyebrow="Speed Accuracy" title="Speedometer Error & Tire Size" />
+        <div class="prose prose--dark">
+          {SPEEDO_COPY.map((p) => <p set:html={p} />)}
+        </div>
+        <p class="formula">
+          Speedo Error % = ((New Circumference − Original Circumference) ÷ Original Circumference) × 100<br />
+          Actual Speed = Displayed Speed × (New Circ ÷ Original Circ)
+        </p>
+      </div>
+      <div class="speedo-card">
+        <h3>Speedo error at common tire size changes</h3>
+        <table>
+          <thead><tr><th scope="col">Size change</th><th scope="col">Error</th><th scope="col">Speedo 60 = actual</th></tr></thead>
+          <tbody>
+            {speedoRows.map((r) => (
+              <tr><td>{r.from} → {r.to}</td><td class={`lvl-${r.level}`}>{r.err}</td><td>{r.at60} mph</td></tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- CHARTS -->
+  <section class="section section--gray">
+    <div class="container">
+      <SectionHead eyebrow="Reference Data" title="Tire Size Calculator Charts" lead="Use these tire size charts to find common tire equivalents by wheel size or overall diameter — a quick reference alongside the full tire size calculator above." />
+
+      <h3 class="chart-title">Tire Size Calculator Charts by Wheel Size</h3>
+      <Tabs id="by-wheel" labels={WHEEL_TABS.map((r) => `${r}"`)}>
+        {WHEEL_TABS.map((r, i) => (
+          <div slot={`panel-${i}`} class="chart">
+            <h4>Tire Size Calculator Chart for {r}" Wheels</h4>
+            <div class="chart-cols">
+              {wheelSizeColumns(r).map((c) => (
+                <div><p class="chart-col-head">{c.heading}</p><ul>{c.items.map((t) => <li>{t}</li>)}</ul></div>
+              ))}
+            </div>
+          </div>
+        ))}
+      </Tabs>
+
+      <h3 class="chart-title">Tire Size Calculator Charts by Diameter</h3>
+      <Tabs id="by-diameter" labels={DIAMETER_TABS.map((d) => `${d}"`)}>
+        {DIAMETER_TABS.map((d, i) => (
+          <div slot={`panel-${i}`} class="chart">
+            <h4>{d}" Diameter Tire Calculator Chart</h4>
+            <div class="chart-cols">
+              {diameterColumns(d).map((c) => (
+                <div><p class="chart-col-head">{c.heading}</p><ul>{c.items.map((t) => <li>{t}</li>)}</ul></div>
+              ))}
+            </div>
+          </div>
+        ))}
+      </Tabs>
+    </div>
+  </section>
+
+  <!-- WHO USES -->
+  <section class="section">
+    <div class="container">
+      <SectionHead eyebrow="Use Cases" title="Who Uses the Wheel & Tire Calculator?" lead="From weekend modifiers to daily drivers — anyone changing wheel or tire size needs to check fitment first." />
+      <div class="cards-3">
+        {USERS.map((u) => (
+          <div class="user-card">
+            <span class="user-icon" set:html={ICONS[u.icon]} />
+            <h3>{u.title}</h3>
+            <p>{u.desc}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  <section class="section section--gray">
+    <div class="container">
+      <SectionHead eyebrow="FAQ" title="Tire Size Calculator — Frequently Asked Questions" lead="Common questions about the wheel and tire size calculator, fitment, offset, and speedo error." />
+      <Faq items={FAQ} />
+    </div>
+  </section>
+
+  <!-- GUIDES -->
+  <section class="section">
+    <div class="container">
+      <SectionHead eyebrow="Guides & Resources" title="Tire Size & Wheel Fitment Guides" lead="In-depth guides on tire sizing, wheel offset, speedo error, and getting the perfect fitment for your vehicle." />
+      <PostGrid posts={POSTS} />
+    </div>
+  </section>
+
+  <TrustBar items={TRUST_BOTTOM} />
 </BaseLayout>
+
+<style>
+  /* Hero */
+  .hero {
+    position: relative; display: grid; place-items: center; min-height: 464px; padding-block: 90px;
+    background: #111 var(--hero) center / cover no-repeat; text-align: center;
+  }
+  .hero::before { content: ''; position: absolute; inset: 0; background: rgb(0 0 0 / .62); }
+  @media (max-width: 767px) { .hero { background-image: var(--hero-sm); padding-block: 60px; min-height: 0; } }
+  .hero-inner { position: relative; }
+  .hero h1 { margin: 0 0 22px; font: 900 64px/1 var(--font-display); text-transform: uppercase; color: #fff; }
+  .hero h1 span { color: var(--red); }
+  .hero-sub { margin: 0 0 22px; font: 600 18px/1.3 var(--font-display); color: #fff; }
+  .hero-text { max-width: 560px; margin: 0 auto 22px; font-size: 16px; color: rgb(255 255 255 / .85); }
+  .cta {
+    display: inline-block; padding: 16px 38px; border-radius: 3px; background: var(--red-bright); color: #fff; text-decoration: none;
+    font: 700 18px/1 var(--font-display); letter-spacing: 1px; text-transform: uppercase;
+  }
+  .cta:hover { background: #c50d14; color: #fff; }
+  @media (max-width: 767px) { .hero h1 { font-size: 44px; } }
+
+  .calc-section { padding-block: 40px 20px; }
+
+  /* Generic layout */
+  .two-col { display: grid; grid-template-columns: 1.15fr 1fr; gap: 40px 60px; align-items: start; }
+  .two-col--center { align-items: center; }
+  @media (max-width: 1024px) { .two-col { grid-template-columns: 1fr; } }
+  .prose p { font-size: 16px; }
+  .prose--dark :global(strong), .prose--dark :global(b) { color: #fff; }
+  .prose--dark :global(a) { color: #ff4d6d; text-decoration: none; }
+  .cards-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+  @media (max-width: 1024px) { .cards-3 { grid-template-columns: repeat(2, 1fr); } }
+  @media (max-width: 640px) { .cards-3 { grid-template-columns: 1fr; } }
+
+  /* What is */
+  .features { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 30px; }
+  .feature { padding: 22px 16px; background: var(--gray-100); border-radius: 10px; border-left: 2px solid; }
+  .feature--red { border-color: var(--red); }
+  .feature--navy { border-color: var(--navy); }
+  .feature h3 { margin: 0 0 6px; font: 800 13px/1.3 var(--font-display); letter-spacing: 1px; text-transform: uppercase; }
+  .feature--red h3 { color: var(--red); }
+  .feature--navy h3 { color: var(--navy); }
+  .feature p { margin: 0; font-size: 12px; line-height: 1.6; }
+  @media (max-width: 480px) { .features { grid-template-columns: 1fr; } }
+  .calc-list { background: var(--gray-100); border: 1px solid var(--border); border-radius: 10px; padding: 26px; margin-top: 110px; }
+  @media (max-width: 1024px) { .calc-list { margin-top: 0; } }
+  .calc-list h3 { margin: 0 0 20px; font: 700 13px/1.3 var(--font-display); letter-spacing: 1.5px; text-transform: uppercase; color: var(--text); }
+  .calc-list ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 12px; }
+  .calc-list li { display: flex; align-items: center; gap: 10px; font-size: 14px; color: var(--ink); }
+  .calc-list a { color: inherit; text-decoration: none; }
+  .calc-list a:hover { color: var(--red); }
+  .check { display: inline-flex; width: 18px; height: 18px; flex: none; color: var(--red); }
+  .check :global(svg) { width: 18px; height: 18px; fill: currentColor; }
+
+  /* Steps */
+  .steps { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+  @media (max-width: 900px) { .steps { grid-template-columns: 1fr; } }
+  .step { background: #fff; border-top: 3px solid var(--red-bright); border-radius: 10px; padding: 22px 14px 26px; }
+  .step-num { display: block; font: 900 52px/1 var(--font-display); color: var(--pink-50); }
+  .step-label { display: block; margin: 6px 0 12px; font: 700 12px/1 var(--font-body); letter-spacing: 1.5px; text-transform: uppercase; color: var(--red); }
+  .step h3 { margin: 0 0 12px; font: 700 17px/1.3 var(--font-semi); }
+  .step p { margin: 0; font-size: 14px; }
+
+  /* Tire code */
+  .tire-code {
+    margin: 0 0 16px; padding: 24px; text-align: center; background: var(--gray-200); border: 1px solid #ccc; border-radius: 5px;
+    font: 900 28px/1 var(--font-display); letter-spacing: 1px;
+  }
+  .tire-code .r { color: var(--red); }
+  .tire-code .n { color: var(--navy-3); }
+  .code-parts { margin: 0; display: grid; gap: 16px; }
+  .code-part { display: grid; grid-template-columns: 68px 1fr; gap: 12px; padding: 20px 16px 18px; background: var(--gray-100); border-left: 2px solid var(--red); border-radius: 5px; }
+  .code-part dt { font: 900 18px/1.3 var(--font-display); color: var(--red); }
+  .code-part dd { margin: 0; }
+  .code-part strong { display: block; margin-bottom: 4px; font: 700 16px/1.3 var(--font-semi); }
+  .code-part span { font-size: 13px; line-height: 1.5; }
+  .sidewall { margin: 0; justify-self: center; padding: 20px 20px 30px; background: var(--gray-100); border: 1px solid var(--border); border-radius: 10px; }
+  .sidewall :global(img) { display: block; }
+
+  /* Glossary */
+  .glossary { margin: 0; display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+  @media (max-width: 1024px) { .glossary { grid-template-columns: repeat(2, 1fr); } }
+  @media (max-width: 640px) { .glossary { grid-template-columns: 1fr; } }
+  .term { padding: 26px 28px; border: 1px solid rgb(255 255 255 / .3); border-radius: 10px; background: rgb(255 255 255 / .04); }
+  .term dt { margin-bottom: 14px; font: 800 18px/1.2 var(--font-display); color: var(--red-bright); }
+  .term dd { margin: 0; font-size: 14px; line-height: 1.55; color: rgb(255 255 255 / .75); }
+
+  /* Fitment */
+  .fit-card { padding: 38px 20px 30px; background: #fff; border: 1px solid var(--border); border-radius: 10px; }
+  .icon-tile { display: grid; place-items: center; width: 42px; height: 42px; margin-bottom: 26px; background: var(--pink-50); border-radius: 5px; }
+  .icon-tile :global(svg) { width: 22px; height: 22px; }
+  .fit-card h3 { margin: 0 0 14px; font: 700 17px/1.3 var(--font-semi); }
+  .fit-card p { margin: 0; font-size: 13px; }
+
+  /* Speedometer */
+  .formula { margin: 30px 0 0; padding: 22px 16px; background: rgb(192 0 26 / .12); border: 1px solid rgb(237 28 36 / .4); border-radius: 5px; font: 700 13px/2.3 var(--font-display); color: var(--red-bright); }
+  .speedo-card { border: 1px solid #fff; border-radius: 10px; padding: 24px; background: rgb(255 255 255 / .03); }
+  .speedo-card h3 { margin: 0 0 16px; font: 700 12px/1.4 var(--font-body); letter-spacing: 1px; text-transform: uppercase; color: rgb(255 255 255 / .7); }
+  .speedo-card table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  .speedo-card th { padding: 8px 6px; text-align: left; font: 700 11px/1.3 var(--font-body); letter-spacing: .5px; text-transform: uppercase; color: rgb(255 255 255 / .45); border-bottom: 1px solid rgb(255 255 255 / .15); }
+  .speedo-card td { padding: 10px 6px; color: rgb(255 255 255 / .85); border-bottom: 1px solid rgb(255 255 255 / .08); }
+  .speedo-card tr:last-child td { border-bottom: 0; }
+  .lvl-ok { color: #6bff8e !important; font-weight: 700; }
+  .lvl-warn { color: #ffc107 !important; font-weight: 700; }
+  .lvl-bad { color: #ff6b6b !important; font-weight: 700; }
+
+  /* Charts */
+  .chart-title { margin: 40px 0 26px; text-align: center; font: 700 22px/1.3 var(--font-display); letter-spacing: 1.5px; color: var(--ink); }
+  .chart h4 { margin: 0 0 20px; padding-bottom: 16px; border-bottom: 1px solid #e5e5e5; text-align: center; font: 600 16px/1.3 var(--font-semi); }
+  .chart-cols { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px 40px; padding: 0 20px 10px; }
+  @media (max-width: 767px) { .chart-cols { grid-template-columns: 1fr; padding: 0; } }
+  .chart-col-head { margin: 0 0 10px; font: 700 13px/1.3 var(--font-body); color: #555; }
+  .chart ul { list-style: none; margin: 0; padding: 0; }
+  .chart li { padding: 7px 0; border-bottom: 1px solid #ddd; font: 400 13px/1.3 var(--font-display); color: var(--ink); }
+
+  /* Who uses */
+  .user-card { padding: 30px 20px; background: var(--gray-100); border-radius: 10px; box-shadow: 0 2px 6px rgb(0 0 0 / .04); }
+  .user-icon { display: block; width: 24px; height: 24px; margin-bottom: 20px; }
+  .user-icon :global(svg) { width: 24px; height: 24px; }
+  .user-card h3 { margin: 0 0 14px; font: 700 17px/1.3 var(--font-semi); }
+  .user-card p { margin: 0; font-size: 14px; }
+</style>

@@ -1,0 +1,16 @@
+---
+interface Props { items: string[] }
+const { items } = Astro.props;
+---
+<div class="trust">
+  <ul class="container container-wide">
+    {items.map((t) => <li><span aria-hidden="true">✓</span> {t}</li>)}
+  </ul>
+</div>
+
+<style>
+  .trust { background: var(--navy); padding-block: 26px; }
+  ul { list-style: none; margin: 0 auto; display: flex; flex-wrap: wrap; justify-content: center; gap: 12px 50px; }
+  li { font: 600 13px/1.4 var(--font-body); color: rgb(255 255 255 / .7); }
+  span { color: #4ade80; }
+</style>

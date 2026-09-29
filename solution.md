@@ -225,6 +225,11 @@ Keep the current look and section order. Only make these quality fixes, which do
 - ⚠️ **Broken internal links on the live site, fixed in the port** (`src/lib/legacyHtml.ts`): `/wheel-offset-calculator/`→`/wheel-offset/`, `/what-is-wheel-offset/` and `/guides/what-is-wheel-offset/`→`/what-is-wheel-offset-et/`, `/guides/poke-flush-tucked/`, `/guides/wheel-offset-vs-backspacing/`, `/revolutions-per-mile-calculator/`, `/tire-diameter-calculator/`→`/`. These paths also get 301s in `vercel.json` (task 3.2).
 - ⚠️ **Linked but never published** (text kept, link removed; possible future articles): `/what-is-tire-revolutions-per-mile/`, `/tire-rpm-odometer-accuracy/`, `/how-tire-size-affects-rpm/`, `/tire-rolling-circumference/`, `/speedometer-error-after-tire-change/`, `/how-to-fix-speedometer-error/`, `/how-much-speedometer-error-is-legal/`.
 - ℹ️ Posts are verbatim legacy HTML (`src/content/posts/*.html`) served by `src/pages/[slug].astro`, with metadata in `src/data/posts.ts`. `positive-negative-zero-offset` is bylined **Jake Harmon**; the others are bylined mike.themechanic. The live category archive layout was broken (huge gaps), so it has a clean card grid now.
+- ⚠️ **Homepage content fixes (please review):**
+  - Size charts (`src/data/tireCharts.ts`) are now computed. About 30 of 54 diameters on the live "by wheel size" chart were wrong (e.g. 225/35R19 listed 26.1", actually 25.2"), and the whole live 24" tab held 22–23" tires. The same tire sizes are kept, each placed in the group it really belongs to. Revert by replacing the functions with static lists.
+  - "Speedo error at common tire size changes" was an empty box on the live site. It now shows a computed table of 5 size changes that the site already mentions.
+  - The Fitment Guide card titled "iOS (Apple Books)" (a CMS slip) is now "What is Poke?".
+  - Eyebrow labels ("Free Online Tool", "Fitment Guide" …) are styled text, not H2/H5 headings, so there is one H1 per page with a clean heading outline.
 - 🚫 **Never modify the live WordPress site** (no edits through connectors, MCP tools, wp-admin or the REST API). Only read from it by fetching public pages.
 - Later (not v1): add the 3 extra calculators to the nav, shareable URL params, tire-code input, programmatic size-comparison pages.
 
@@ -254,7 +259,7 @@ Mark `[x]` only when the task's **Done when** is verified.
 **Done when (each):** tests pass, and the UI shows the same numbers as the live page for 3 manual sample inputs.
 
 ### Phase 2 — Pages & content
-- [ ] **2.1** Home page: all 14 sections in live order, chart data in `src/data/`, FAQ + JSON-LD.
+- [x] **2.1** Home page: all 14 sections in live order, chart data in `src/data/`, FAQ + JSON-LD.
 - [ ] **2.2** The 3 calculator pages with their full content + FAQ JSON-LD.
 - [x] **2.3** Content collection + 4 posts + `PostLayout` (Article + Breadcrumb JSON-LD).
 - [x] **2.4** `/blog/` listing (cards) + `/category/wheel-offset-calculator/`.
