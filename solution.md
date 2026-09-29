@@ -112,7 +112,7 @@ Features that must survive: Wheel 1 vs Wheel 2, **+ Add Wheel** / remove wheel (
 
 | Concern | Choice |
 |---|---|
-| Framework | Astro 5, `output: 'static'` |
+| Framework | Astro 7 (7.3.5), static output, TypeScript 6 (pinned: @astrojs/check needs ≤6) |
 | Styling | Plain CSS with custom properties (brand tokens in `src/styles/tokens.css`), component-scoped styles. No Tailwind, because the legacy CSS ports straight over |
 | Interactivity | Vanilla TS `<script>` in Astro components (no React/Preact needed) |
 | Content | Content collections: `src/content/posts/*.md` (4 posts), pages as `.astro` |
@@ -233,7 +233,7 @@ Keep the current look and section order. Only make these quality fixes, which do
 Mark `[x]` only when the task's **Done when** is verified.
 
 ### Phase 0 — Scaffold
-- [ ] **0.1** Scaffold Astro (minimal template, TS strict) in repo root. Add `.gitignore`, `astro.config.mjs` per §5, `@astrojs/sitemap`, Vitest. **Done when:** `npm run build` and `npm test` pass.
+- [x] **0.1** Scaffold Astro (minimal template, TS strict) in repo root. Add `.gitignore`, `astro.config.mjs` per §5, `@astrojs/sitemap`, Vitest. **Done when:** `npm run build` and `npm test` pass.
 - [ ] **0.2** Brand tokens + global CSS + self-hosted fonts (§3). **Done when:** a test page shows all tokens/fonts.
 - [ ] **0.3** `BaseLayout`, `Seo`, `Header` (logo + nav + mobile menu, no JS dependency beyond a tiny toggle), `Footer`. **Done when:** layout matches the live header/footer at 375px and 1280px.
 
