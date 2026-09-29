@@ -1,0 +1,48 @@
+/* Brand tokens extracted from the live Elementor kit and page CSS (see solution.md §3). */
+:root {
+  /* Reds */
+  --red: #c0001a;          /* header, primary */
+  --red-bright: #ed1c24;   /* CTA button, eyebrow accents, active tabs */
+  --red-deep: #990026;     /* footer bar, calculator Wheel 2 */
+  --pink-50: #f9e5e8;      /* chips, icon tiles */
+  --pink-25: #fdf7f8;
+
+  /* Navy */
+  --navy: #1a1f6e;         /* trust bar, glossary section, nav dropdown */
+  --navy-2: #1e2170;       /* chart tab buttons */
+  --navy-3: #262a75;
+
+  /* Neutrals */
+  --ink: #222222;          /* headings */
+  --text: #666666;         /* body copy */
+  --muted: #888888;
+  --gray-50: #f9f9f9;
+  --gray-100: #f4f4f4;     /* section and card backgrounds */
+  --gray-200: #ebebeb;
+  --border: #dddddd;
+  --dark: #1b1b1b;         /* speedometer section, specs table */
+  --white: #ffffff;
+  --on-dark: rgb(255 255 255 / 0.6);
+  --nav-link: #ceb6b6;
+
+  /* Calculator palette (legacy widget) */
+  --calc-blue: #0092cd;
+  --calc-gold: #cfb11f;
+  --calc-green: #004225;
+  --calc-bg: #f8f9fa;
+  --calc-border: #dce4ec;
+
+  /* Type */
+  --font-body: 'Barlow', system-ui, sans-serif;
+  --font-display: 'Barlow Condensed', 'Arial Narrow', sans-serif;
+  --font-semi: 'Barlow Semi Condensed', 'Barlow', sans-serif;
+  --font-calc: 'Poppins', system-ui, sans-serif;
+
+  /* Layout */
+  --content: 1100px;
+  --content-wide: 1200px;
+  --gutter: 16px;
+  --radius: 10px;
+  --radius-sm: 5px;
+  --shadow: 0 5px 10px rgb(0 0 0 / 0.13);
+}

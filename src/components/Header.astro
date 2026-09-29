@@ -1,0 +1,101 @@
+---
+import { Image } from 'astro:assets';
+import logo from '../assets/logo.png';
+import { NAV } from '../data/site';
+
+const current = Astro.url.pathname;
+---
+<header class="site-header">
+  <div class="bar">
+    <a href="/" class="brand" aria-label="Tire Size Calculator home">
+      <Image src={logo} alt="TireSizeCalculator.pro" width={127} height={62} loading="eager" fetchpriority="high" />
+    </a>
+
+    <button class="toggle" type="button" aria-expanded="false" aria-controls="site-nav" aria-label="Menu">
+      <span></span><span></span><span></span>
+    </button>
+
+    <nav id="site-nav" class="nav" aria-label="Main">
+      <ul>
+        {NAV.map((item) => (
+          <li class={item.children ? 'has-sub' : undefined}>
+            <a href={item.href} aria-current={!item.children && current === item.href ? 'page' : undefined}>
+              {item.label}
+              {item.children && <svg class="caret" viewBox="0 0 10 6" width="10" height="6" aria-hidden="true"><path d="M0 0h10L5 6z" fill="currentColor" /></svg>}
+            </a>
+            {item.children && (
+              <ul class="sub">
+                {item.children.map((c) => <li><a href={c.href}>{c.label}</a></li>)}
+              </ul>
+            )}
+          </li>
+        ))}
+      </ul>
+    </nav>
+  </div>
+</header>
+
+<script>
+  const btn = document.querySelector<HTMLButtonElement>('.site-header .toggle');
+  btn?.addEventListener('click', () => {
+    const open = btn.getAttribute('aria-expanded') === 'true';
+    btn.setAttribute('aria-expanded', String(!open));
+    btn.closest('.site-header')?.classList.toggle('open', !open);
+  });
+</script>
+
+<style>
+  .site-header {
+    position: relative; z-index: 999;
+    background: var(--red);
+    box-shadow: var(--shadow);
+  }
+  .bar {
+    display: flex; align-items: center; justify-content: space-between;
+    min-height: 83px; padding-inline: max(2%, var(--gutter));
+  }
+  .brand { display: block; line-height: 0; }
+  .brand :global(img) { width: 112px; height: auto; }
+
+  .nav ul { list-style: none; margin: 0; padding: 0; }
+  .nav > ul { display: flex; gap: 4px; }
+  .nav a {
+    display: flex; align-items: center; gap: 8px;
+    padding: 10px; color: var(--nav-link); text-decoration: none;
+    font: 600 14px/22px var(--font-body);
+  }
+  .nav a:hover, .nav a[aria-current='page'], .has-sub:focus-within > a, .has-sub:hover > a { color: var(--white); }
+  .has-sub { position: relative; }
+  .has-sub > a { color: var(--white); }
+  .sub {
+    position: absolute; top: 100%; left: 0; min-width: 200px;
+    background: var(--navy); padding: 6px 0;
+    opacity: 0; visibility: hidden; transform: translateY(6px);
+    transition: opacity .15s, transform .15s, visibility .15s;
+  }
+  .sub a { color: var(--white); padding: 10px 18px; }
+  .sub a:hover { background: rgb(255 255 255 / .08); }
+  .has-sub:hover .sub, .has-sub:focus-within .sub { opacity: 1; visibility: visible; transform: none; }
+
+  .toggle {
+    display: none; width: 44px; height: 44px; padding: 10px;
+    background: transparent; border: 0; cursor: pointer;
+  }
+  .toggle span { display: block; height: 2px; margin: 5px 0; background: var(--white); transition: transform .2s, opacity .2s; }
+
+  @media (max-width: 1024px) {
+    .toggle { display: block; }
+    .nav {
+      position: absolute; top: 100%; left: 0; right: 0;
+      background: var(--navy); display: none;
+    }
+    .open .nav { display: block; }
+    .nav > ul { flex-direction: column; gap: 0; padding: 8px 0; }
+    .nav a { color: var(--white); padding: 12px var(--gutter); }
+    .sub { position: static; opacity: 1; visibility: visible; transform: none; padding: 0; background: transparent; }
+    .sub a { padding-left: calc(var(--gutter) + 16px); }
+    .open .toggle span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+    .open .toggle span:nth-child(2) { opacity: 0; }
+    .open .toggle span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+  }
+</style>

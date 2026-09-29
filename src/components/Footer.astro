@@ -1,0 +1,25 @@
+---
+import { FOOTER_LINKS, SITE } from '../data/site';
+---
+<footer class="site-footer">
+  <div class="bar">
+    <p>© 2026 {SITE.domain} All Rights Reserved.</p>
+    <nav aria-label="Legal">
+      {FOOTER_LINKS.map((l) => <a href={l.href}>{l.label}</a>)}
+    </nav>
+  </div>
+</footer>
+
+<style>
+  .site-footer { background: var(--red-deep); }
+  .bar {
+    display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px 24px;
+    min-height: 70px; padding: 16px max(2.8%, var(--gutter));
+    font: 400 13px/1.5 var(--font-body);
+  }
+  p { margin: 0; color: rgb(255 255 255 / .7); }
+  nav { display: flex; gap: 16px; }
+  a { color: var(--nav-link); text-decoration: none; }
+  a:hover { color: var(--white); }
+  @media (max-width: 767px) { .bar { justify-content: center; text-align: center; } }
+</style>

@@ -48,10 +48,10 @@ Only load the weights actually used. The WP site loads every weight of every fam
 
 | Token | Hex | Where used |
 |---|---|---|
-| `--navy-900` | `#1A1F6E` | header/dark sections |
+| `--navy` | `#1A1F6E` | trust bar, glossary section, nav dropdown |
 | `--navy-800` | `#262A75` | header/section backgrounds |
 | `--navy-700` | `#1E2170` / `#241E63` | kit accents |
-| `--red-700` | `#C0001A` | primary brand red, buttons |
+| `--red` | `#C0001A` | **header background**, primary brand red |
 | `--red-600` | `#ED1C24` | category labels, highlights |
 | `--red-900` | `#990026` | calculator "red" |
 | `--pink-50` | `#F9E5E8` / `#EFDBDE` / `#FDF7F8` | tinted cards, label chips |
@@ -62,7 +62,7 @@ Only load the weights actually used. The WP site loads every weight of every fam
 | `--calc-bg` / `--calc-border` | `#F8F9FA` / `#DCE4EC` | calculator panels |
 | text | `#000000` / `#222222` / `#333333` | body / titles |
 
-**Logo:** `_legacy/assets/logo-white.png` (508×250, white wordmark "TireSizeCalculator.pro" for the dark navy header).
+**Logo:** `_legacy/assets/logo-white.png` (508×250, white "TSC" mark + wordmark, shown on the **red** header). Footer bar is `#990026`. Headings: Barlow Condensed 900 uppercase; body: Barlow 15px `#666`; calculator: Poppins. Implemented in `src/styles/tokens.css`.
 **Favicon:** `_legacy/assets/favicon-192.png`. Generate 32px, 180px (apple-touch) and 192px sizes from it.
 **Images to download at build time (Phase 2):** hero/section images and the blog featured images under `/wp-content/uploads/2026/06/` and `/2026/07/`. Convert them to WebP/AVIF via `astro:assets`.
 
@@ -234,8 +234,8 @@ Mark `[x]` only when the task's **Done when** is verified.
 
 ### Phase 0 — Scaffold
 - [x] **0.1** Scaffold Astro (minimal template, TS strict) in repo root. Add `.gitignore`, `astro.config.mjs` per §5, `@astrojs/sitemap`, Vitest. **Done when:** `npm run build` and `npm test` pass.
-- [ ] **0.2** Brand tokens + global CSS + self-hosted fonts (§3). **Done when:** a test page shows all tokens/fonts.
-- [ ] **0.3** `BaseLayout`, `Seo`, `Header` (logo + nav + mobile menu, no JS dependency beyond a tiny toggle), `Footer`. **Done when:** layout matches the live header/footer at 375px and 1280px.
+- [x] **0.2** Brand tokens + global CSS + self-hosted fonts (§3). **Done when:** a test page shows all tokens/fonts.
+- [x] **0.3** `BaseLayout`, `Seo`, `Header` (logo + nav + mobile menu, no JS dependency beyond a tiny toggle), `Footer`. **Done when:** layout matches the live header/footer at 375px and 1280px.
 
 ### Phase 1 — Calculators (math first, then UI)
 - [ ] **1.1** `lib/calc/wheelTire.ts` + golden tests against the legacy formulas.
