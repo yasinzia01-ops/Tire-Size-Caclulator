@@ -221,6 +221,7 @@ Keep the current look and section order. Only make these quality fixes, which do
 - ✅ No AdSense. ✅ **Keep Google Analytics** with the same tag `GT-MBT5TB3W` (owner, 2026-09-29). Add it as a plain `gtag.js` snippet in `BaseLayout` (async, production builds only) so historical data continues. This is the only third-party script allowed.
 - ✅ Speedo error: use `(New − Original) ÷ Original` (see §4).
 - ✅ About, Privacy and Terms: write new, distinct meta descriptions (done in §8a). Check that the Privacy Policy body mentions Google Analytics cookies.
+- ℹ️ Legacy wheel-offset widget CSS had unclosed `@media` blocks, so most calculator styles applied only below 600px on the live site. The port closes them, so desktop now gets the intended styling. The browser `alert()` for empty fields is replaced by an inline message.
 - 🚫 **Never modify the live WordPress site** (no edits through connectors, MCP tools, wp-admin or the REST API). Only read from it by fetching public pages.
 - Later (not v1): add the 3 extra calculators to the nav, shareable URL params, tire-code input, programmatic size-comparison pages.
 
@@ -246,7 +247,7 @@ Mark `[x]` only when the task's **Done when** is verified.
 - [x] **1.2** `WheelTireCalculator.astro`: inputs, add/remove wheels, results, unit toggle, both SVG diagrams.
 - [x] **1.3** `lib/calc/speedo.ts` + tests → `SpeedoCalculator.astro`.
 - [x] **1.4** `lib/calc/revsPerMile.ts` + tests → `RevsPerMileCalculator.astro`.
-- [ ] **1.5** `lib/calc/wheelOffset.ts` + tests → `WheelOffsetCalculator.astro`.
+- [x] **1.5** `lib/calc/wheelOffset.ts` + tests → `WheelOffsetCalculator.astro`.
 **Done when (each):** tests pass, and the UI shows the same numbers as the live page for 3 manual sample inputs.
 
 ### Phase 2 — Pages & content

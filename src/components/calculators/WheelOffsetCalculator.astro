@@ -1,0 +1,113 @@
+---
+/**
+ * Wheel Offset Calculator — port of the legacy widget's calculator section.
+ * Math: src/lib/calc/wheelOffset.ts. Like the live tool, fields start empty
+ * (placeholders only) and results appear after Calculate.
+ */
+const cards = [
+  { key: 's', title: 'Wheel 1', badge: 'STOCK', cls: 'stock', ph: ['e.g. 7.5', 'e.g. 48'] },
+  { key: 'n', title: 'Wheel 2', badge: 'NEW', cls: 'new', ph: ['e.g. 8.5', 'e.g. 35'] },
+] as const;
+---
+<div class="woc-tool" data-woc>
+  <div class="grid">
+    {cards.map((c) => (
+      <div class={`card card-${c.cls}`} data-wheel={c.key}>
+        <div class="card-header">{c.title} <span class="badge">{c.badge}</span></div>
+        <div class="card-body">
+          <label class="field">
+            <span>Wheel Width (inches)</span>
+            <input type="number" inputmode="decimal" data-f="width" placeholder={c.ph[0]} step="0.5" min="4" max="20" />
+          </label>
+          <label class="field">
+            <span>Offset / ET (mm)</span>
+            <input type="number" inputmode="decimal" data-f="et" placeholder={c.ph[1]} min="-100" max="120" />
+          </label>
+        </div>
+      </div>
+    ))}
+  </div>
+
+  <button type="button" class="btn" data-run>Calculate Wheel Offset</button>
+  <p class="error" data-error role="alert" hidden>Please fill in all four fields.</p>
+
+  <div class="results" data-results aria-live="polite">
+    <div class="results-head">Your Results</div>
+    <div class="results-grid">
+      <div class="item"><div class="label">Outer Change</div><div class="value" data-o="outer">—</div><div class="note" data-n="outer">Poke / Tuck</div></div>
+      <div class="item"><div class="label">Inner Clearance</div><div class="value" data-o="inner">—</div><div class="note" data-n="inner">vs stock</div></div>
+      <div class="item"><div class="label">Fitment Status</div><div class="value" data-o="status">—</div><div class="note" data-n="status">—</div></div>
+    </div>
+    <div class="verdict" data-verdict></div>
+  </div>
+</div>
+
+<script>
+  import { offsetResult, type OffsetWheel } from '../../lib/calc/wheelOffset';
+
+  for (const root of document.querySelectorAll<HTMLElement>('[data-woc]')) {
+    const val = (k: 's' | 'n', f: 'width' | 'et') =>
+      parseFloat(root.querySelector<HTMLInputElement>(`[data-wheel="${k}"] [data-f="${f}"]`)!.value);
+    const error = root.querySelector<HTMLElement>('[data-error]')!;
+
+    root.querySelector('[data-run]')!.addEventListener('click', () => {
+      const stock: OffsetWheel = { width: val('s', 'width'), et: val('s', 'et') };
+      const next: OffsetWheel = { width: val('n', 'width'), et: val('n', 'et') };
+      const missing = [stock.width, stock.et, next.width, next.et].some(Number.isNaN);
+      error.hidden = !missing;
+      if (missing) return;
+
+      const r = offsetResult(stock, next);
+      for (const k of ['outer', 'inner', 'status'] as const) {
+        const el = root.querySelector<HTMLElement>(`[data-o="${k}"]`)!;
+        el.textContent = r[k].value;
+        el.className = `value ${r[k].tone}`.trim();
+        root.querySelector(`[data-n="${k}"]`)!.textContent = r[k].note;
+      }
+      root.querySelector('[data-verdict]')!.innerHTML = r.verdictHtml;
+      root.querySelector('[data-results]')!.classList.add('visible');
+    });
+  }
+</script>
+
+<style>
+  .woc-tool { max-width: 900px; margin: 0 auto; font-family: 'Inter', 'Segoe UI', Arial, sans-serif; color: #1a1a1a; line-height: 1.7; }
+  .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 22px; }
+  .card { border-radius: 10px; overflow: hidden; border: 1px solid #e0e0e0; box-shadow: 0 2px 12px rgb(0 0 0 / .06); }
+  .card-header { padding: 13px 20px; font-size: 13px; font-weight: 800; letter-spacing: 2px; text-transform: uppercase; color: #fff; display: flex; align-items: center; gap: 10px; }
+  .badge { font-size: 10px; background: rgb(255 255 255 / .25); padding: 2px 8px; border-radius: 20px; letter-spacing: 1px; }
+  .card-stock .card-header { background: #1a7cc8; }
+  .card-new .card-header { background: #a8122a; }
+  .card-body { background: #fff; padding: 20px; }
+  .field { display: block; margin-bottom: 14px; }
+  .field:last-child { margin-bottom: 0; }
+  .field span { display: block; font-size: 12px; font-weight: 700; letter-spacing: .5px; color: #666; text-transform: uppercase; margin-bottom: 6px; }
+  .field input { width: 100%; border: 1.5px solid #ddd; border-radius: 6px; font-family: inherit; font-size: 16px; font-weight: 600; color: #1a1a1a; padding: 10px 14px; background: #fafafa; outline: none; transition: border-color .2s, box-shadow .2s; }
+  .field input:focus { border-color: #cc0000; box-shadow: 0 0 0 3px rgb(204 0 0 / .08); background: #fff; }
+
+  .btn { width: 100%; background: #cc0000; color: #fff; border: 0; border-radius: 8px; font-family: inherit; font-size: 15px; font-weight: 800; letter-spacing: 2px; text-transform: uppercase; padding: 17px 20px; cursor: pointer; transition: background .2s, transform .1s; margin-bottom: 24px; box-shadow: 0 4px 14px rgb(204 0 0 / .3); }
+  .btn:hover { background: #aa0000; transform: translateY(-1px); }
+  .btn:active { transform: none; }
+  .error { margin: -12px 0 20px; color: #cc0000; font-weight: 700; font-size: 14px; text-align: center; }
+
+  .results { display: none; border-radius: 10px; overflow: hidden; border: 1px solid #e0e0e0; box-shadow: 0 4px 20px rgb(0 0 0 / .08); }
+  .results.visible { display: block; }
+  .results-head { background: #1a1a1a; padding: 14px 22px; font-size: 12px; font-weight: 800; letter-spacing: 2px; text-transform: uppercase; color: #fff; }
+  .results-grid { display: grid; grid-template-columns: repeat(3, 1fr); background: #fff; }
+  .item { padding: 22px 18px; border-right: 1px solid #eee; text-align: center; }
+  .item:last-child { border-right: 0; }
+  .label { font-size: 11px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; color: #999; margin-bottom: 8px; }
+  .value { font-size: 30px; font-weight: 900; color: #1a1a1a; margin-bottom: 5px; line-height: 1; }
+  .value.red { color: #cc0000; }
+  .value.blue { color: #1a7cc8; }
+  .value.green { color: #1a9a5a; }
+  .note { font-size: 12px; color: #888; }
+  .verdict { background: #f8f8f8; border-top: 1px solid #eee; padding: 16px 22px; font-size: 14px; color: #444; line-height: 1.6; }
+  .verdict :global(strong) { color: #1a1a1a; }
+
+  @media (max-width: 600px) { .grid { grid-template-columns: 1fr; } }
+  @media (max-width: 560px) {
+    .results-grid { grid-template-columns: 1fr; }
+    .item { border-right: 0; border-bottom: 1px solid #eee; }
+  }
+</style>
