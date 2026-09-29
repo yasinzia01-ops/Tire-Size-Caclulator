@@ -239,7 +239,7 @@ Mark `[x]` only when the task's **Done when** is verified.
 
 ### Phase 1 — Calculators (math first, then UI)
 - [x] **1.1** `lib/calc/wheelTire.ts` + golden tests against the legacy formulas.
-- [ ] **1.2** `WheelTireCalculator.astro`: inputs, add/remove wheels, results, unit toggle, both SVG diagrams.
+- [x] **1.2** `WheelTireCalculator.astro`: inputs, add/remove wheels, results, unit toggle, both SVG diagrams.
 - [ ] **1.3** `lib/calc/speedo.ts` + tests → `SpeedoCalculator.astro`.
 - [ ] **1.4** `lib/calc/revsPerMile.ts` + tests → `RevsPerMileCalculator.astro`.
 - [ ] **1.5** `lib/calc/wheelOffset.ts` + tests → `WheelOffsetCalculator.astro`.

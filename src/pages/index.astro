@@ -1,15 +1,7 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
+import WheelTireCalculator from '../components/calculators/WheelTireCalculator.astro';
 ---
 <BaseLayout title="Tire Size Calculator | Free Tire Size Fitment Tool" description="Free tire size calculator." path="/">
-  <section class="section">
-    <div class="container">
-      <span class="eyebrow">Free online tool</span>
-      <h2 class="section-title">What is the Wheel &amp; Tire Calculator?</h2>
-      <p class="lead">Body copy in Barlow. <strong>Bold text</strong> and a <a href="/about-us/">link</a>.</p>
-      <p style="font-family:var(--font-calc)">Poppins calculator text 400 <b style="font-weight:800">800</b></p>
-      <p style="font-family:var(--font-semi);font-weight:700;color:var(--ink);font-size:17px">Barlow Semi Condensed 700</p>
-    </div>
-  </section>
-  <section class="section section--navy"><div class="container"><span class="eyebrow">Key terms</span><h2 class="section-title">Glossary</h2><p class="lead">Navy section.</p></div></section>
+  <section class="section"><div class="container-wide container"><WheelTireCalculator /></div></section>
 </BaseLayout>

@@ -1,0 +1,429 @@
+---
+/**
+ * Wheel & Tire Calculator — port of the legacy Elementor HTML widget.
+ * Math lives in src/lib/calc/wheelTire.ts; this file is markup, styles and DOM glue.
+ * Default results are rendered at build time so the page is complete without JS.
+ */
+import { computeWheels, resultRows, specsRows, type WheelInput } from '../../lib/calc/wheelTire';
+
+const DEFAULTS: WheelInput[] = [
+  { dia: 17, width: 7, off: 48, tW: 205, tP: 45 },
+  { dia: 18, width: 8, off: 35, tW: 225, tP: 40 },
+];
+const TAGS = ['BASE', 'SELECTED', 'GREEN', 'GOLD'];
+const wheels = computeWheels(DEFAULTS);
+const results = resultRows(wheels, 'mm');
+const specs = specsRows(wheels, 'imperial');
+const fields = [
+  { group: 'WHEEL SIZE', items: [['dia', 'Dia', 'rim diameter (in)'], ['width', 'Width', 'rim width (in)'], ['off', 'ET', 'offset ET (mm)']] },
+  { group: 'TIRE SIZE', items: [['tW', 'Width', 'tire width (mm)'], ['tP', 'Prof', 'tire profile (%)']] },
+] as const;
+---
+<div class="wtc" id="calculate" data-wtc>
+  <div class="top-controls">
+    <div class="unit-switcher">
+      <span aria-hidden="true">mm</span>
+      <label class="switch">
+        <input type="checkbox" data-unit-toggle aria-label="Show results in centimetres" />
+        <span class="slider"></span>
+      </label>
+      <span aria-hidden="true">cm</span>
+    </div>
+    <button type="button" class="add-btn" data-add>+ ADD WHEEL</button>
+  </div>
+
+  <div class="input-container" data-cards>
+    {DEFAULTS.map((d, i) => (
+      <div class="wheel-card is-active" data-card>
+        <div class="card-header">
+          <div><span data-title>WHEEL {i + 1}</span> <span class="tag" data-tag>{TAGS[i]}</span></div>
+        </div>
+        <div class="card-body">
+          {fields.map((f) => (
+            <>
+              <span class="group-label">{f.group}</span>
+              <div class="input-row">
+                {f.items.map(([key, short, long]) => (
+                  <label class="inp-grp">
+                    <small>{short}</small>
+                    <input type="number" inputmode="decimal" step="any" data-field={key} value={d[key]} aria-label={`Wheel ${i + 1} ${long}`} />
+                  </label>
+                ))}
+              </div>
+            </>
+          ))}
+        </div>
+      </div>
+    ))}
+  </div>
+
+  <template data-card-template>
+    <div class="wheel-card is-active" data-card>
+      <div class="card-header">
+        <div><span data-title></span> <span class="tag" data-tag></span></div>
+        <button type="button" class="remove-wheel" data-remove aria-label="Remove wheel">×</button>
+      </div>
+      <div class="card-body">
+        {fields.map((f) => (
+          <>
+            <span class="group-label">{f.group}</span>
+            <div class="input-row">
+              {f.items.map(([key, short, long]) => (
+                <label class="inp-grp">
+                  <small>{short}</small>
+                  <input type="number" inputmode="decimal" step="any" data-field={key} value={DEFAULTS[1]![key]} data-long={long} />
+                </label>
+              ))}
+            </div>
+          </>
+        ))}
+      </div>
+    </div>
+  </template>
+
+  <div class="results-layout">
+    <div class="viz-column">
+      <div class="viz-box">
+        <h3>Side View Profile</h3>
+        <div class="viz-canvas-wrapper">
+          <svg data-side viewBox="0 0 400 400" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Side view comparison of tire diameters"></svg>
+        </div>
+        <div class="legend" data-side-legend></div>
+      </div>
+      <div class="viz-box">
+        <h3>Front View (Offset / Poke)</h3>
+        <div class="viz-canvas-wrapper">
+          <svg data-front viewBox="0 0 400 400" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Front view comparison of wheel offset and poke"></svg>
+        </div>
+        <div class="legend" data-front-legend></div>
+      </div>
+    </div>
+
+    <div class="table-container">
+      <table class="wheel-table">
+        <thead><tr data-result-head><th>Metric</th>{wheels.map((w) => <th>WHEEL {w.id}</th>)}</tr></thead>
+        <tbody data-result-rows>
+          {results.map(([label, ...cells]) => <tr><td>{label}</td>{cells.map((c) => <td>{c}</td>)}</tr>)}
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="specs-table-card">
+    <div class="specs-table-header">
+      <span class="specs-table-title">Specs Comparison</span>
+      <div class="unit-tabs" role="group" aria-label="Specs units">
+        <button type="button" class="unit-tab active" data-specs="imperial" aria-pressed="true">Imperial</button>
+        <button type="button" class="unit-tab" data-specs="metric" aria-pressed="false">Metric</button>
+      </div>
+    </div>
+    <div class="specs-table-scroll">
+      <table class="specs-table">
+        <thead>
+          <tr data-specs-head>
+            <th>Measurement</th>
+            {wheels.map((w, i) => <th class={`hc-${i + 1}`}>Wheel {w.id}</th>)}
+            <th>Diff (W1 vs W2)</th>
+          </tr>
+        </thead>
+        <tbody data-specs-rows>
+          {specs.map((r) => (
+            <tr>
+              <td>{r.label}</td>
+              {r.values.map((v, i) => <td class={`val-${i + 1}`}>{v}</td>)}
+              <td class={`diff-val ${r.diff ? (r.diff.sign > 0 ? 'diff-p' : r.diff.sign < 0 ? 'diff-n' : 'diff-z') : 'diff-z'}`}>{r.diff?.text ?? '—'}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<script>
+  import {
+    MAX_WHEELS, MM_PER_IN, computeWheels, resultRows, specsRows, toNum,
+    type LengthUnit, type SpecsMode, type Wheel, type WheelInput,
+  } from '../../lib/calc/wheelTire';
+
+  const TAGS = ['BASE', 'SELECTED', 'GREEN', 'GOLD'];
+  // Diagram stroke colours from the legacy widget (Wheel 1 is drawn in dark navy).
+  const DIAGRAM_COLORS = ['#1A0F6B', '#990026', '#004225', '#CFB11F'];
+
+  for (const root of document.querySelectorAll<HTMLElement>('[data-wtc]')) init(root);
+
+  function init(root: HTMLElement) {
+    const $ = <T extends Element>(s: string) => root.querySelector<T>(s)!;
+    const cards = $<HTMLElement>('[data-cards]');
+    const tpl = $<HTMLTemplateElement>('[data-card-template]');
+    const addBtn = $<HTMLButtonElement>('[data-add]');
+    const unitToggle = $<HTMLInputElement>('[data-unit-toggle]');
+    let specsMode: SpecsMode = 'imperial';
+
+    const esc = (s: string) => s.replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' })[c]!);
+
+    function readInputs(): WheelInput[] {
+      return [...cards.querySelectorAll<HTMLElement>('[data-card]')].map((card) => {
+        const v = (k: keyof WheelInput) => toNum(card.querySelector<HTMLInputElement>(`[data-field="${k}"]`)!.value);
+        return { dia: v('dia'), width: v('width'), off: v('off'), tW: v('tW'), tP: v('tP') };
+      });
+    }
+
+    function calculate() {
+      const wheels = computeWheels(readInputs());
+      const unit: LengthUnit = unitToggle.checked ? 'cm' : 'mm';
+
+      $('[data-result-head]').innerHTML = '<th>Metric</th>' + wheels.map((w) => `<th>WHEEL ${w.id}</th>`).join('');
+      $('[data-result-rows]').innerHTML = resultRows(wheels, unit)
+        .map(([label, ...cells]) => `<tr><td>${label}</td>${cells.map((c) => `<td>${esc(c)}</td>`).join('')}</tr>`)
+        .join('');
+
+      $('[data-specs-head]').innerHTML =
+        '<th>Measurement</th>' + wheels.map((w, i) => `<th class="hc-${i + 1}">Wheel ${w.id}</th>`).join('') + '<th>Diff (W1 vs W2)</th>';
+      $('[data-specs-rows]').innerHTML = specsRows(wheels, specsMode)
+        .map((r) => {
+          const cls = r.diff ? (r.diff.sign > 0 ? 'diff-p' : r.diff.sign < 0 ? 'diff-n' : 'diff-z') : 'diff-z';
+          return `<tr><td>${r.label}</td>${r.values.map((v, i) => `<td class="val-${i + 1}">${esc(v)}</td>`).join('')}<td class="diff-val ${cls}">${esc(r.diff?.text ?? '—')}</td></tr>`;
+        })
+        .join('');
+
+      drawSideView(wheels);
+      drawFrontView(wheels);
+    }
+
+    function legend(el: Element, wheels: Wheel[]) {
+      el.innerHTML = wheels
+        .map((w, i) => {
+          const c = DIAGRAM_COLORS[i];
+          const border = i === 0 ? `2px solid ${c}` : `2px dashed ${c}`;
+          return `<div class="legend-item"><div class="legend-line" style="background:${c};border-bottom:${border}"></div><span>Wheel ${w.id}</span></div>`;
+        })
+        .join('');
+    }
+
+    const strokeStyle = (i: number) => ({ dash: i === 0 ? 'none' : '6,3', sw: i === 0 ? 3.5 : 2.5, op: i === 0 ? 1 : 0.85 });
+
+    function drawSideView(wheels: Wheel[]) {
+      const svg = $<SVGSVGElement>('[data-side]');
+      legend($('[data-side-legend]'), wheels);
+      if (!wheels.length) return (svg.innerHTML = '');
+      const cx = 200, cy = 200;
+      const maxR = Math.max(...wheels.map((d) => d.diameter / 2));
+      const scale = maxR > 0 ? 165 / maxR : 0;
+      let s = `<line x1="20" y1="${cy + 170}" x2="380" y2="${cy + 170}" stroke="#d1d5db" stroke-width="2"/>`;
+      s += `<ellipse cx="${cx}" cy="${cy + 170}" rx="165" ry="5" fill="rgba(0,0,0,0.06)"/>`;
+      s += `<circle cx="${cx}" cy="${cy}" r="38" fill="#f1f5f9" stroke="#cbd5e1" stroke-width="1.5"/>`;
+      s += `<circle cx="${cx}" cy="${cy}" r="11" fill="#e2e8f0" stroke="#cbd5e1" stroke-width="1"/>`;
+      s += `<path d="M ${cx + 28},${cy - 13} Q ${cx + 44},${cy - 7} ${cx + 44},${cy + 7} Q ${cx + 44},${cy + 21} ${cx + 28},${cy + 13}" fill="none" stroke="#94a3b8" stroke-width="7" stroke-linecap="round"/>`;
+      for (let i = 0; i < 5; i++) {
+        const a = (i / 5) * Math.PI * 2 - Math.PI / 2;
+        s += `<circle cx="${cx + Math.cos(a) * 25}" cy="${cy + Math.sin(a) * 25}" r="3" fill="#94a3b8"/>`;
+      }
+      s += `<path d="M ${cx - 82},${cy + 58} Q ${cx - 52},${cy + 88} ${cx - 8},${cy + 168}" fill="none" stroke="#94a3b8" stroke-width="5" stroke-linecap="round"/>`;
+      for (let i = wheels.length - 1; i >= 0; i--) {
+        const c = DIAGRAM_COLORS[i], { dash, sw, op } = strokeStyle(i);
+        const r = Math.max(0, (wheels[i]!.diameter / 2) * scale);
+        s += `<circle cx="${cx}" cy="${cy}" r="${r}" fill="${c}" fill-opacity="0.04" stroke="${c}" stroke-width="${sw}" stroke-dasharray="${dash}" opacity="${op}"/>`;
+      }
+      svg.innerHTML = s;
+    }
+
+    function drawFrontView(wheels: Wheel[]) {
+      const svg = $<SVGSVGElement>('[data-front]');
+      legend($('[data-front-legend]'), wheels);
+      if (!wheels.length) return (svg.innerHTML = '');
+      const cy = 200, hubX = 210;
+      const maxR = Math.max(...wheels.map((d) => d.diameter / 2));
+      const maxW = Math.max(...wheels.map((d) => Math.max(d.tW, d.width * MM_PER_IN)));
+      const sc = maxR > 0 ? 160 / maxR : 0, wsc = maxW > 0 ? 90 / maxW : 0;
+      let s = `<rect x="196" y="18" width="24" height="105" rx="4" fill="#e2e8f0" stroke="#cbd5e1" stroke-width="1.5"/>`;
+      for (let k = 0; k < 5; k++) {
+        const ky = 22 + k * 17;
+        s += `<path d="M 191,${ky} Q 208,${ky + 5} 222,${ky + 3} Q 236,${ky + 1} 217,${ky + 11}" fill="none" stroke="#94a3b8" stroke-width="2.5" stroke-linecap="round"/>`;
+      }
+      s += `<rect x="186" y="126" width="40" height="46" rx="4" fill="#e2e8f0" stroke="#cbd5e1" stroke-width="1.5"/>`;
+      s += `<line x1="${hubX}" y1="175" x2="${hubX - 50}" y2="228" stroke="#94a3b8" stroke-width="5" stroke-linecap="round"/>`;
+      s += `<circle cx="${hubX - 50}" cy="230" r="6" fill="#cbd5e1" stroke="#94a3b8" stroke-width="2"/>`;
+      s += `<circle cx="${hubX}" cy="${cy}" r="13" fill="#f8fafc" stroke="#94a3b8" stroke-width="2"/>`;
+      s += `<circle cx="${hubX}" cy="${cy}" r="4" fill="#94a3b8"/>`;
+      s += `<line x1="${hubX}" y1="20" x2="${hubX}" y2="380" stroke="#94a3b8" stroke-width="1" stroke-dasharray="5,4" opacity="0.45"/>`;
+      s += `<line x1="20" y1="370" x2="380" y2="370" stroke="#d1d5db" stroke-width="2"/>`;
+      for (let i = wheels.length - 1; i >= 0; i--) {
+        const d = wheels[i]!, c = DIAGRAM_COLORS[i], { dash, sw, op } = strokeStyle(i);
+        const fR = Math.max(0, (d.diameter / 2) * sc);
+        const tireW = Math.max(0, d.tW * wsc);
+        const tireLeft = hubX - tireW / 2 + d.off * wsc;
+        s += `<rect x="${tireLeft}" y="${cy - fR}" width="${tireW}" height="${fR * 2}" fill="${c}" fill-opacity="0.05" stroke="${c}" stroke-width="${sw}" stroke-dasharray="${dash}" opacity="${op}" rx="5"/>`;
+      }
+      svg.innerHTML = s;
+    }
+
+    function reindex() {
+      const all = cards.querySelectorAll<HTMLElement>('[data-card]');
+      all.forEach((card, i) => {
+        card.querySelector('[data-title]')!.textContent = `WHEEL ${i + 1}`;
+        card.querySelector('[data-tag]')!.textContent = TAGS[i] ?? '';
+        card.querySelectorAll<HTMLInputElement>('input[data-long]').forEach((inp) => inp.setAttribute('aria-label', `Wheel ${i + 1} ${inp.dataset.long}`));
+      });
+      addBtn.disabled = all.length >= MAX_WHEELS;
+    }
+
+    addBtn.addEventListener('click', () => {
+      if (cards.querySelectorAll('[data-card]').length >= MAX_WHEELS) return;
+      cards.appendChild(tpl.content.cloneNode(true));
+      reindex();
+      calculate();
+    });
+
+    cards.addEventListener('click', (e) => {
+      const target = e.target as HTMLElement;
+      const remove = target.closest('[data-remove]');
+      if (remove) {
+        remove.closest('[data-card]')!.remove();
+        reindex();
+        calculate();
+        return;
+      }
+      // Mobile accordion (legacy behaviour): tapping a header opens that card only.
+      if (window.innerWidth > 768) return;
+      const header = target.closest('.card-header');
+      if (!header) return;
+      const card = header.closest('[data-card]')!;
+      const wasOn = card.classList.contains('is-active');
+      cards.querySelectorAll('[data-card]').forEach((c) => c.classList.remove('is-active'));
+      if (!wasOn) card.classList.add('is-active');
+    });
+
+    cards.addEventListener('input', (e) => {
+      if ((e.target as HTMLElement).tagName === 'INPUT') calculate();
+    });
+    unitToggle.addEventListener('change', calculate);
+
+    root.querySelectorAll<HTMLButtonElement>('[data-specs]').forEach((btn) =>
+      btn.addEventListener('click', () => {
+        specsMode = btn.dataset.specs as SpecsMode;
+        root.querySelectorAll<HTMLButtonElement>('[data-specs]').forEach((b) => {
+          b.classList.toggle('active', b === btn);
+          b.setAttribute('aria-pressed', String(b === btn));
+        });
+        calculate();
+      }),
+    );
+
+    calculate();
+  }
+</script>
+
+<style is:global>
+  .wtc {
+    --w1: var(--calc-blue); --w2: var(--red-deep); --w3: var(--calc-green); --w4: var(--calc-gold);
+    font-family: var(--font-calc); color: #333; line-height: 1.5;
+    max-width: 1100px; margin: 20px auto; padding: 15px;
+    scroll-margin-top: 20px;
+  }
+  .wtc button { font-family: inherit; }
+
+  .wtc .top-controls { display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; }
+  .wtc .unit-switcher { display: flex; align-items: center; gap: 10px; font-weight: 700; }
+  .wtc .switch { position: relative; display: inline-block; width: 44px; height: 22px; }
+  .wtc .switch input { opacity: 0; width: 0; height: 0; }
+  .wtc .slider { position: absolute; cursor: pointer; inset: 0; background: #ccc; transition: .4s; border-radius: 22px; }
+  .wtc .slider::before { position: absolute; content: ''; height: 16px; width: 16px; left: 3px; bottom: 3px; background: #fff; transition: .4s; border-radius: 50%; }
+  .wtc .switch input:checked + .slider { background: var(--w1); }
+  .wtc .switch input:checked + .slider::before { transform: translateX(22px); }
+  .wtc .switch input:focus-visible + .slider { outline: 2px solid var(--red-bright); outline-offset: 2px; }
+
+  .wtc .add-btn { background: #000; color: #fff; border: 0; padding: 10px 20px; border-radius: 8px; font-weight: 800; font-size: 14px; cursor: pointer; }
+  .wtc .add-btn:disabled { background: #aaa; cursor: not-allowed; }
+
+  .wtc .input-container { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 15px; margin-bottom: 30px; }
+  .wtc .wheel-card { background: #fff; border: 1px solid var(--calc-border); border-radius: 12px; overflow: hidden; box-shadow: 0 4px 10px rgb(0 0 0 / .05); }
+  .wtc .wheel-card:nth-child(1) .card-header { background: var(--w1); }
+  .wtc .wheel-card:nth-child(2) .card-header { background: var(--w2); }
+  .wtc .wheel-card:nth-child(3) .card-header { background: var(--w3); }
+  .wtc .wheel-card:nth-child(4) .card-header { background: var(--w4); }
+  .wtc .card-header { padding: 12px 15px; color: #fff; font-weight: 700; display: flex; justify-content: space-between; align-items: center; }
+  .wtc .tag { font-size: 10px; background: rgb(255 255 255 / .2); padding: 2px 6px; border-radius: 4px; margin-left: 8px; }
+  .wtc .remove-wheel { background: none; border: 0; cursor: pointer; font-size: 20px; font-weight: 700; line-height: 1; padding: 0 5px; color: rgb(255 255 255 / .7); }
+  .wtc .remove-wheel:hover { color: #ffb900; }
+
+  .wtc .card-body { padding: 15px; }
+  .wtc .group-label { display: block; font-size: 11px; font-weight: 800; color: #888; margin-bottom: 8px; text-transform: uppercase; }
+  .wtc .input-row { display: flex; gap: 6px; margin-bottom: 15px; }
+  .wtc .inp-grp { flex: 1; min-width: 0; }
+  .wtc .inp-grp input {
+    width: 100%; padding: 8px 4px; border: 1px solid var(--calc-border); border-radius: 5px;
+    text-align: center; font: 600 16px/1.4 var(--font-calc); color: #000; background: var(--calc-bg);
+    -moz-appearance: textfield;
+  }
+  .wtc .inp-grp input::-webkit-outer-spin-button, .wtc .inp-grp input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+  .wtc .inp-grp small { display: block; font-size: 10px; color: #aaa; margin-bottom: 3px; }
+
+  .wtc .results-layout { display: grid; grid-template-columns: 380px 1fr; gap: 20px; margin-bottom: 30px; align-items: start; }
+  .wtc .viz-column { display: flex; flex-direction: column; gap: 15px; }
+  .wtc .viz-box { background: #fff; border: 1px solid var(--calc-border); border-radius: 15px; padding: 18px; text-align: center; box-shadow: 0 4px 10px rgb(0 0 0 / .02); }
+  .wtc .viz-box h3 { margin: 0 0 12px; font: 800 13px/1.4 var(--font-calc); color: #444; text-transform: uppercase; }
+  .wtc .viz-canvas-wrapper { background: #fdfdfd; border: 1px solid #eef2f5; border-radius: 10px; padding: 8px; }
+  .wtc .viz-canvas-wrapper svg { width: 100%; height: auto; display: block; aspect-ratio: 1; }
+  .wtc .legend { display: flex; gap: 12px; flex-wrap: wrap; justify-content: center; margin-top: 8px; min-height: 18px; }
+  .wtc .legend-item { display: flex; align-items: center; gap: 5px; font-size: 11px; font-weight: 600; color: #555; }
+  .wtc .legend-line { width: 18px; height: 3px; border-radius: 2px; }
+
+  .wtc .table-container { background: #fff; border-radius: 15px; border: 1px solid var(--calc-border); overflow-x: auto; }
+  .wtc .wheel-table { width: 100%; border-collapse: collapse; min-width: 400px; }
+  .wtc .wheel-table th, .wtc .wheel-table td { padding: 12px 15px; text-align: center; border-bottom: 1px solid #eee; font-size: 14px; }
+  .wtc .wheel-table td:first-child { text-align: left; font-weight: 700; background: #fafbfc; color: #555; width: 200px; }
+  .wtc .wheel-table th:nth-child(2) { background: var(--w1); color: #fff; }
+  .wtc .wheel-table th:nth-child(3) { background: var(--w2); color: #fff; }
+  .wtc .wheel-table th:nth-child(4) { background: var(--w3); color: #fff; }
+  .wtc .wheel-table th:nth-child(5) { background: var(--w4); color: #fff; }
+  .wtc .wheel-table tbody tr:nth-child(odd) td:not(:first-child) { background: #f7f7f7; }
+
+  .wtc .specs-table-card { background: #1a1a1a; border-radius: 15px; overflow: hidden; box-shadow: 0 4px 20px rgb(0 0 0 / .18); margin-bottom: 30px; }
+  .wtc .specs-table-header { display: flex; align-items: center; justify-content: space-between; padding: 18px 24px; border-bottom: 1px solid rgb(255 255 255 / .08); }
+  .wtc .specs-table-title { font-size: 15px; font-weight: 800; color: #fff; text-transform: uppercase; letter-spacing: .06em; }
+  .wtc .unit-tabs { display: flex; gap: 2px; }
+  .wtc .unit-tab { padding: 6px 14px; font-size: 12px; font-weight: 700; background: transparent; border: 1px solid rgb(255 255 255 / .2); color: rgb(255 255 255 / .5); cursor: pointer; transition: all .2s; }
+  .wtc .unit-tab:first-child { border-radius: 4px 0 0 4px; }
+  .wtc .unit-tab:last-child { border-radius: 0 4px 4px 0; }
+  .wtc .unit-tab.active { background: rgb(255 255 255 / .15); color: #fff; border-color: rgb(255 255 255 / .4); }
+  .wtc .specs-table-scroll { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+  .wtc table.specs-table { width: 100%; border-collapse: collapse; min-width: 480px; }
+  .wtc table.specs-table thead th { padding: 10px 24px; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .08em; color: rgb(255 255 255 / .35); text-align: left; }
+  .wtc table.specs-table thead th.hc-1 { color: var(--w1); }
+  .wtc table.specs-table thead th.hc-2 { color: var(--w2); }
+  .wtc table.specs-table thead th.hc-3 { color: var(--w3); }
+  .wtc table.specs-table thead th.hc-4 { color: var(--w4); }
+  .wtc table.specs-table tbody tr { border-top: 1px solid rgb(255 255 255 / .06); transition: background .15s; }
+  .wtc table.specs-table tbody tr:hover { background: rgb(255 255 255 / .04); }
+  .wtc table.specs-table tbody td { padding: 14px 24px; font-size: 14px; color: rgb(255 255 255 / .7); }
+  .wtc table.specs-table tbody td:first-child { font-weight: 700; color: #fff; }
+  .wtc table.specs-table tbody td[class^='val-'] { font-weight: 700; font-size: 16px; }
+  .wtc table.specs-table tbody td.val-1 { color: var(--w1); }
+  .wtc table.specs-table tbody td.val-2 { color: var(--w2); }
+  .wtc table.specs-table tbody td.val-3 { color: var(--w3); }
+  .wtc table.specs-table tbody td.val-4 { color: var(--w4); }
+  .wtc table.specs-table tbody td.diff-val { font-weight: 700; font-size: 13px; }
+  .wtc .diff-p { color: #4ade80 !important; }
+  .wtc .diff-n { color: #ff6b6b !important; }
+  .wtc .diff-z { color: rgb(255 255 255 / .35) !important; }
+
+  @media (max-width: 768px) {
+    .wtc { padding: 15px 0; }
+    .wtc .results-layout { grid-template-columns: 1fr; }
+    .wtc .input-container { display: block; }
+    .wtc .wheel-card { margin-bottom: 8px; border-radius: 8px; }
+    .wtc .card-header { cursor: pointer; position: relative; }
+    .wtc .card-header::after { content: '›'; position: absolute; right: 40px; font-size: 24px; transition: transform .3s; }
+    .wtc .wheel-card.is-active .card-header::after { transform: rotate(90deg); }
+    .wtc .card-body { display: none; }
+    .wtc .wheel-card.is-active .card-body { display: block; border-top: 1px solid rgb(0 0 0 / .05); }
+    .wtc .top-controls { flex-direction: column; gap: 15px; }
+    .wtc .specs-table-header { flex-direction: column; align-items: flex-start; gap: 10px; }
+    /* Mobile quality fix (solution.md §7): keep values on one line; tables scroll inside their card. */
+    .wtc .wheel-table { min-width: 0; }
+    .wtc .wheel-table th, .wtc .wheel-table td { padding: 10px 12px; font-size: 13px; white-space: nowrap; }
+    .wtc .wheel-table td:first-child { width: auto; }
+    .wtc table.specs-table tbody td, .wtc table.specs-table thead th { padding-inline: 14px; white-space: nowrap; }
+  }
+</style>
