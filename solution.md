@@ -32,8 +32,7 @@ Repo: https://github.com/yasinzia01-ops/Tire-Size-Caclulator (public)
 | `/privacy-policy/` | Page | |
 | `/terms-condition/` | Page | Note: slug is `terms-condition` (keep it) |
 
-**Navigation:** Calculators ▸ (Tire size Calculator) · About Us · Blog.
-The other 3 calculators are **not** in the nav at the moment. Keep the nav identical for parity. Adding them to the Calculators dropdown is a one-line change if the owner wants it.
+**Navigation:** Calculators ▸ (Tire size Calculator, Speedometer Error Calculator, Tire Revolutions Per Mile Calculator, Wheel Offset Calculator) · About Us · Blog. The other 3 calculators were added to the dropdown at the owner's request (2026-09-29); on the live site only the Tire size Calculator was listed.
 
 **Footer:** Privacy Policy · Terms & Condition · © 2026 Tiresizecalculator.pro
 
@@ -235,9 +234,7 @@ Keep the current look and section order. Only make these quality fixes, which do
   - Speedometer page reuses the homepage FAQ, same as live (its FAQ schema was identical). Note that the FAQ intro text promises questions about MOT and fixing error that the FAQ doesn't contain.
   - RPM page: the live FAQPage schema listed 3 questions that were not the 6 shown on the page. The schema is now generated from the visible FAQ.
   - RPM page prose/tables were kept verbatim and not recomputed (e.g. "265/70R17 … 21% speedo error" is really ~27%). Worth a copy review.
-- 🛑 **LAUNCH BLOCKERS (owner action needed):**
-  - **Privacy Policy** is an AI template. The live page even shows the template's own instructions ("Important Next Steps… Would you like me to refine this document…"), which were removed in the port. It still says `[Insert Your Email Address Here]`: give a contact email (`src/content/legal/privacy-policy.md`).
-  - **Terms & Condition** is word-for-word the Privacy Policy on the live site (kept identical for parity). It needs real terms (`src/content/legal/terms-condition.md`).
+- ✅ **Privacy Policy and Terms & Condition rewritten** (owner request, 2026-09-29), with no contact details as instructed. Privacy describes what the site actually does: calculators run in the browser, GA4 analytics cookies, hosting logs, no ads, no accounts. Terms cover estimate/accuracy disclaimers, user responsibility for fitment and legality, IP, liability and third-party links. No governing-law clause, because the jurisdiction is unknown; add one if needed. Files: `src/content/legal/*.md`.
 - ℹ️ About page = the same homepage sections as live. Its speedo table is computed (live had wrong signs, e.g. 205/55R16→235/40R18 "−1.8%", really +2.1%).
 - ℹ️ GA4 `gtag.js` loads after the window `load` event (when the browser is idle), so it does not block rendering. Page views are still recorded.
 - 🚫 **Never modify the live WordPress site** (no edits through connectors, MCP tools, wp-admin or the REST API). Only read from it by fetching public pages.

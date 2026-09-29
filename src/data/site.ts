@@ -13,9 +13,14 @@ export interface NavItem {
   children?: NavItem[];
 }
 
-/** Mirrors the live header menu exactly (solution.md §2). */
+/** Header menu. The Calculators dropdown lists all four tools (owner request, 2026-09-29). */
 export const NAV: NavItem[] = [
-  { label: 'Calculators', href: '/', children: [{ label: 'Tire size Calculator', href: '/' }] },
+  { label: 'Calculators', href: '/', children: [
+      { label: 'Tire size Calculator', href: '/' },
+      { label: 'Speedometer Error Calculator', href: '/speedometer-error-calculator/' },
+      { label: 'Tire Revolutions Per Mile Calculator', href: '/tire-revolutions-per-mile-calculator/' },
+      { label: 'Wheel Offset Calculator', href: '/wheel-offset/' },
+    ] },
   { label: 'About Us', href: '/about-us/' },
   { label: 'Blog', href: '/blog/' },
 ];

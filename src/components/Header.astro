@@ -68,12 +68,12 @@ const current = Astro.url.pathname;
   .has-sub { position: relative; }
   .has-sub > a { color: var(--white); }
   .sub {
-    position: absolute; top: 100%; left: 0; min-width: 200px;
+    position: absolute; top: 100%; right: 0; min-width: 280px;
     background: var(--navy); padding: 6px 0;
     opacity: 0; visibility: hidden; transform: translateY(6px);
     transition: opacity .15s, transform .15s, visibility .15s;
   }
-  .sub a { color: var(--white); padding: 10px 18px; }
+  .sub a { color: var(--white); padding: 10px 18px; white-space: nowrap; }
   .sub a:hover { background: rgb(255 255 255 / .08); }
   .has-sub:hover .sub, .has-sub:focus-within .sub { opacity: 1; visibility: visible; transform: none; }
 
