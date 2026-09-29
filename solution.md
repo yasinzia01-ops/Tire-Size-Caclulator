@@ -238,7 +238,7 @@ Mark `[x]` only when the task's **Done when** is verified.
 - [x] **0.3** `BaseLayout`, `Seo`, `Header` (logo + nav + mobile menu, no JS dependency beyond a tiny toggle), `Footer`. **Done when:** layout matches the live header/footer at 375px and 1280px.
 
 ### Phase 1 — Calculators (math first, then UI)
-- [ ] **1.1** `lib/calc/wheelTire.ts` + golden tests against the legacy formulas.
+- [x] **1.1** `lib/calc/wheelTire.ts` + golden tests against the legacy formulas.
 - [ ] **1.2** `WheelTireCalculator.astro`: inputs, add/remove wheels, results, unit toggle, both SVG diagrams.
 - [ ] **1.3** `lib/calc/speedo.ts` + tests → `SpeedoCalculator.astro`.
 - [ ] **1.4** `lib/calc/revsPerMile.ts` + tests → `RevsPerMileCalculator.astro`.
