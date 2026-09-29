@@ -1,0 +1,58 @@
+---
+import SectionHead from '../SectionHead.astro';
+import { ICONS } from '../../data/icons';
+import { CAN_CALCULATE, FEATURES } from '../../data/home';
+---
+<section class="section">
+  <div class="container two-col">
+    <div>
+      <SectionHead eyebrow="Free Online Tool" title="What is the Wheel & Tire Calculator?" />
+      <div class="prose">
+        <p>The <strong>Wheel &amp; Tire Calculator</strong> is a free online tire size calculator that lets you compare two different wheel and tire combinations side by side. Enter your current setup as Wheel 1 (base) and your proposed new size as Wheel 2, and instantly see the full fitment data — no button click needed.</p>
+        <p>It calculates <strong>diameter, circumference, poke, inset, speedometer error, ride height change,</strong> arch gap change, and <strong>ideal rim range</strong> — everything you need to check before ordering new wheels or tires.</p>
+      </div>
+      <div class="features">
+        {FEATURES.map((f) => (
+          <div class={`feature feature--${f.tone}`}>
+            <h3>{f.title}</h3>
+            <p>{f.desc}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+    <aside class="calc-list">
+      <h3>What you can calculate:</h3>
+      <ul>
+        {CAN_CALCULATE.map((it) => (
+          <li>
+            <span class="check" set:html={ICONS.check} />
+            {it.href ? <a href={it.href}>{it.text}</a> : it.text}
+          </li>
+        ))}
+      </ul>
+    </aside>
+  </div>
+</section>
+
+<style>
+  /* What is */
+  .features { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 30px; }
+  .feature { padding: 22px 16px; background: var(--gray-100); border-radius: 10px; border-left: 2px solid; }
+  .feature--red { border-color: var(--red); }
+  .feature--navy { border-color: var(--navy); }
+  .feature h3 { margin: 0 0 6px; font: 800 13px/1.3 var(--font-display); letter-spacing: 1px; text-transform: uppercase; }
+  .feature--red h3 { color: var(--red); }
+  .feature--navy h3 { color: var(--navy); }
+  .feature p { margin: 0; font-size: 12px; line-height: 1.6; }
+  @media (max-width: 480px) { .features { grid-template-columns: 1fr; } }
+  .calc-list { background: var(--gray-100); border: 1px solid var(--border); border-radius: 10px; padding: 26px; margin-top: 110px; }
+  @media (max-width: 1024px) { .calc-list { margin-top: 0; } }
+  .calc-list h3 { margin: 0 0 20px; font: 700 13px/1.3 var(--font-display); letter-spacing: 1.5px; text-transform: uppercase; color: var(--text); }
+  .calc-list ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 12px; }
+  .calc-list li { display: flex; align-items: center; gap: 10px; font-size: 14px; color: var(--ink); }
+  .calc-list a { color: inherit; text-decoration: none; }
+  .calc-list a:hover { color: var(--red); }
+  .check { display: inline-flex; width: 18px; height: 18px; flex: none; color: var(--red); }
+  .check :global(svg) { width: 18px; height: 18px; fill: currentColor; }
+
+</style>

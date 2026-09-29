@@ -1,0 +1,12 @@
+---
+import LegalLayout from '../layouts/LegalLayout.astro';
+import { Content, getHeadings } from '../content/legal/privacy-policy.md';
+---
+<LegalLayout
+  title="Privacy Policy - Tire Size Calculator"
+  heading="Privacy Policy"
+  description="How TireSizeCalculator.pro collects, uses and protects your information, including Google Analytics cookies, and the choices you have."
+  headings={getHeadings()}
+>
+  <Content />
+</LegalLayout>

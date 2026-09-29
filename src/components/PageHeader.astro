@@ -1,0 +1,12 @@
+---
+/** Black title band used by archive and static pages on the live site. */
+interface Props { title: string }
+const { title } = Astro.props;
+---
+<section class="page-header"><div class="container"><h1>{title}</h1></div></section>
+
+<style>
+  .page-header { background: #000; padding-block: 90px; }
+  h1 { margin: 0; color: #fff; font: 900 60px/1.1 var(--font-display); }
+  @media (max-width: 767px) { .page-header { padding-block: 48px; } h1 { font-size: 40px; } }
+</style>

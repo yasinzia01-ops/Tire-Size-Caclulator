@@ -1,0 +1,46 @@
+---
+import { Image } from 'astro:assets';
+import SectionHead from '../SectionHead.astro';
+import sidewallImg from '../../assets/images/tire-sidewall-code.webp';
+import { TIRE_CODE_PARTS } from '../../data/home';
+---
+<section class="section">
+  <div class="container two-col two-col--top">
+    <div>
+      <SectionHead eyebrow="Tire Size Calculator Guide" title="How to Read a Tire Size" lead="Every tire has an alphanumeric code on its sidewall. Understanding what each part means lets you use the tire size calculator correctly and choose the right replacement tires." />
+      <p class="tire-code" aria-label="Example tire code P215/65R15 95H">
+        <span class="r">P</span><span class="n">215/</span> <span class="r">65</span><span class="n">R15 95H</span>
+      </p>
+      <dl class="code-parts">
+        {TIRE_CODE_PARTS.map((p) => (
+          <div class="code-part">
+            <dt>{p.code}</dt>
+            <dd><strong>{p.title}</strong><span>{p.desc}</span></dd>
+          </div>
+        ))}
+      </dl>
+    </div>
+    <figure class="sidewall">
+      <Image src={sidewallImg} alt="Tire sidewall code diagram labelling aspect ratio, load/speed and section width on P215/65R15 95H" loading="lazy" />
+    </figure>
+  </div>
+</section>
+
+<style>
+  /* Tire code */
+  .tire-code {
+    margin: 0 0 16px; padding: 24px; text-align: center; background: var(--gray-200); border: 1px solid #ccc; border-radius: 5px;
+    font: 900 28px/1 var(--font-display); letter-spacing: 1px;
+  }
+  .tire-code .r { color: var(--red); }
+  .tire-code .n { color: var(--navy-3); }
+  .code-parts { margin: 0; display: grid; gap: 16px; }
+  .code-part { display: grid; grid-template-columns: 68px 1fr; gap: 12px; padding: 20px 16px 18px; background: var(--gray-100); border-left: 2px solid var(--red); border-radius: 5px; }
+  .code-part dt { font: 900 18px/1.3 var(--font-display); color: var(--red); }
+  .code-part dd { margin: 0; }
+  .code-part strong { display: block; margin-bottom: 4px; font: 700 16px/1.3 var(--font-semi); }
+  .code-part span { font-size: 13px; line-height: 1.5; }
+  .sidewall { margin: 0; justify-self: center; padding: 20px 20px 30px; background: var(--gray-100); border: 1px solid var(--border); border-radius: 10px; }
+  .sidewall :global(img) { display: block; }
+
+</style>

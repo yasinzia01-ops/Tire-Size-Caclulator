@@ -1,0 +1,36 @@
+---
+import type { MarkdownHeading } from 'astro';
+import BaseLayout from './BaseLayout.astro';
+import PageHeader from '../components/PageHeader.astro';
+
+interface Props { title: string; heading: string; description: string; headings: MarkdownHeading[] }
+const { title, heading, description, headings } = Astro.props;
+const toc = headings.filter((h) => h.depth === 2);
+---
+<BaseLayout title={title} description={description}>
+  <PageHeader title={heading} />
+  <section class="section">
+    <div class="container legal">
+      <nav class="toc" aria-label="Table of Contents">
+        <p class="toc-title">Table of Contents</p>
+        <ol>{toc.map((h) => <li><a href={`#${h.slug}`}>{h.text}</a></li>)}</ol>
+      </nav>
+      <article class="legal-body"><slot /></article>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .legal { display: grid; grid-template-columns: 324px 1fr; gap: 30px; align-items: start; }
+  @media (max-width: 900px) { .legal { grid-template-columns: 1fr; } }
+  .toc { position: sticky; top: 20px; background: var(--gray-100); border: 1px solid #ddd; border-radius: 4px; }
+  @media (max-width: 900px) { .toc { position: static; } }
+  .toc-title { margin: 0; padding: 20px 15px; border-bottom: 1px solid #ddd; font: 700 20px/1.2 var(--font-display); color: var(--ink); }
+  .toc ol { margin: 0; padding: 16px 15px 20px 34px; display: grid; gap: 8px; }
+  .toc li { font-size: 18px; color: var(--ink); }
+  .toc a { color: var(--text); text-decoration: none; }
+  .toc a:hover { color: var(--red); }
+  .legal-body :global(h2) { margin: 0 0 18px; scroll-margin-top: 20px; font: 600 28px/1.25 var(--font-semi); color: #000; }
+  .legal-body :global(h2:not(:first-child)) { margin-top: 30px; }
+  .legal-body :global(p) { margin: 0 0 18px; font-size: 15px; color: #222; }
+</style>

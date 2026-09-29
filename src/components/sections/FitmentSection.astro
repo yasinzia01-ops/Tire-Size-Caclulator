@@ -1,0 +1,29 @@
+---
+import SectionHead from '../SectionHead.astro';
+import { ICONS } from '../../data/icons';
+import { FITMENT } from '../../data/home';
+---
+<section class="section section--light">
+  <div class="container">
+    <SectionHead eyebrow="Fitment Guide" title="Poke, Inset & Rubbing — Explained" lead="Three critical fitment measurements you need to understand before changing wheel size or offset. Our wheel offset calculator shows all three instantly." />
+    <div class="cards-3">
+      {FITMENT.map((f) => (
+        <div class="fit-card">
+          <span class="icon-tile" set:html={ICONS[f.icon]} />
+          <h3>{f.title}</h3>
+          <p>{f.desc}</p>
+        </div>
+      ))}
+    </div>
+  </div>
+</section>
+
+<style>
+  /* Fitment */
+  .fit-card { padding: 38px 20px 30px; background: #fff; border: 1px solid var(--border); border-radius: 10px; }
+  .icon-tile { display: grid; place-items: center; width: 42px; height: 42px; margin-bottom: 26px; background: var(--pink-50); border-radius: 5px; }
+  .icon-tile :global(svg) { width: 22px; height: 22px; }
+  .fit-card h3 { margin: 0 0 14px; font: 700 17px/1.3 var(--font-semi); }
+  .fit-card p { margin: 0; font-size: 13px; }
+
+</style>

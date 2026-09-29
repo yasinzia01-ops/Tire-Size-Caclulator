@@ -1,0 +1,41 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PageHeader from '../components/PageHeader.astro';
+import WhatIsSection from '../components/sections/WhatIsSection.astro';
+import FitmentSection from '../components/sections/FitmentSection.astro';
+import ReadTireSizeSection from '../components/sections/ReadTireSizeSection.astro';
+import SpeedoSection from '../components/sections/SpeedoSection.astro';
+import { organizationSchema } from '../data/site';
+
+// The live About page repeats these homepage sections, in this order.
+const ABOUT_SPEEDO_COPY = [
+  'Changing your tire size directly affects your speedometer accuracy. Here’s how to calculate speedo error and what it means for your vehicle.',
+  'Your speedometer works by counting the number of wheel revolutions per second and multiplying by the tire’s circumference to calculate speed. When you fit a larger-diameter tire, each revolution covers <strong>more distance</strong> — your actual speed is higher than displayed. With a smaller tire, the opposite occurs.',
+  'A tire size difference of just 3% from OEM spec can cause your speedo to read 2–3 mph off at 60 mph. This also affects your odometer, trip computer, and — critically — ABS and traction control calibration.',
+  '<strong>General rule:</strong> Taller tire = speedo reads LOW (you’re going faster than shown). Shorter tire = speedo reads HIGH (you’re going slower than shown).',
+];
+const ABOUT_CHANGES: [string, string][] = [
+  ['205/55R16', '225/45R17'],
+  ['205/55R16', '215/55R16'],
+  ['205/55R16', '235/40R18'],
+  ['225/45R17', '245/35R19'],
+  ['265/70R17', '285/75R17'],
+];
+const aboutPage = {
+  '@context': 'https://schema.org',
+  '@type': 'AboutPage',
+  name: 'About Us - Tire Size Calculator',
+  about: { '@id': organizationSchema['@id'] },
+};
+---
+<BaseLayout
+  title="About Us - Tire Size Calculator"
+  description="Learn who builds TireSizeCalculator.pro, how our free tire size, speedometer error and wheel offset calculators work, and the sources behind them."
+  schema={[organizationSchema, aboutPage]}
+>
+  <PageHeader title="About Us" />
+  <WhatIsSection />
+  <FitmentSection />
+  <ReadTireSizeSection />
+  <SpeedoSection rows={ABOUT_CHANGES} variant="about" copy={ABOUT_SPEEDO_COPY} />
+</BaseLayout>

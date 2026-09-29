@@ -1,0 +1,12 @@
+---
+import LegalLayout from '../layouts/LegalLayout.astro';
+import { Content, getHeadings } from '../content/legal/terms-condition.md';
+---
+<LegalLayout
+  title="Terms & Condition - Tire Size Calculator"
+  heading="Terms & Condition"
+  description="The terms for using TireSizeCalculator.pro's free tire size and fitment calculators, including accuracy disclaimers and your responsibilities."
+  headings={getHeadings()}
+>
+  <Content />
+</LegalLayout>

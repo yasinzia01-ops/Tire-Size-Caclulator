@@ -235,6 +235,10 @@ Keep the current look and section order. Only make these quality fixes, which do
   - Speedometer page reuses the homepage FAQ, same as live (its FAQ schema was identical). Note that the FAQ intro text promises questions about MOT and fixing error that the FAQ doesn't contain.
   - RPM page: the live FAQPage schema listed 3 questions that were not the 6 shown on the page. The schema is now generated from the visible FAQ.
   - RPM page prose/tables were kept verbatim and not recomputed (e.g. "265/70R17 … 21% speedo error" is really ~27%). Worth a copy review.
+- 🛑 **LAUNCH BLOCKERS (owner action needed):**
+  - **Privacy Policy** is an AI template. The live page even shows the template's own instructions ("Important Next Steps… Would you like me to refine this document…"), which were removed in the port. It still says `[Insert Your Email Address Here]`: give a contact email (`src/content/legal/privacy-policy.md`).
+  - **Terms & Condition** is word-for-word the Privacy Policy on the live site (kept identical for parity). It needs real terms (`src/content/legal/terms-condition.md`).
+- ℹ️ About page = the same homepage sections as live. Its speedo table is computed (live had wrong signs, e.g. 205/55R16→235/40R18 "−1.8%", really +2.1%).
 - 🚫 **Never modify the live WordPress site** (no edits through connectors, MCP tools, wp-admin or the REST API). Only read from it by fetching public pages.
 - Later (not v1): add the 3 extra calculators to the nav, shareable URL params, tire-code input, programmatic size-comparison pages.
 
@@ -268,8 +272,8 @@ Mark `[x]` only when the task's **Done when** is verified.
 - [x] **2.2** The 3 calculator pages with their full content + FAQ JSON-LD.
 - [x] **2.3** Content collection + 4 posts + `PostLayout` (Article + Breadcrumb JSON-LD).
 - [x] **2.4** `/blog/` listing (cards) + `/category/wheel-offset-calculator/`.
-- [ ] **2.5** About, Privacy, Terms.
-- [ ] **2.6** Images downloaded, optimized, alt text written.
+- [x] **2.5** About, Privacy, Terms.
+- [x] **2.6** Images downloaded, optimized, alt text written.
 
 ### Phase 3 — SEO & polish
 - [ ] **3.1** Titles/descriptions/canonicals per §8a; OG image.
