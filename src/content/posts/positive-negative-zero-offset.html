@@ -1,0 +1,229 @@
+
+
+
+
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    { "@type": "Question", "name": "What is positive wheel offset?", "acceptedAnswer": { "@type": "Answer", "text": "Positive wheel offset (ET+) means the mounting face of the wheel is positioned in front of the centerline  closer to the outer face. This moves the wheel inward toward the suspension and engine bay. Most front-wheel-drive cars and modern SUVs use positive offset ranging from ET35 to ET55." } },
+    { "@type": "Question", "name": "What is negative wheel offset?", "acceptedAnswer": { "@type": "Answer", "text": "Negative wheel offset (ET-) means the mounting face is behind the wheel centerline  closer to the inner face. This moves the wheel outward toward the fender, creating poke. Negative offset is common on off-road trucks, lifted 4x4s, and stance builds, typically ranging from ET0 to ET-30 or lower." } },
+    { "@type": "Question", "name": "What is zero wheel offset (ET0)?", "acceptedAnswer": { "@type": "Answer", "text": "Zero offset (ET0) means the wheel's mounting face is positioned exactly at the centerline of the wheel width. The wheel sits centered on the hub with equal distance inward and outward. ET0 is used on older American trucks, classic muscle cars, and some specialized off-road builds." } },
+    { "@type": "Question", "name": "What offset should I use for my car?", "acceptedAnswer": { "@type": "Answer", "text": "Use an offset within plus or minus 10mm of your vehicle's factory ET for safe daily driving. Front-wheel-drive cars need ET35 to ET50. Rear-wheel-drive sports cars use ET20 to ET40. Trucks use ET18 to ET30. Going more than 20mm from stock requires checking fender and suspension clearance." } }
+  ]
+}
+</script>
+
+<style>
+.sp4*{box-sizing:border-box;margin:0;padding:0}
+.sp4{font-family:'Inter','Segoe UI',Arial,sans-serif;color:#1a1a1a;background:#fff;line-height:1.7;-webkit-font-smoothing:antialiased}
+.sp4-hero{background:#555;padding:55px 20px 50px;text-align:center}
+.sp4-breadcrumb{font-size:13px;color:#ccc;margin-bottom:18px}
+.sp4-breadcrumb a{color:#fff;text-decoration:none;font-weight:600}
+.sp4-breadcrumb a:hover{text-decoration:underline}
+.sp4-hero h1{font-size:clamp(24px,4vw,48px);font-weight:900;color:#fff;text-transform:uppercase;letter-spacing:-1px;line-height:1.1;margin-bottom:16px}
+.sp4-hero h1 span{color:#cc0000}
+.sp4-hero-desc{font-size:16px;color:#ddd;max-width:580px;margin:0 auto 20px;line-height:1.6}
+.sp4-meta{font-size:13px;color:#bbb}
+.sp4-meta strong{color:#fff}
+.sp4-content{padding:55px 20px 30px}
+.sp4-wrap{max-width:860px;margin:0 auto}
+.sp4-content h2{font-size:clamp(18px,2.5vw,24px);font-weight:900;text-transform:uppercase;color:#1a1a1a;margin-top:50px;margin-bottom:10px;line-height:1.25}
+.sp4-content h2:first-of-type{margin-top:0}
+.sp4-content h2::after{content:'';display:block;width:40px;height:3px;background:#cc0000;margin-top:8px}
+.sp4-answer{background:#f9f9f9;border-left:4px solid #cc0000;border-radius:0 6px 6px 0;padding:14px 20px;font-size:15px;color:#333;margin:14px 0 18px;line-height:1.7}
+.sp4-content p{font-size:15px;color:#444;margin-bottom:16px;line-height:1.8}
+.sp4-content strong{color:#1a1a1a}
+.sp4-content a{color:#cc0000;text-decoration:none;font-weight:600}
+.sp4-content a:hover{text-decoration:underline}
+/* 3 offset cards */
+.sp4-offset-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin:24px 0}
+@media(max-width:620px){.sp4-offset-grid{grid-template-columns:1fr}}
+.sp4-offset-card{border-radius:10px;overflow:hidden;border:1px solid #e0e0e0}
+.sp4-offset-card-head{padding:14px 18px;font-size:12px;font-weight:800;letter-spacing:2px;text-transform:uppercase;color:#fff}
+.sp4-offset-card-head.positive{background:#1a7cc8}
+.sp4-offset-card-head.zero{background:#1a1a1a}
+.sp4-offset-card-head.negative{background:#cc0000}
+.sp4-offset-card-body{background:#fff;padding:16px 18px}
+.sp4-offset-card-body p{font-size:13px;color:#555;margin-bottom:6px}
+.sp4-offset-card-body .range{font-size:14px;font-weight:800;color:#1a1a1a;margin-top:8px}
+/* Table */
+.sp4-table-wrap{overflow-x:auto;margin:22px 0;border-radius:8px;border:1px solid #e0e0e0;box-shadow:0 2px 8px rgba(0,0,0,.05)}
+.sp4-table{width:100%;border-collapse:collapse;font-size:14px}
+.sp4-table thead{background:#1a1a1a}
+.sp4-table thead th{padding:12px 16px;text-align:left;font-weight:800;font-size:11px;letter-spacing:1.5px;text-transform:uppercase;color:#fff}
+.sp4-table tbody tr{border-bottom:1px solid #eee}
+.sp4-table tbody tr:last-child{border-bottom:none}
+.sp4-table tbody tr:nth-child(even){background:#fafafa}
+.sp4-table tbody td{padding:11px 16px;color:#555}
+.sp4-table tbody td:first-child{color:#1a1a1a;font-weight:700}
+.t-blue{color:#1a7cc8;font-weight:700}
+.t-red{color:#cc0000;font-weight:700}
+.t-dark{color:#1a1a1a;font-weight:700}
+/* Checklist */
+.sp4-list{background:#f4f4f4;border-radius:8px;padding:20px 22px;margin:20px 0}
+.sp4-list ul{list-style:none;padding:0}
+.sp4-list li{font-size:14px;color:#333;padding:7px 0 7px 28px;position:relative;border-bottom:1px solid #e4e4e4}
+.sp4-list li:last-child{border-bottom:none}
+.sp4-list li::before{content:'✔';color:#cc0000;font-size:13px;font-weight:700;position:absolute;left:0;top:8px}
+/* Related */
+.sp4-related{background:#f4f4f4;border-radius:8px;padding:22px 24px;margin:40px 0 30px}
+.sp4-related-title{font-size:11px;font-weight:800;letter-spacing:2px;text-transform:uppercase;color:#999;margin-bottom:14px}
+.sp4-related-links{display:flex;flex-wrap:wrap;gap:10px}
+.sp4-related-links a{display:inline-block;background:#fff;border:1.5px solid #ddd;color:#cc0000;text-decoration:none;font-size:13px;font-weight:700;padding:8px 16px;border-radius:6px;transition:border-color 0.2s}
+.sp4-related-links a:hover{border-color:#cc0000}
+/* FAQ */
+.sp4-faq{padding:10px 20px 60px}
+.sp4-faq h2{font-size:clamp(18px,2.5vw,24px);font-weight:900;text-transform:uppercase;color:#1a1a1a;margin-bottom:10px}
+.sp4-faq h2::after{content:'';display:block;width:40px;height:3px;background:#cc0000;margin-top:8px;margin-bottom:26px}
+.sp4-faq-item{border-bottom:1px solid #eee;padding:18px 0}
+.sp4-faq-item:first-child{padding-top:26px}
+.sp4-faq-item:last-child{border-bottom:none}
+.sp4-faq-q{font-size:15px;font-weight:800;color:#1a1a1a;margin-bottom:8px;line-height:1.4}
+.sp4-faq-a{font-size:14px;color:#555;line-height:1.75}
+</style>
+
+<div class="sp4">
+
+<section class="sp4-hero">
+  <div class="sp4-breadcrumb">
+    <a href="https://tiresizecalculator.pro/">Home</a> &rsaquo;
+    <a href="https://tiresizecalculator.pro/wheel-offset-calculator/">Wheel Offset Calculator</a> &rsaquo;
+    Positive vs Negative vs Zero Offset
+  </div>
+  <h1><span>Positive</span> vs Negative vs Zero Wheel Offset</h1>
+  <p class="sp4-hero-desc">A complete guide to all three offset types  exact ET ranges, fitment effects, handling changes, and which offset is right for your vehicle.</p>
+  <div class="sp4-meta">Written by <strong>Jake Harmon</strong> · ASE-Certified Mechanic · Updated July 2026</div>
+</section>
+
+<section class="sp4-content">
+  <div class="sp4-wrap">
+
+    <div class="sp4-offset-grid">
+      <div class="sp4-offset-card">
+        <div class="sp4-offset-card-head positive">Positive (ET+)</div>
+        <div class="sp4-offset-card-body">
+          <p>Mounting face in front of centerline. Wheel sits inward.</p>
+          <div class="range">ET15 to ET55+</div>
+        </div>
+      </div>
+      <div class="sp4-offset-card">
+        <div class="sp4-offset-card-head zero">Zero (ET0)</div>
+        <div class="sp4-offset-card-body">
+          <p>Mounting face exactly at centerline. Neutral position.</p>
+          <div class="range">ET0</div>
+        </div>
+      </div>
+      <div class="sp4-offset-card">
+        <div class="sp4-offset-card-head negative">Negative (ET−)</div>
+        <div class="sp4-offset-card-body">
+          <p>Mounting face behind centerline. Wheel sits outward.</p>
+          <div class="range">ET−1 to ET−50+</div>
+        </div>
+      </div>
+    </div>
+
+    <h2>What is positive wheel offset?</h2>
+    <div class="sp4-answer">
+      Positive offset (ET+) means the wheel's mounting face is positioned in front of the centerline  closer to the outer face of the wheel. This moves the entire wheel inward toward the suspension and engine bay. Most modern passenger cars, SUVs, and minivans use positive offset between ET35 and ET55.
+    </div>
+    <p>Positive offset was adopted widely with the introduction of front-wheel-drive vehicles in the 1970s and 1980s. FWD vehicles require the wheel to sit close to the hub and CV joint, which demands high positive offset. A car with ET50 wheels has its mounting face sitting <strong>50mm in front of the wheel centerline</strong>  meaning the inner part of the wheel extends significantly inward behind the brake assembly.</p>
+    <p><strong>Key effects of positive offset:</strong> more inner fender clearance, less outer fender clearance, wheel sits further under the car, reduced scrub radius, lighter steering feel.</p>
+
+    <h2>What is negative wheel offset?</h2>
+    <div class="sp4-answer">
+      Negative offset (ET−) means the wheel's mounting face is positioned behind the centerline  closer to the inner face of the wheel. This moves the wheel outward toward the fender, creating poke. Negative offset is common on off-road trucks, lifted 4x4 vehicles, and stance builds, typically ranging from ET0 to ET−30.
+    </div>
+    <p>Negative offset widens the vehicle's track  the distance between the left and right wheels. A wider track improves cornering stability but increases stress on wheel bearings and CV joints. Going from ET45 to ET−10 moves the wheel <strong>55mm outward</strong>. On a stock vehicle with 20mm of fender clearance, this would result in <strong>35mm of poke</strong>  requiring significant fender modification.</p>
+    <p><strong>Key effects of negative offset:</strong> wider visual stance, more poke, increased track width, higher scrub radius, heavier steering, increased bearing wear over time.</p>
+
+    <h2>What is zero wheel offset (ET0)?</h2>
+    <div class="sp4-answer">
+      Zero offset (ET0) means the wheel's mounting face sits exactly at the centerline of the wheel width. The wheel extends equally inward and outward from the hub. ET0 is used on older American trucks, classic muscle cars, and certain off-road builds where a neutral, centered wheel position is required.
+    </div>
+    <p>ET0 is not a universal neutral starting point  it only means the mounting face aligns with the center of that specific wheel. A vehicle designed for ET45 will have <strong>45mm more poke</strong> if ET0 wheels are fitted. ET0 does not mean the wheel will sit in the same position as stock on most modern vehicles.</p>
+
+    <h2>What offset do most stock cars come with from the factory?</h2>
+    <div class="sp4-answer">
+      Most front-wheel-drive cars come with ET35 to ET50 from the factory. Rear-wheel-drive sports cars use ET20 to ET40. SUVs and crossovers use ET40 to ET55. Pickup trucks come with ET18 to ET30. Sports compacts and hot hatches typically use ET38 to ET48 as the OEM fitment.
+    </div>
+
+    <div class="sp4-table-wrap">
+      <table class="sp4-table">
+        <thead>
+          <tr><th>Vehicle Type</th><th>Factory ET Range</th><th>Offset Type</th><th>Typical Wheel Width</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>FWD Compact / Sedan</td><td class="t-blue">ET38 – ET50</td><td>Positive</td><td>6.5" – 7.5"</td></tr>
+          <tr><td>FWD Hot Hatch</td><td class="t-blue">ET35 – ET48</td><td>Positive</td><td>7" – 8"</td></tr>
+          <tr><td>RWD Sports Car</td><td class="t-blue">ET20 – ET40</td><td>Positive</td><td>8" – 9.5"</td></tr>
+          <tr><td>SUV / Crossover</td><td class="t-blue">ET40 – ET55</td><td>Positive</td><td>7" – 8.5"</td></tr>
+          <tr><td>Pickup Truck (stock)</td><td class="t-blue">ET18 – ET30</td><td>Positive</td><td>7.5" – 9"</td></tr>
+          <tr><td>Lifted Truck</td><td class="t-dark">ET0 – ET15</td><td>Near Zero</td><td>9" – 12"</td></tr>
+          <tr><td>Off-Road 4x4</td><td class="t-red">ET−5 – ET−25</td><td>Negative</td><td>9" – 12"</td></tr>
+          <tr><td>JDM / Stance Build</td><td class="t-red">ET−10 – ET−45</td><td>Negative</td><td>9" – 12"</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h2>When should I use negative offset?</h2>
+    <div class="sp4-answer">
+      Use negative offset when you want a wider visual stance, when fitment on a lifted truck requires more clearance from the suspension, or when building a stance or off-road vehicle. Negative offset on a stock daily driver almost always causes fender rubbing and requires body modification to make road-legal.
+    </div>
+    <div class="sp4-list">
+      <ul>
+        <li><strong>Lifted trucks</strong>  Negative offset fills the wider fender opening created by the lift kit and adds suspension clearance</li>
+        <li><strong>Off-road builds</strong>  Negative offset keeps the tire outside the suspension during full articulation, preventing contact</li>
+        <li><strong>Stance builds</strong>  Negative offset creates poke for an aggressive visual width</li>
+        <li><strong>Wide-body vehicles</strong>  Negative offset fills the wider fender flares added to the bodywork</li>
+      </ul>
+    </div>
+
+    <h2>How does changing from positive to negative offset affect handling?</h2>
+    <div class="sp4-answer">
+      Moving from positive to negative offset increases the scrub radius  the distance between the steering axis and the tire contact patch. A larger scrub radius makes steering feel heavier, increases sensitivity to road irregularities, and accelerates stress on wheel bearings and CV joints under cornering and braking loads.
+    </div>
+    <p>On <strong>front-wheel-drive vehicles</strong>, running very negative offset causes torque steer during hard acceleration  the steering pulls left or right as the CV joints fight against the wider angle. On <strong>rear-wheel-drive vehicles</strong>, negative offset widens the rear track, which improves straight-line stability and cornering but increases bearing wear. A change of more than <strong>±20mm from stock ET</strong> will produce noticeable handling differences on any vehicle.</p>
+    <p>Use our <a href="https://tiresizecalculator.pro/wheel-offset-calculator/">wheel offset calculator</a> to see exactly how much your outer wheel position changes before committing to new wheels. Pair this with the <a href="https://tiresizecalculator.pro/">tire size calculator</a> on our homepage to verify your new tire size also fits correctly.</p>
+
+    <div class="sp4-related">
+      <div class="sp4-related-title">Related Calculators &amp; Guides</div>
+      <div class="sp4-related-links">
+        <a href="https://tiresizecalculator.pro/wheel-offset-calculator/">Wheel Offset Calculator</a>
+        <a href="https://tiresizecalculator.pro/">Tire Size Calculator</a>
+        <a href="https://tiresizecalculator.pro/guides/what-is-wheel-offset/">What is Wheel Offset?</a>
+        <a href="https://tiresizecalculator.pro/guides/wheel-offset-vs-backspacing/">Offset vs Backspacing</a>
+        <a href="https://tiresizecalculator.pro/guides/poke-flush-tucked/">Poke vs Flush vs Tucked</a>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<section class="sp4-faq">
+  <div class="sp4-wrap">
+    <h2>Frequently Asked Questions</h2>
+    <div>
+      <div class="sp4-faq-item">
+        <div class="sp4-faq-q">What is positive wheel offset?</div>
+        <div class="sp4-faq-a">Positive offset (ET+) means the mounting face is in front of the centerline  the wheel sits inward toward the suspension. Most front-wheel-drive cars and modern SUVs use positive offset from ET35 to ET55. Higher positive ET means the wheel sits further inward under the vehicle.</div>
+      </div>
+      <div class="sp4-faq-item">
+        <div class="sp4-faq-q">What is negative wheel offset?</div>
+        <div class="sp4-faq-a">Negative offset (ET−) means the mounting face is behind the centerline  the wheel extends outward toward the fender, creating poke. Common on off-road trucks and stance builds, ranging from ET0 to ET−30 or lower. Negative offset widens the vehicle's track width.</div>
+      </div>
+      <div class="sp4-faq-item">
+        <div class="sp4-faq-q">What is zero wheel offset (ET0)?</div>
+        <div class="sp4-faq-a">Zero offset (ET0) means the mounting face is exactly at the wheel centerline. The wheel extends equally inward and outward from the hub. ET0 is common on older American trucks and classic muscle cars. It does not mean the wheel sits in a neutral position on modern vehicles designed for positive ET.</div>
+      </div>
+      <div class="sp4-faq-item">
+        <div class="sp4-faq-q">What offset should I use for my car?</div>
+        <div class="sp4-faq-a">Stay within ±10mm of your vehicle's factory ET for safe daily driving. FWD cars need ET35 to ET50. RWD sports cars use ET20 to ET40. Trucks use ET18 to ET30. Going more than 20mm from stock requires checking fender and suspension clearance before fitting new wheels.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+</div>

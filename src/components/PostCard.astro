@@ -1,0 +1,45 @@
+---
+import { Image } from 'astro:assets';
+import type { Post } from '../data/posts';
+
+interface Props {
+  post: Post;
+  /** Archive style shows the excerpt and "Read More »" (live category page). */
+  excerpt?: boolean;
+  headingLevel?: 'h2' | 'h3';
+}
+const { post, excerpt = false, headingLevel: H = 'h3' } = Astro.props;
+const href = `/${post.slug}/`;
+---
+<article class="post-card">
+  <a href={href} class="thumb" tabindex="-1" aria-hidden="true">
+    <Image src={post.image} alt="" widths={[400, 700]} sizes="(max-width: 767px) 100vw, 340px" loading="lazy" />
+  </a>
+  <div class="body">
+    <a class="chip" href={`/category/${post.category.slug}/`}>{post.category.name}</a>
+    <H class="title"><a href={href}>{post.title}</a></H>
+    {excerpt && (
+      <>
+        <p class="excerpt">{post.description}</p>
+        <a class="more" href={href} aria-label={`Read more: ${post.title}`}>Read More »</a>
+      </>
+    )}
+  </div>
+</article>
+
+<style>
+  .post-card { display: flex; flex-direction: column; background: var(--gray-100); border-radius: 10px; overflow: hidden; }
+  .thumb { display: block; line-height: 0; }
+  .thumb :global(img) { width: 100%; aspect-ratio: 1376 / 768; object-fit: cover; filter: brightness(50%); border-radius: 10px 10px 0 0; transition: filter .2s; }
+  .post-card:hover .thumb :global(img) { filter: brightness(70%); }
+  .body { display: flex; flex-direction: column; align-items: flex-start; gap: 10px; padding: 5%; }
+  .chip {
+    background: #efdbde; padding: 2px 4px; border-radius: 5px; text-decoration: none;
+    font: 700 10px/16px var(--font-body); text-transform: uppercase; color: var(--red-bright);
+  }
+  .title { margin: 0; font: 700 15px/21px var(--font-semi); color: var(--ink); }
+  .title a { color: inherit; text-decoration: none; }
+  .title a:hover { color: var(--red); }
+  .excerpt { margin: 0; font-size: 14px; line-height: 1.6; color: var(--text); }
+  .more { font: 700 13px/1 var(--font-display); color: var(--red); text-decoration: none; }
+</style>

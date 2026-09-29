@@ -1,0 +1,16 @@
+---
+import PostCard from './PostCard.astro';
+import type { Post } from '../data/posts';
+
+interface Props { posts: Post[]; excerpt?: boolean; headingLevel?: 'h2' | 'h3' }
+const { posts, excerpt, headingLevel } = Astro.props;
+---
+<div class="post-grid">
+  {posts.map((post) => <PostCard post={post} excerpt={excerpt} headingLevel={headingLevel} />)}
+</div>
+
+<style>
+  .post-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 30px; }
+  @media (max-width: 1024px) { .post-grid { grid-template-columns: repeat(2, 1fr); } }
+  @media (max-width: 600px) { .post-grid { grid-template-columns: 1fr; } }
+</style>

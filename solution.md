@@ -222,6 +222,9 @@ Keep the current look and section order. Only make these quality fixes, which do
 - ✅ Speedo error: use `(New − Original) ÷ Original` (see §4).
 - ✅ About, Privacy and Terms: write new, distinct meta descriptions (done in §8a). Check that the Privacy Policy body mentions Google Analytics cookies.
 - ℹ️ Legacy wheel-offset widget CSS had unclosed `@media` blocks, so most calculator styles applied only below 600px on the live site. The port closes them, so desktop now gets the intended styling. The browser `alert()` for empty fields is replaced by an inline message.
+- ⚠️ **Broken internal links on the live site, fixed in the port** (`src/lib/legacyHtml.ts`): `/wheel-offset-calculator/`→`/wheel-offset/`, `/what-is-wheel-offset/` and `/guides/what-is-wheel-offset/`→`/what-is-wheel-offset-et/`, `/guides/poke-flush-tucked/`, `/guides/wheel-offset-vs-backspacing/`, `/revolutions-per-mile-calculator/`, `/tire-diameter-calculator/`→`/`. These paths also get 301s in `vercel.json` (task 3.2).
+- ⚠️ **Linked but never published** (text kept, link removed; possible future articles): `/what-is-tire-revolutions-per-mile/`, `/tire-rpm-odometer-accuracy/`, `/how-tire-size-affects-rpm/`, `/tire-rolling-circumference/`, `/speedometer-error-after-tire-change/`, `/how-to-fix-speedometer-error/`, `/how-much-speedometer-error-is-legal/`.
+- ℹ️ Posts are verbatim legacy HTML (`src/content/posts/*.html`) served by `src/pages/[slug].astro`, with metadata in `src/data/posts.ts`. `positive-negative-zero-offset` is bylined **Jake Harmon**; the others are bylined mike.themechanic. The live category archive layout was broken (huge gaps), so it has a clean card grid now.
 - 🚫 **Never modify the live WordPress site** (no edits through connectors, MCP tools, wp-admin or the REST API). Only read from it by fetching public pages.
 - Later (not v1): add the 3 extra calculators to the nav, shareable URL params, tire-code input, programmatic size-comparison pages.
 
@@ -253,8 +256,8 @@ Mark `[x]` only when the task's **Done when** is verified.
 ### Phase 2 — Pages & content
 - [ ] **2.1** Home page: all 14 sections in live order, chart data in `src/data/`, FAQ + JSON-LD.
 - [ ] **2.2** The 3 calculator pages with their full content + FAQ JSON-LD.
-- [ ] **2.3** Content collection + 4 posts + `PostLayout` (Article + Breadcrumb JSON-LD).
-- [ ] **2.4** `/blog/` listing (cards) + `/category/wheel-offset-calculator/`.
+- [x] **2.3** Content collection + 4 posts + `PostLayout` (Article + Breadcrumb JSON-LD).
+- [x] **2.4** `/blog/` listing (cards) + `/category/wheel-offset-calculator/`.
 - [ ] **2.5** About, Privacy, Terms.
 - [ ] **2.6** Images downloaded, optimized, alt text written.
 

@@ -1,0 +1,231 @@
+
+
+
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    { "@type": "Question", "name": "What is the difference between wheel offset and backspacing?", "acceptedAnswer": { "@type": "Answer", "text": "Wheel offset (ET) measures from the mounting face to the wheel centerline in millimeters. Backspacing measures from the mounting face to the inner lip of the wheel in inches. Both describe how far inward or outward the wheel sits, but they use different reference points and measurement systems." } },
+    { "@type": "Question", "name": "How do I convert backspacing to offset?", "acceptedAnswer": { "@type": "Answer", "text": "To convert backspacing to ET: multiply backspacing in inches by 25.4, then subtract half the wheel width in mm. Formula: ET = (Backspacing x 25.4) minus (Width x 25.4 divided by 2). Example: 5.5 inch backspacing on an 8-inch wide wheel equals ET38." } },
+    { "@type": "Question", "name": "Which is more commonly used  offset or backspacing?", "acceptedAnswer": { "@type": "Answer", "text": "Wheel offset (ET) is the global standard used by European, Asian, and most international manufacturers. Backspacing is primarily used in the North American truck and off-road market. Aftermarket wheel brands list both measurements, but ET is more universally recognized worldwide." } },
+    { "@type": "Question", "name": "Can I use a wheel with the wrong backspacing?", "acceptedAnswer": { "@type": "Answer", "text": "Using a wheel with incorrect backspacing will shift the tire position inward or outward from the stock location. Too much backspacing causes inner suspension contact. Too little backspacing causes outer fender contact. Always verify both backspacing and ET match your vehicle's clearance requirements." } }
+  ]
+}
+</script>
+
+<style>
+.sp2*{box-sizing:border-box;margin:0;padding:0}
+.sp2{font-family:'Inter','Segoe UI',Arial,sans-serif;color:#1a1a1a;background:#fff;line-height:1.7;-webkit-font-smoothing:antialiased}
+.sp2-hero{background:#555;padding:55px 20px 50px;text-align:center}
+.sp2-breadcrumb{font-size:13px;color:#ccc;margin-bottom:18px}
+.sp2-breadcrumb a{color:#fff;text-decoration:none;font-weight:600}
+.sp2-breadcrumb a:hover{text-decoration:underline}
+.sp2-hero h1{font-size:clamp(26px,4.2vw,50px);font-weight:900;color:#fff;text-transform:uppercase;letter-spacing:-1px;line-height:1.1;margin-bottom:16px}
+.sp2-hero h1 span{color:#cc0000}
+.sp2-hero-desc{font-size:16px;color:#ddd;max-width:560px;margin:0 auto 20px;line-height:1.6}
+.sp2-meta{font-size:13px;color:#bbb}
+.sp2-meta strong{color:#fff}
+.sp2-content{padding:55px 20px 30px}
+.sp2-wrap{max-width:860px;margin:0 auto}
+.sp2-content h2{font-size:clamp(18px,2.5vw,24px);font-weight:900;text-transform:uppercase;color:#1a1a1a;margin-top:50px;margin-bottom:10px;line-height:1.25}
+.sp2-content h2:first-of-type{margin-top:0}
+.sp2-content h2::after{content:'';display:block;width:40px;height:3px;background:#cc0000;margin-top:8px}
+.sp2-answer{background:#f9f9f9;border-left:4px solid #cc0000;border-radius:0 6px 6px 0;padding:14px 20px;font-size:15px;color:#333;margin:14px 0 18px;line-height:1.7}
+.sp2-content p{font-size:15px;color:#444;margin-bottom:16px;line-height:1.8}
+.sp2-content strong{color:#1a1a1a}
+.sp2-content a{color:#cc0000;text-decoration:none;font-weight:600}
+.sp2-content a:hover{text-decoration:underline}
+/* Comparison table */
+.sp2-compare{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin:22px 0}
+@media(max-width:580px){.sp2-compare{grid-template-columns:1fr}}
+.sp2-col{border-radius:10px;overflow:hidden;border:1px solid #e0e0e0}
+.sp2-col-head{padding:13px 18px;font-size:12px;font-weight:800;letter-spacing:2px;text-transform:uppercase;color:#fff}
+.sp2-col-head.blue{background:#1a7cc8}
+.sp2-col-head.red{background:#a8122a}
+.sp2-col-body{padding:16px 18px;background:#fff}
+.sp2-col-body li{font-size:14px;color:#444;padding:6px 0 6px 20px;position:relative;border-bottom:1px solid #f0f0f0;list-style:none}
+.sp2-col-body li:last-child{border-bottom:none}
+.sp2-col-body li::before{content:'→';color:#cc0000;font-weight:700;position:absolute;left:0;top:7px;font-size:12px}
+/* Formula box */
+.sp2-formula{background:#1a1a1a;border-radius:8px;padding:22px 24px;margin:22px 0;text-align:center}
+.sp2-formula-label{font-size:11px;font-weight:800;letter-spacing:2px;text-transform:uppercase;color:#888;margin-bottom:12px}
+.sp2-formula-eq{font-size:clamp(14px,2.2vw,18px);font-weight:800;color:#fff;line-height:1.6}
+.sp2-formula-eq span{color:#cc0000}
+.sp2-formula-example{font-size:13px;color:#aaa;margin-top:10px}
+/* Data table */
+.sp2-table-wrap{overflow-x:auto;margin:22px 0;border-radius:8px;border:1px solid #e0e0e0;box-shadow:0 2px 8px rgba(0,0,0,.05)}
+.sp2-table{width:100%;border-collapse:collapse;font-size:14px}
+.sp2-table thead{background:#1a1a1a}
+.sp2-table thead th{padding:12px 16px;text-align:left;font-weight:800;font-size:11px;letter-spacing:1.5px;text-transform:uppercase;color:#fff}
+.sp2-table tbody tr{border-bottom:1px solid #eee}
+.sp2-table tbody tr:last-child{border-bottom:none}
+.sp2-table tbody tr:nth-child(even){background:#fafafa}
+.sp2-table tbody td{padding:11px 16px;color:#555}
+.sp2-table tbody td:first-child{color:#1a1a1a;font-weight:700}
+/* Related */
+.sp2-related{background:#f4f4f4;border-radius:8px;padding:22px 24px;margin:40px 0 30px}
+.sp2-related-title{font-size:11px;font-weight:800;letter-spacing:2px;text-transform:uppercase;color:#999;margin-bottom:14px}
+.sp2-related-links{display:flex;flex-wrap:wrap;gap:10px}
+.sp2-related-links a{display:inline-block;background:#fff;border:1.5px solid #ddd;color:#cc0000;text-decoration:none;font-size:13px;font-weight:700;padding:8px 16px;border-radius:6px;transition:border-color 0.2s}
+.sp2-related-links a:hover{border-color:#cc0000}
+/* FAQ */
+.sp2-faq{padding:10px 20px 60px}
+.sp2-faq h2{font-size:clamp(18px,2.5vw,24px);font-weight:900;text-transform:uppercase;color:#1a1a1a;margin-bottom:10px}
+.sp2-faq h2::after{content:'';display:block;width:40px;height:3px;background:#cc0000;margin-top:8px;margin-bottom:26px}
+.sp2-faq-item{border-bottom:1px solid #eee;padding:18px 0}
+.sp2-faq-item:first-child{padding-top:26px}
+.sp2-faq-item:last-child{border-bottom:none}
+.sp2-faq-q{font-size:15px;font-weight:800;color:#1a1a1a;margin-bottom:8px;line-height:1.4}
+.sp2-faq-a{font-size:14px;color:#555;line-height:1.75}
+</style>
+
+<div class="sp2">
+
+<section class="sp2-hero">
+  <div class="sp2-breadcrumb">
+    <a href="https://tiresizecalculator.pro/">Home</a> &rsaquo;
+    <a href="https://tiresizecalculator.pro/wheel-offset-calculator/">Wheel Offset Calculator</a> &rsaquo;
+    Offset vs Backspacing
+  </div>
+  <h1>Wheel Offset vs <span>Backspacing</span>: Key Differences</h1>
+  <p class="sp2-hero-desc">Both measurements describe wheel position  but they use different reference points and units. Here is exactly what separates them and how to convert between the two.</p>
+  <div class="sp2-meta">Written by <strong>mike.themechanic</strong> · ASE-Certified Mechanic · Updated July 2026</div>
+</section>
+
+<section class="sp2-content">
+  <div class="sp2-wrap">
+
+    <h2>What is wheel offset (ET)?</h2>
+    <div class="sp2-answer">
+      Wheel offset (ET) is the distance in millimeters from the wheel's mounting face to its centerline. Positive ET moves the wheel inward. Negative ET moves it outward. ET is the global standard measurement used by European, Asian, and most international wheel manufacturers.
+    </div>
+    <p>ET is stamped on the back barrel of nearly every aftermarket wheel. A measurement of <strong>ET45</strong> means the mounting face sits 45mm in front of the wheel's centerline. You can find your stock ET stamped on your current wheel or listed in your vehicle's owner's manual.</p>
+
+    <h2>What is wheel backspacing?</h2>
+    <div class="sp2-answer">
+      Backspacing is the distance in inches from the wheel's mounting face to the inner lip of the wheel. It measures how far the wheel sits inside the fender well. Higher backspacing moves the wheel inward. Lower backspacing moves the wheel outward toward the fender.
+    </div>
+    <p>Backspacing is most commonly used in the <strong>North American truck and off-road market</strong>. When you buy wheels from American manufacturers  particularly for trucks, Jeeps, and 4x4s  the fitment spec is often listed as backspacing in inches rather than ET in millimeters. An 8-inch wide wheel with <strong>5.5 inches of backspacing</strong> positions the mounting face 5.5 inches from the inner lip.</p>
+
+    <h2>What is the key difference between offset and backspacing?</h2>
+    <div class="sp2-answer">
+      Offset (ET) is measured from the mounting face to the wheel centerline in millimeters. Backspacing is measured from the mounting face to the inner wheel lip in inches. Offset uses the centerline as its zero point. Backspacing uses the inner edge. Both measure the same wheel  from different starting points.
+    </div>
+
+    <div class="sp2-compare">
+      <div class="sp2-col">
+        <div class="sp2-col-head blue">Wheel Offset (ET)</div>
+        <ul class="sp2-col-body">
+          <li>Measured in millimeters</li>
+          <li>Reference point: wheel centerline</li>
+          <li>Can be positive, zero, or negative</li>
+          <li>Global standard  used worldwide</li>
+          <li>Stamped on wheel back barrel</li>
+          <li>Used by European &amp; Asian brands</li>
+        </ul>
+      </div>
+      <div class="sp2-col">
+        <div class="sp2-col-head red">Backspacing</div>
+        <ul class="sp2-col-body">
+          <li>Measured in inches</li>
+          <li>Reference point: inner wheel lip</li>
+          <li>Always a positive number</li>
+          <li>Primarily North American market</li>
+          <li>Listed on spec sheets, not stamped</li>
+          <li>Used by American truck brands</li>
+        </ul>
+      </div>
+    </div>
+
+    <h2>How do I convert backspacing to wheel offset?</h2>
+    <div class="sp2-answer">
+      To convert backspacing to ET: multiply backspacing in inches by 25.4 to get mm, then subtract half the wheel width in mm. The formula is ET = (Backspacing × 25.4) − (Width × 25.4 ÷ 2). A 5.5-inch backspacing on an 8-inch wide wheel equals ET38.
+    </div>
+
+    <div class="sp2-formula">
+      <div class="sp2-formula-label">Backspacing to ET Formula</div>
+      <div class="sp2-formula-eq">
+        ET = <span>(Backspacing × 25.4)</span> − <span>(Width × 25.4 ÷ 2)</span>
+      </div>
+      <div class="sp2-formula-example">Example: 5.5" backspacing on 8" wide wheel → (5.5 × 25.4) − (8 × 25.4 ÷ 2) = 139.7 − 101.6 = <strong style="color:#fff">ET38</strong></div>
+    </div>
+
+    <h2>How do I convert wheel offset to backspacing?</h2>
+    <div class="sp2-answer">
+      To convert ET to backspacing: add half the wheel width in mm to the ET value, then divide by 25.4 to convert to inches. Formula: Backspacing (inches) = (ET + Width mm ÷ 2) ÷ 25.4. An ET45 on a 7.5-inch wide wheel equals 5.54 inches of backspacing.
+    </div>
+
+    <div class="sp2-formula">
+      <div class="sp2-formula-label">ET to Backspacing Formula</div>
+      <div class="sp2-formula-eq">
+        Backspacing = <span>(ET + Width mm ÷ 2)</span> ÷ <span>25.4</span>
+      </div>
+      <div class="sp2-formula-example">Example: ET45 on 7.5" wide wheel → (45 + 95.25) ÷ 25.4 = 140.25 ÷ 25.4 = <strong style="color:#fff">5.52"</strong> backspacing</div>
+    </div>
+
+    <h2>Which measurement should I use  offset or backspacing?</h2>
+    <div class="sp2-answer">
+      Use ET if you are buying wheels from European, Asian, or international brands  ET is stamped on the wheel and listed in fitment databases. Use backspacing if you are fitting wheels on an American truck or Jeep where the spec sheet lists inches. Both measure the same thing from different starting points.
+    </div>
+
+    <div class="sp2-table-wrap">
+      <table class="sp2-table">
+        <thead>
+          <tr><th>Situation</th><th>Use This Measurement</th><th>Why</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Buying aftermarket wheels (JDM/Euro)</td><td>ET (offset)</td><td>Stamped on wheel, listed in databases</td></tr>
+          <tr><td>Fitting a truck or Jeep</td><td>Backspacing (inches)</td><td>American brands list backspacing on spec sheets</td></tr>
+          <tr><td>Cross-referencing two wheel brands</td><td>Both  convert as needed</td><td>Ensures consistent comparison</td></tr>
+          <tr><td>Measuring a wheel you own</td><td>ET (offset)</td><td>Easier to measure to centerline than inner lip</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h2>Does a higher backspacing mean more or less poke?</h2>
+    <div class="sp2-answer">
+      Higher backspacing means the wheel sits further inward  less poke, more tuck. Lower backspacing means the wheel sits further outward  more poke. This is the opposite of ET: higher ET = more tuck (same as higher backspacing). Lower ET = more poke (same as lower backspacing).
+    </div>
+    <p>Both measurements move in the same physical direction  they just count from opposite reference points. When you increase backspacing, the wheel moves inward, the same as increasing ET. Use our <a href="https://tiresizecalculator.pro/wheel-offset-calculator/">wheel offset calculator</a> to see the poke or tuck result for any ET change without needing to convert manually.</p>
+
+    <div class="sp2-related">
+      <div class="sp2-related-title">Related Calculators &amp; Guides</div>
+      <div class="sp2-related-links">
+        <a href="https://tiresizecalculator.pro/wheel-offset-calculator/">Wheel Offset Calculator</a>
+        <a href="https://tiresizecalculator.pro/">Tire Size Calculator</a>
+        <a href="https://tiresizecalculator.pro/what-is-wheel-offset/">What is Wheel Offset?</a>
+        <a href="https://tiresizecalculator.pro/poke-flush-tucked/">Poke vs Flush vs Tucked</a>
+        <a href="https://tiresizecalculator.pro/positive-negative-zero-offset/">Positive vs Negative Offset</a>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<section class="sp2-faq">
+  <div class="sp2-wrap">
+    <h2>Frequently Asked Questions</h2>
+    <div>
+      <div class="sp2-faq-item">
+        <div class="sp2-faq-q">What is the difference between wheel offset and backspacing?</div>
+        <div class="sp2-faq-a">Wheel offset (ET) measures from the mounting face to the wheel centerline in millimeters. Backspacing measures from the mounting face to the inner lip in inches. Both describe how far inward or outward the wheel sits, but use different reference points and measurement systems.</div>
+      </div>
+      <div class="sp2-faq-item">
+        <div class="sp2-faq-q">How do I convert backspacing to offset?</div>
+        <div class="sp2-faq-a">To convert: ET = (Backspacing × 25.4) − (Width × 25.4 ÷ 2). Example: 5.5-inch backspacing on an 8-inch wide wheel = (5.5 × 25.4) − (8 × 25.4 ÷ 2) = 139.7 − 101.6 = ET38.</div>
+      </div>
+      <div class="sp2-faq-item">
+        <div class="sp2-faq-q">Which is more commonly used  offset or backspacing?</div>
+        <div class="sp2-faq-a">ET offset is the global standard used by European, Asian, and most international manufacturers. Backspacing is primarily used in the North American truck and off-road market. Most aftermarket wheel brands list both measurements.</div>
+      </div>
+      <div class="sp2-faq-item">
+        <div class="sp2-faq-q">Can I use a wheel with the wrong backspacing?</div>
+        <div class="sp2-faq-a">Using incorrect backspacing shifts the tire inward or outward. Too much backspacing causes inner suspension contact. Too little causes outer fender contact. Always verify backspacing and ET match your vehicle's clearance requirements before ordering wheels.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+</div>

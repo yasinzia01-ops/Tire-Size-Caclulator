@@ -1,0 +1,58 @@
+---
+/**
+ * Blog posts live at the site root (/poke-flush-tucked/ etc.), exactly like WordPress.
+ * Bodies are the verbatim legacy HTML in src/content/posts/, cleaned at build time.
+ */
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { POSTS, type Post } from '../data/posts';
+import { SITE } from '../data/site';
+import { cleanLegacyHtml } from '../lib/legacyHtml';
+import { getImage } from 'astro:assets';
+
+const bodies = import.meta.glob<string>('../content/posts/*.html', { query: '?raw', import: 'default', eager: true });
+
+export function getStaticPaths() {
+  return POSTS.map((post) => ({ params: { slug: post.slug }, props: { post } }));
+}
+
+const { post } = Astro.props as { post: Post };
+const raw = bodies[`../content/posts/${post.slug}.html`];
+if (!raw) throw new Error(`Missing body for ${post.slug}`);
+const { html, schema } = cleanLegacyHtml(raw);
+const og = await getImage({ src: post.image, width: 1200, format: 'jpeg' });
+const url = `${SITE.url}/${post.slug}/`;
+
+const article = {
+  '@context': 'https://schema.org',
+  '@type': 'BlogPosting',
+  headline: post.title,
+  description: post.description,
+  image: new URL(og.src, SITE.url).href,
+  datePublished: post.published,
+  dateModified: post.modified,
+  author: { '@type': 'Person', name: post.author },
+  publisher: { '@id': `${SITE.url}/#organization` },
+  mainEntityOfPage: url,
+  articleSection: post.category.name,
+};
+const breadcrumb = {
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  itemListElement: [
+    { '@type': 'ListItem', position: 1, name: 'Home', item: `${SITE.url}/` },
+    { '@type': 'ListItem', position: 2, name: post.category.name, item: `${SITE.url}/category/${post.category.slug}/` },
+    { '@type': 'ListItem', position: 3, name: post.title, item: url },
+  ],
+};
+---
+<BaseLayout
+  title={post.title}
+  description={post.description}
+  ogType="article"
+  ogImage={og.src}
+  publishedTime={post.published}
+  modifiedTime={post.modified}
+  schema={[article, breadcrumb, ...schema]}
+>
+  <article class="legacy-post" set:html={html} />
+</BaseLayout>
