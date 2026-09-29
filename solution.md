@@ -283,4 +283,4 @@ Mark `[x]` only when the task's **Done when** is verified.
 - [ ] **3.4** Link check (no broken internal links), one H1 per page, Lighthouse targets met.
   - Status 2026-09-29: `npm run verify` passes (13 URLs, 1 H1 each, canonicals, no broken internal links). Local Lighthouse mobile: SEO 100, Best Practices 100, Accessibility 96, CLS ≤ 0.004. Performance 76–86 is **not reliable here**: this PC's Lighthouse CPU benchmark is 600–1,100 and swings between runs. **Re-measure with PageSpeed Insights on the Vercel preview** before ticking.
   - Accessibility: the only failures are colour contrast in brand colours (e.g. `#ED1C24` on white = 4.38:1, just under 4.5:1). The live site has the same. Kept for brand parity; darkening the red slightly would fix it.
-- [ ] **3.5** README: run/build/deploy instructions.
+- [x] **3.5** README: run/build/deploy instructions.
