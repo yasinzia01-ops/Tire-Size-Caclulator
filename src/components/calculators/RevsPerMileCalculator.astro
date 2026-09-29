@@ -1,0 +1,165 @@
+---
+/**
+ * Tire Revolutions Per Mile Calculator — port of the legacy widget's calculator card
+ * and reference table. Math: src/lib/calc/revsPerMile.ts.
+ */
+import { REFERENCE_SIZES, referenceRow, rpmResult } from '../../lib/calc/revsPerMile';
+import { sizeLabel, type TireSize } from '../../lib/calc/speedo';
+
+const T1: TireSize = { w: 205, a: 55, r: 16 };
+const T2: TireSize = { w: 215, a: 55, r: 16 };
+const res = rpmResult(T1, T2);
+const panels = [
+  { n: 1, title: 'Tire 1 — Current', tire: T1 },
+  { n: 2, title: 'Tire 2 — New Size', tire: T2 },
+] as const;
+const fields = [
+  ['w', 'Width (mm)', 100, 500],
+  ['a', 'Aspect Ratio', 20, 100],
+  ['r', 'Rim (in)', 10, 30],
+] as const;
+const rows = REFERENCE_SIZES.map(referenceRow);
+---
+<div class="rpm" data-rpm>
+  <div class="calc-card">
+    <h2>How Do You Use the Tire Revolutions Per Mile Calculator?</h2>
+    <p class="calc-subtitle">Enter section width, aspect ratio, and rim diameter for each tire. Hit Calculate to see exact RPM, diameter, and speedometer error.</p>
+
+    <div class="calc-grid">
+      {panels.map((p) => (
+        <div class="tire-panel" data-tire={p.n}>
+          <h3>{p.title}</h3>
+          <div class="field-row">
+            {fields.map(([k, label, min, max]) => (
+              <label class="field-group">
+                <span>{label}</span>
+                <input type="number" inputmode="decimal" step="any" data-f={k} value={p.tire[k]} min={min} max={max} />
+              </label>
+            ))}
+          </div>
+          <div class="tire-size-display" data-display>{sizeLabel(p.tire)}</div>
+        </div>
+      ))}
+    </div>
+
+    <div class="calc-btn-row">
+      <button type="button" class="btn" data-run>Calculate Revolutions Per Mile</button>
+    </div>
+
+    <div class="result-panel" aria-live="polite">
+      <div class="result-grid">
+        <div class="result-box"><div class="r-label">Tire 1 RPM</div><span class="r-value" data-o="t1Rpm">{res.t1Rpm}</span><div class="r-unit">rev / mile</div></div>
+        <div class="result-box"><div class="r-label">Tire 2 RPM</div><span class="r-value" data-o="t2Rpm">{res.t2Rpm}</span><div class="r-unit">rev / mile</div></div>
+        <div class="result-box"><div class="r-label">RPM Difference</div><span class={`r-value diff-${res.diff.tone}`} data-o="diff">{res.diff.text}</span><div class="r-unit">rev / mile</div></div>
+      </div>
+      <div class="result-compare">
+        <div class="compare-row"><span>Tire 1 overall diameter</span><span class="diff" data-o="t1Dia">{res.t1Dia}</span></div>
+        <div class="compare-row"><span>Tire 2 overall diameter</span><span class="diff" data-o="t2Dia">{res.t2Dia}</span></div>
+        <div class="compare-row"><span>Speedometer error at 60 mph</span><span class={`diff diff-${res.speedo.tone}`} data-o="speedo">{res.speedo.text}</span></div>
+        <div class="compare-row"><span>Actual speed when speedo shows 60 mph</span><span class={`diff diff-${res.actual.tone}`} data-o="actual">{res.actual.text}</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="oem">
+    <h3>Common Tire Sizes — Revolutions Per Mile Reference Table</h3>
+    <div class="oem-table-wrap">
+      <table class="oem-table">
+        <thead><tr><th>Tire Size</th><th>Diameter (in)</th><th>Circumference (in)</th><th>Rev / Mile</th></tr></thead>
+        <tbody>
+          {rows.map((r) => (
+            <tr class:list={{ 'oem-highlight': r.size === '205/55R16' }}><td>{r.size}</td><td>{r.dia}</td><td>{r.circ}</td><td>{r.rpm}</td></tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<script>
+  import { rpmResult, type RpmResult } from '../../lib/calc/revsPerMile';
+  import { sizeLabel, type TireSize } from '../../lib/calc/speedo';
+
+  for (const root of document.querySelectorAll<HTMLElement>('[data-rpm]')) {
+    const panel = (n: 1 | 2) => root.querySelector<HTMLElement>(`[data-tire="${n}"]`)!;
+    const raw = (n: 1 | 2, f: keyof TireSize) => panel(n).querySelector<HTMLInputElement>(`[data-f="${f}"]`)!.value;
+    const read = (n: 1 | 2): TireSize => ({ w: parseFloat(raw(n, 'w')), a: parseFloat(raw(n, 'a')), r: parseFloat(raw(n, 'r')) });
+
+    root.addEventListener('input', () => {
+      for (const n of [1, 2] as const) {
+        panel(n).querySelector('[data-display]')!.textContent = sizeLabel({ w: raw(n, 'w'), a: raw(n, 'a'), r: raw(n, 'r') });
+      }
+    });
+
+    root.querySelector('[data-run]')!.addEventListener('click', () => {
+      const res = rpmResult(read(1), read(2));
+      const set = (k: keyof RpmResult, base: string) => {
+        const el = root.querySelector<HTMLElement>(`[data-o="${k}"]`)!;
+        const v = res[k];
+        if (typeof v === 'string') el.textContent = v;
+        else {
+          el.textContent = v.text;
+          el.className = `${base} diff-${v.tone}`;
+        }
+      };
+      set('t1Rpm', 'r-value');
+      set('t2Rpm', 'r-value');
+      set('diff', 'r-value');
+      set('t1Dia', 'diff');
+      set('t2Dia', 'diff');
+      set('speedo', 'diff');
+      set('actual', 'diff');
+    });
+  }
+</script>
+
+<style>
+  .rpm { --rpm-border: #e0e0e0; font: 400 16px/1.6 -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; color: #333; }
+  :where(.rpm *) { margin: 0; padding: 0; }
+  h2, h3 { font-family: var(--font-display); line-height: 1.15; color: var(--navy); font-weight: 700; }
+
+  .calc-card { background: #fff; border-radius: 10px; box-shadow: 0 4px 24px rgb(0 0 0 / .1); padding: 36px 40px; max-width: 780px; margin: 0 auto; }
+  .calc-card h2 { text-align: center; margin-bottom: 8px; font-size: 26px; }
+  .calc-subtitle { text-align: center; color: #666; margin-bottom: 28px; font-size: 15px; }
+  .calc-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 28px; margin-bottom: 24px; }
+  .tire-panel { background: var(--gray-100); border-radius: 8px; padding: 20px 22px; }
+  .tire-panel h3 { font-size: 15px; text-transform: uppercase; letter-spacing: .5px; margin-bottom: 14px; padding-bottom: 8px; border-bottom: 2px solid var(--red-bright); }
+  .field-row { display: flex; gap: 10px; margin-bottom: 10px; }
+  .field-group { flex: 1; min-width: 0; }
+  .field-group span { display: block; font-size: 12px; font-weight: 600; color: #555; text-transform: uppercase; letter-spacing: .5px; margin-bottom: 4px; }
+  .field-group input { width: 100%; padding: 9px 10px; border: 1.5px solid var(--rpm-border); border-radius: 5px; font: inherit; font-size: 16px; color: #333; background: #fff; transition: border-color .2s; }
+  .field-group input:focus { outline: none; border-color: var(--red-bright); }
+  .tire-size-display { text-align: center; font: 700 18px/1.6 var(--font-display); color: var(--navy); background: #fff; border: 1.5px solid var(--rpm-border); border-radius: 5px; padding: 8px; margin-top: 8px; }
+  .calc-btn-row { text-align: center; margin-bottom: 24px; }
+  .btn { display: inline-block; padding: 13px 40px; background: var(--red-bright); color: #fff; font: 700 17px/1.4 var(--font-display); letter-spacing: .5px; border-radius: 6px; border: 0; cursor: pointer; transition: background .2s; }
+  .btn:hover { background: #c50d14; }
+
+  .result-panel { background: var(--navy); border-radius: 8px; padding: 24px 28px; }
+  .result-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-bottom: 16px; }
+  .result-box { text-align: center; }
+  .r-label { font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: .5px; color: rgb(255 255 255 / .65); margin-bottom: 4px; }
+  .r-value { font: 900 32px/1 var(--font-display); color: #fff; display: block; }
+  .r-unit { font-size: 13px; color: rgb(255 255 255 / .6); }
+  .result-compare { background: rgb(255 255 255 / .08); border-radius: 6px; padding: 14px 16px; }
+  .compare-row { display: flex; justify-content: space-between; align-items: center; gap: 12px; font-size: 14px; color: rgb(255 255 255 / .85); padding: 6px 0; border-bottom: 1px solid rgb(255 255 255 / .08); }
+  .compare-row:last-child { border-bottom: 0; }
+  .diff { font-weight: 700; white-space: nowrap; }
+  .diff-neg { color: #ff6b6b; }
+  .diff-pos { color: #6bff8e; }
+  .diff-zero { color: rgb(255 255 255 / .6); }
+
+  .oem { max-width: 780px; margin: 32px auto 0; }
+  .oem h3 { font-size: 20px; margin-bottom: 12px; }
+  .oem-table-wrap { overflow-x: auto; margin-top: 20px; }
+  .oem-table { width: 100%; border-collapse: collapse; font-size: 14px; }
+  .oem-table th { background: var(--navy); color: #fff; padding: 10px 14px; text-align: left; font-size: 12px; text-transform: uppercase; letter-spacing: .5px; }
+  .oem-table td { padding: 9px 14px; border-bottom: 1px solid var(--rpm-border); color: #333; background: #fff; }
+  .oem-table tr:nth-child(even) td { background: var(--gray-100); }
+  .oem-highlight td { font-weight: 700; color: var(--navy); }
+
+  @media (max-width: 768px) {
+    .calc-grid { grid-template-columns: 1fr; }
+    .result-grid { grid-template-columns: 1fr 1fr; }
+    .calc-card { padding: 24px 18px; }
+  }
+</style>

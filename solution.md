@@ -100,7 +100,11 @@ Features that must survive: Wheel 1 vs Wheel 2, **+ Add Wheel** / remove wheel (
 > - the home tool's own "reading @60" column.
 >
 > With this convention, a positive result means a bigger tire and true speed higher than indicated (the speedo reads low).
-> This is the **one intentional deviation** from the live numbers. The golden test for the home calculator must assert the corrected sign, and every other output must still match the legacy tool.
+> **Related accuracy fixes (same owner decision):**
+> - Revs-per-mile tool: "Actual speed when speedo shows 60 mph" was `60 ÷ (1 + err)`, which is inverted (it said a bigger tire is *slower*). Now it is `60 × (1 + err)`.
+> - Revs-per-mile reference table: it is now computed from the same formula. The live table had 215/55R17 = 27.3" (really 26.3") and 235/35R19 = 26.3" (really 25.5"). Other rows differ by ≤1 in the last digit.
+>
+> These are the **only intentional deviations** from the live numbers. The golden test for the home calculator must assert the corrected sign, and every other output must still match the legacy tool.
 
 ### Porting approach
 1. Move each calculator's math into a **pure TS module** (`src/lib/calc/*.ts`) with no DOM access.
@@ -241,7 +245,7 @@ Mark `[x]` only when the task's **Done when** is verified.
 - [x] **1.1** `lib/calc/wheelTire.ts` + golden tests against the legacy formulas.
 - [x] **1.2** `WheelTireCalculator.astro`: inputs, add/remove wheels, results, unit toggle, both SVG diagrams.
 - [x] **1.3** `lib/calc/speedo.ts` + tests → `SpeedoCalculator.astro`.
-- [ ] **1.4** `lib/calc/revsPerMile.ts` + tests → `RevsPerMileCalculator.astro`.
+- [x] **1.4** `lib/calc/revsPerMile.ts` + tests → `RevsPerMileCalculator.astro`.
 - [ ] **1.5** `lib/calc/wheelOffset.ts` + tests → `WheelOffsetCalculator.astro`.
 **Done when (each):** tests pass, and the UI shows the same numbers as the live page for 3 manual sample inputs.
 
