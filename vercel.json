@@ -1,0 +1,37 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "trailingSlash": true,
+  "redirects": [
+    { "source": "/wp-sitemap.xml", "destination": "/sitemap-index.xml", "permanent": true },
+    { "source": "/sitemap_index.xml", "destination": "/sitemap-index.xml", "permanent": true },
+    { "source": "/post-sitemap.xml", "destination": "/sitemap-index.xml", "permanent": true },
+    { "source": "/page-sitemap.xml", "destination": "/sitemap-index.xml", "permanent": true },
+    { "source": "/category-sitemap.xml", "destination": "/sitemap-index.xml", "permanent": true },
+    { "source": "/feed/", "destination": "/blog/", "permanent": true },
+    { "source": "/comments/feed/", "destination": "/blog/", "permanent": true },
+    { "source": "/category/wheel-offset-calculator/feed/", "destination": "/category/wheel-offset-calculator/", "permanent": true },
+    { "source": "/wp-admin/:path*", "destination": "/", "permanent": false },
+    { "source": "/wp-login.php", "destination": "/", "permanent": false },
+
+    { "source": "/wheel-offset-calculator/", "destination": "/wheel-offset/", "permanent": true },
+    { "source": "/what-is-wheel-offset/", "destination": "/what-is-wheel-offset-et/", "permanent": true },
+    { "source": "/guides/what-is-wheel-offset/", "destination": "/what-is-wheel-offset-et/", "permanent": true },
+    { "source": "/guides/wheel-offset-vs-backspacing/", "destination": "/wheel-offset-vs-backspacing/", "permanent": true },
+    { "source": "/guides/poke-flush-tucked/", "destination": "/poke-flush-tucked/", "permanent": true },
+    { "source": "/revolutions-per-mile-calculator/", "destination": "/tire-revolutions-per-mile-calculator/", "permanent": true },
+    { "source": "/tire-diameter-calculator/", "destination": "/", "permanent": true }
+  ],
+  "headers": [
+    {
+      "source": "/_astro/(.*)",
+      "headers": [{ "key": "Cache-Control", "value": "public, max-age=31536000, immutable" }]
+    },
+    {
+      "source": "/(.*)",
+      "headers": [
+        { "key": "X-Content-Type-Options", "value": "nosniff" },
+        { "key": "Referrer-Policy", "value": "strict-origin-when-cross-origin" }
+      ]
+    }
+  ]
+}

@@ -8,7 +8,7 @@ const { labels, id } = Astro.props;
 const panels = await Promise.all(labels.map((_, i) => Astro.slots.render(`panel-${i}`)));
 ---
 <div class="tabs" data-tabs>
-  <div class="tablist" role="tablist" hidden>
+  <div class="tablist" role="tablist">
     {labels.map((l, i) => (
       <button type="button" role="tab" id={`${id}-tab-${i}`} aria-controls={`${id}-panel-${i}`} aria-selected={i === 0 ? 'true' : 'false'} tabindex={i === 0 ? 0 : -1}>{l}</button>
     ))}
@@ -28,10 +28,10 @@ const panels = await Promise.all(labels.map((_, i) => Astro.slots.render(`panel-
         t.setAttribute('aria-selected', String(i === j));
         t.tabIndex = i === j ? 0 : -1;
         panels[j]!.hidden = i !== j;
+        panels[j]!.toggleAttribute('data-active', i === j);
       });
       if (focus) tabs[i]!.focus();
     };
-    list.hidden = false;
     tabs.forEach((t, i) => {
       t.addEventListener('click', () => select(i));
       t.addEventListener('keydown', (e) => {
@@ -44,8 +44,12 @@ const panels = await Promise.all(labels.map((_, i) => Astro.slots.render(`panel-
 </script>
 
 <style>
-  .tablist { display: flex; flex-wrap: wrap; gap: 5px; }
-  .tablist[hidden] { display: none; }
+  /* Without JS the tab buttons are hidden and every panel is shown. With JS (html.js is set in <head>) only the first
+     panel is visible from the first paint, so nothing shifts when the script runs. */
+  .tablist { display: none; flex-wrap: wrap; gap: 5px; }
+  :global(.js) .tablist { display: flex; }
+  :global(.js) .panel:not(:nth-child(2)) { display: none; }
+  :global(.js) .panel[data-active] { display: block; }
   [role='tab'] {
     border: 0; border-radius: 3px 3px 0 0; cursor: pointer;
     padding: 12px 15px; min-width: 46px; background: var(--navy-3); color: rgb(255 255 255 / .8);
@@ -54,5 +58,5 @@ const panels = await Promise.all(labels.map((_, i) => Astro.slots.render(`panel-
   [role='tab'][aria-selected='true'] { background: var(--red-bright); color: #fff; }
   .panel { background: #fff; border: 1px solid #ddd; border-radius: 0 10px 10px 10px; padding: 20px; }
   .panel + .panel { margin-top: 16px; }
-  .tablist:not([hidden]) ~ .panel { margin-top: 0; }
+  :global(.js) .panel { margin-top: 0; }
 </style>

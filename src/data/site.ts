@@ -4,7 +4,7 @@ export const SITE = {
   url: 'https://tiresizecalculator.pro',
   author: 'mike.themechanic',
   gaId: 'GT-MBT5TB3W',
-  defaultOgImage: '/og-default.png',
+  defaultOgImage: '/og-default.jpg',
 };
 
 export interface NavItem {

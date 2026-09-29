@@ -5,6 +5,13 @@ import type { Props as SeoProps } from '../components/Seo.astro';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
 import { SITE } from '../data/site';
+// Above-the-fold fonts, preloaded so text renders in its final font without reflow.
+import barlow600 from '@fontsource/barlow/files/barlow-latin-600-normal.woff2?url';
+import barlowCond900 from '@fontsource/barlow-condensed/files/barlow-condensed-latin-900-normal.woff2?url';
+import poppins600 from '@fontsource/poppins/files/poppins-latin-600-normal.woff2?url';
+import poppins700 from '@fontsource/poppins/files/poppins-latin-700-normal.woff2?url';
+
+const PRELOAD_FONTS = [barlow600, barlowCond900, poppins600, poppins700];
 
 export type Props = SeoProps;
 
@@ -16,20 +23,30 @@ const isProd = import.meta.env.PROD;
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <Seo {...Astro.props} />
+    {PRELOAD_FONTS.map((href) => <link rel="preload" as="font" type="font/woff2" href={href} crossorigin />)}
     <link rel="icon" href="/favicon-32.png" sizes="32x32" />
     <link rel="icon" href="/favicon-192.png" sizes="192x192" />
     <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
     <link rel="sitemap" href="/sitemap-index.xml" />
+    <script is:inline>document.documentElement.classList.add('js');</script>
     {isProd && (
-      <>
-        <script async src={`https://www.googletagmanager.com/gtag/js?id=${SITE.gaId}`}></script>
-        <script is:inline define:vars={{ id: SITE.gaId }}>
-          window.dataLayer = window.dataLayer || [];
-          function gtag() { dataLayer.push(arguments); }
-          gtag('js', new Date());
-          gtag('config', id);
-        </script>
-      </>
+      <script is:inline define:vars={{ id: SITE.gaId }}>
+        // GA4 (same tag as the WordPress site). The config call is queued immediately;
+        // gtag.js itself loads after the page has finished loading so it never blocks rendering.
+        window.dataLayer = window.dataLayer || [];
+        function gtag() { dataLayer.push(arguments); }
+        gtag('js', new Date());
+        gtag('config', id);
+        addEventListener('load', () => {
+          const inject = () => {
+            const s = document.createElement('script');
+            s.async = true;
+            s.src = 'https://www.googletagmanager.com/gtag/js?id=' + id;
+            document.head.appendChild(s);
+          };
+          'requestIdleCallback' in window ? requestIdleCallback(inject, { timeout: 3000 }) : setTimeout(inject, 1500);
+        });
+      </script>
     )}
     <slot name="head" />
   </head>

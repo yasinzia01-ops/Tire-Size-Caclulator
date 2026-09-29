@@ -239,6 +239,7 @@ Keep the current look and section order. Only make these quality fixes, which do
   - **Privacy Policy** is an AI template. The live page even shows the template's own instructions ("Important Next Steps… Would you like me to refine this document…"), which were removed in the port. It still says `[Insert Your Email Address Here]`: give a contact email (`src/content/legal/privacy-policy.md`).
   - **Terms & Condition** is word-for-word the Privacy Policy on the live site (kept identical for parity). It needs real terms (`src/content/legal/terms-condition.md`).
 - ℹ️ About page = the same homepage sections as live. Its speedo table is computed (live had wrong signs, e.g. 205/55R16→235/40R18 "−1.8%", really +2.1%).
+- ℹ️ GA4 `gtag.js` loads after the window `load` event (when the browser is idle), so it does not block rendering. Page views are still recorded.
 - 🚫 **Never modify the live WordPress site** (no edits through connectors, MCP tools, wp-admin or the REST API). Only read from it by fetching public pages.
 - Later (not v1): add the 3 extra calculators to the nav, shareable URL params, tire-code input, programmatic size-comparison pages.
 
@@ -276,8 +277,10 @@ Mark `[x]` only when the task's **Done when** is verified.
 - [x] **2.6** Images downloaded, optimized, alt text written.
 
 ### Phase 3 — SEO & polish
-- [ ] **3.1** Titles/descriptions/canonicals per §8a; OG image.
-- [ ] **3.2** `robots.txt`, sitemap, `vercel.json` redirects + `trailingSlash: true`.
-- [ ] **3.3** 404 page.
+- [x] **3.1** Titles/descriptions/canonicals per §8a; OG image.
+- [x] **3.2** `robots.txt`, sitemap, `vercel.json` redirects + `trailingSlash: true`.
+- [x] **3.3** 404 page.
 - [ ] **3.4** Link check (no broken internal links), one H1 per page, Lighthouse targets met.
+  - Status 2026-09-29: `npm run verify` passes (13 URLs, 1 H1 each, canonicals, no broken internal links). Local Lighthouse mobile: SEO 100, Best Practices 100, Accessibility 96, CLS ≤ 0.004. Performance 76–86 is **not reliable here**: this PC's Lighthouse CPU benchmark is 600–1,100 and swings between runs. **Re-measure with PageSpeed Insights on the Vercel preview** before ticking.
+  - Accessibility: the only failures are colour contrast in brand colours (e.g. `#ED1C24` on white = 4.38:1, just under 4.5:1). The live site has the same. Kept for brand parity; darkening the red slightly would fix it.
 - [ ] **3.5** README: run/build/deploy instructions.
