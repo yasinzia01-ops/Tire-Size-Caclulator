@@ -1,0 +1,157 @@
+---
+/**
+ * Speedometer Error Calculator — port of the legacy Elementor HTML widget.
+ * Math: src/lib/calc/speedo.ts. Default result is rendered at build time.
+ */
+import { sizeLabel, speedoResult, type TireSize } from '../../lib/calc/speedo';
+
+const ORIGINAL: TireSize = { w: 205, a: 55, r: 16 };
+const NEW: TireSize = { w: 225, a: 50, r: 17 };
+const res = speedoResult(ORIGINAL, NEW);
+const panels = [
+  { key: 'o', title: 'Original Tire (OEM)', tire: ORIGINAL, isNew: false },
+  { key: 'n', title: 'New Tire', tire: NEW, isNew: true },
+] as const;
+const fields = [
+  ['w', 'Width (mm)', 100, 500],
+  ['a', 'Aspect', 20, 100],
+  ['r', 'Rim (in)', 10, 30],
+] as const;
+---
+<div class="spe-wrap" data-spe>
+  <div class="calc-card">
+    <h2>How Do You Use the Speedometer Error Calculator?</h2>
+    <p class="calc-desc">Enter your original (OEM) tire size, then your new tire size. Hit Calculate to see exact error %, real speed at every indicated speed, and odometer drift.</p>
+
+    <div class="tires-grid">
+      {panels.map((p) => (
+        <div class:list={['tire-panel', { 'is-new': p.isNew }]} data-panel={p.key}>
+          <div class="tp-title">{p.title}</div>
+          <div class="row3">
+            {fields.map(([k, label, min, max]) => (
+              <label>
+                <span class="f-lbl">{label}</span>
+                <input type="number" inputmode="decimal" step="any" data-f={k} value={p.tire[k]} min={min} max={max} />
+              </label>
+            ))}
+          </div>
+          <div class="size-pill" data-pill aria-live="polite">{sizeLabel(p.tire)}</div>
+        </div>
+      ))}
+    </div>
+
+    <div class="calc-act">
+      <button type="button" class="btn" data-run>Calculate Speedometer Error</button>
+    </div>
+
+    <div class="result-box on" data-result aria-live="polite">
+      <div class="r-hero">
+        <div class="r-pct" data-pct>{res.errText}</div>
+        <div class="r-pct-lbl">Speedometer Error</div>
+        <div class={`r-verdict v-${res.verdict.level}`} data-verdict>{res.verdict.text}</div>
+      </div>
+      <div class="speed-grid">
+        {res.speeds.map((s) => (
+          <div class="spd-cell">
+            <div class="spd-ind">Speedo {s.indicated} mph</div>
+            <span class="spd-actual" data-speed>{s.actual}</span>
+            <span class="spd-unit">actual mph</span>
+          </div>
+        ))}
+      </div>
+      <div class="odo-row">
+        <div class="odo-title">Odometer Drift — Miles Under- or Over-Read</div>
+        <table class="odo-table">
+          <tbody>
+            {res.odometer.map((o) => (
+              <tr><td>{o.label}</td><td><span class={o.positive ? 'pos' : 'neg'} data-odo>{o.text}</span></td></tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  import { sizeLabel, speedoResult, type TireSize } from '../../lib/calc/speedo';
+
+  for (const root of document.querySelectorAll<HTMLElement>('[data-spe]')) {
+    const panel = (k: 'o' | 'n') => root.querySelector<HTMLElement>(`[data-panel="${k}"]`)!;
+    const raw = (k: 'o' | 'n', f: keyof TireSize) => panel(k).querySelector<HTMLInputElement>(`[data-f="${f}"]`)!.value;
+    // Legacy used unary + (empty → 0).
+    const read = (k: 'o' | 'n'): TireSize => ({ w: +raw(k, 'w'), a: +raw(k, 'a'), r: +raw(k, 'r') });
+
+    // Pills update live as you type (legacy speUpd); results update on button click.
+    root.addEventListener('input', () => {
+      for (const k of ['o', 'n'] as const) {
+        panel(k).querySelector('[data-pill]')!.textContent = sizeLabel({ w: raw(k, 'w'), a: raw(k, 'a'), r: raw(k, 'r') });
+      }
+    });
+
+    root.querySelector('[data-run]')!.addEventListener('click', () => {
+      const res = speedoResult(read('o'), read('n'));
+      root.querySelector('[data-pct]')!.textContent = res.errText;
+      const v = root.querySelector<HTMLElement>('[data-verdict]')!;
+      v.textContent = res.verdict.text;
+      v.className = `r-verdict v-${res.verdict.level}`;
+      root.querySelectorAll('[data-speed]').forEach((el, i) => (el.textContent = res.speeds[i]!.actual));
+      root.querySelectorAll('[data-odo]').forEach((el, i) => {
+        el.textContent = res.odometer[i]!.text;
+        el.className = res.odometer[i]!.positive ? 'pos' : 'neg';
+      });
+    });
+  }
+</script>
+
+<style>
+  .spe-wrap { font: 400 16px/1.65 -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; color: #333; }
+  :where(.spe-wrap *) { margin: 0; padding: 0; }
+  h2 { font-family: var(--font-display); font-weight: 700; color: var(--navy); line-height: 1.15; }
+
+  .calc-card { background: #fff; border-radius: 10px; box-shadow: 0 4px 24px rgb(0 0 0 / .09); padding: 32px 36px; max-width: 820px; margin: 0 auto; }
+  .calc-card h2 { text-align: center; font-size: 24px; margin-bottom: 6px; }
+  .calc-desc { text-align: center; color: #666; font-size: 14px; margin-bottom: 24px; }
+  .tires-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 22px; margin-bottom: 20px; }
+  .tire-panel { background: var(--gray-100); border-radius: 8px; padding: 18px 20px; }
+  .tire-panel.is-new { border: 2px solid var(--red-bright); }
+  .tp-title { font: 700 14px/1.65 var(--font-display); color: var(--navy); text-transform: uppercase; letter-spacing: .5px; margin-bottom: 12px; padding-bottom: 7px; border-bottom: 2px solid var(--red-bright); }
+  .is-new .tp-title { color: var(--red-bright); }
+  .row3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; margin-bottom: 8px; }
+  .f-lbl { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .5px; color: #555; margin-bottom: 3px; display: block; }
+  input[type='number'] { width: 100%; padding: 8px 10px; border: 1.5px solid #e0e0e0; border-radius: 5px; font: inherit; font-size: 16px; color: #333; background: #fff; }
+  input[type='number']:focus { outline: none; border-color: var(--red-bright); }
+  .size-pill { background: #fff; border: 1.5px solid #e0e0e0; border-radius: 5px; text-align: center; font: 700 17px/1.65 var(--font-display); color: var(--navy); padding: 7px; margin-top: 6px; }
+  .calc-act { text-align: center; margin: 4px 0 20px; }
+  .btn { display: inline-block; padding: 13px 40px; background: var(--red-bright); color: #fff; font: 700 17px/1.4 var(--font-display); border-radius: 6px; border: 0; cursor: pointer; transition: background .2s; }
+  .btn:hover { background: #c50d14; }
+
+  .result-box { background: var(--navy); border-radius: 8px; padding: 24px 28px; display: none; }
+  .result-box.on { display: block; }
+  .r-hero { text-align: center; margin-bottom: 20px; }
+  .r-pct { font: 900 64px/1 var(--font-display); color: #fff; }
+  .r-pct-lbl { font-size: 14px; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; color: rgb(255 255 255 / .6); margin-top: 4px; }
+  .r-verdict { display: inline-block; padding: 6px 16px; border-radius: 20px; font: 700 16px/1.65 var(--font-display); margin-top: 10px; }
+  .v-ok { background: rgb(107 255 142 / .15); color: #6bff8e; border: 1px solid rgb(107 255 142 / .3); }
+  .v-warn { background: rgb(255 193 7 / .15); color: #ffc107; border: 1px solid rgb(255 193 7 / .3); }
+  .v-bad { background: rgb(255 107 107 / .15); color: #ff6b6b; border: 1px solid rgb(255 107 107 / .3); }
+  .speed-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 16px; }
+  .spd-cell { background: rgb(255 255 255 / .08); border-radius: 6px; padding: 12px; text-align: center; }
+  .spd-ind { font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: .5px; color: rgb(255 255 255 / .55); margin-bottom: 4px; }
+  .spd-actual { font: 900 26px/1.65 var(--font-display); color: #fff; display: block; }
+  .spd-unit { font-size: 11px; color: rgb(255 255 255 / .5); }
+  .odo-row { background: rgb(255 255 255 / .07); border-radius: 6px; padding: 14px 16px; }
+  .odo-title { font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: .5px; color: rgb(255 255 255 / .5); margin-bottom: 10px; }
+  .odo-table { width: 100%; border-collapse: collapse; }
+  .odo-table td { padding: 5px 10px; font-size: 13px; color: rgb(255 255 255 / .82); border-bottom: 1px solid rgb(255 255 255 / .06); background: transparent; }
+  .odo-table td:last-child { text-align: right; font-weight: 700; white-space: nowrap; }
+  .odo-table tr:last-child td { border-bottom: 0; }
+  .pos { color: #6bff8e; }
+  .neg { color: #ff6b6b; }
+
+  @media (max-width: 768px) {
+    .tires-grid { grid-template-columns: 1fr; }
+    .speed-grid { grid-template-columns: 1fr 1fr; }
+    .calc-card { padding: 20px 16px; }
+  }
+</style>
