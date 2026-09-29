@@ -1,0 +1,964 @@
+					<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tire Revolutions Per Mile Calculator | RPM by Tire Size</title>
+<meta name="description" content="Calculate tire revolutions per mile instantly. Enter any tire size and get exact RPM, compare OEM vs new tires, and see speedometer impact.">
+<link rel="canonical" href="https://tiresizecalculator.pro/revolutions-per-mile-calculator/">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600;700;900&family=Barlow:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<!-- Schema Markup -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+   
+    {
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "What is tire revolutions per mile?",
+          "acceptedAnswer": { "@type": "Answer", "text": "Tire revolutions per mile is the number of times a tire completes a full rotation to travel one mile. A standard 205/55R16 tire makes approximately 812 revolutions per mile." }
+        },
+        {
+          "@type": "Question",
+          "name": "How many revolutions per mile is normal for a tire?",
+          "acceptedAnswer": { "@type": "Answer", "text": "Most passenger car tires make between 700 and 900 revolutions per mile depending on overall diameter. Smaller tires spin more; larger tires spin fewer times per mile." }
+        },
+        {
+          "@type": "Question",
+          "name": "What happens to your speedometer when tire RPM changes?",
+          "acceptedAnswer": { "@type": "Answer", "text": "A larger tire makes fewer revolutions per mile, so the speedometer reads lower than actual speed. A smaller tire makes more revolutions, causing the speedometer to read higher than actual speed." }
+        }
+      ]
+    }
+  ]
+}
+</script>
+
+<style>
+  /* ===== RESET & BASE ===== */
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    font-size: 16px;
+    line-height: 1.6;
+    color: #333333;
+    background: #ffffff;
+  }
+
+  /* ===== COLOUR TOKENS (matching tiresizecalculator.pro live site) ===== */
+  :root {
+    --red-hero:   #C0001A;
+    --red-btn:    #ED1C24;
+    --red-footer: #990026;
+    --navy:       #1A1F6E;
+    --gray-light: #F4F4F4;
+    --gray-mid:   #F9F9F9;
+    --white:      #FFFFFF;
+    --text:       #333333;
+    --text-muted: #666666;
+    --border:     #E0E0E0;
+  }
+
+  /* ===== TYPOGRAPHY ===== */
+  h1, h2, h3 { font-family: "Barlow Condensed", sans-serif; line-height: 1.15; }
+  h1 { font-size: clamp(36px, 6vw, 64px); font-weight: 900; color: #ffffff; }
+  h2 { font-size: clamp(22px, 3vw, 30px); font-weight: 700; color: var(--navy); margin-bottom: 12px; }
+  h3 { font-size: 20px; font-weight: 700; color: var(--navy); margin-bottom: 8px; }
+  p  { margin-bottom: 14px; color: var(--text); }
+  a  { color: var(--red-btn); text-decoration: none; }
+  a:hover { text-decoration: underline; }
+
+  /* ===== LAYOUT ===== */
+  .container { max-width: 1140px; margin: 0 auto; padding: 0 20px; }
+  .section-pad { padding: 60px 0; }
+  .section-pad-sm { padding: 40px 0; }
+
+  /* ===== HEADER / NAV ===== */
+  .site-header {
+    background: var(--red-hero);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+  }
+  .site-header .container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 68px;
+  }
+  .site-logo { display: flex; align-items: center; text-decoration: none; }
+  .site-logo img { height: 44px; width: auto; display: block; }
+  .site-logo-fallback {
+    font-family: "Barlow Condensed", sans-serif;
+    font-weight: 900;
+    font-size: 22px;
+    color: #ffffff;
+    letter-spacing: 0.5px;
+    display: none;
+  }
+  .site-nav { display: flex; gap: 0; list-style: none; }
+  .site-nav li { position: relative; }
+  .site-nav a {
+    display: block;
+    padding: 0 18px;
+    height: 68px;
+    line-height: 68px;
+    color: #ffffff;
+    font-weight: 600;
+    font-size: 15px;
+    letter-spacing: 0.3px;
+    white-space: nowrap;
+    text-decoration: none;
+  }
+  .site-nav a:hover { background: rgba(255,255,255,0.12); }
+  .nav-toggle { display: none; background: none; border: none; cursor: pointer; padding: 8px; }
+  .nav-bar { display: block; width: 24px; height: 2px; background: #fff; margin: 5px 0; }
+
+  /* ===== HERO ===== */
+  .hero {
+    background: var(--red-hero);
+    padding: 56px 0 48px;
+    text-align: center;
+    border-bottom: 4px solid rgba(0,0,0,0.15);
+  }
+  .hero-eyebrow {
+    font-family: "Barlow Condensed", sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.75);
+    margin-bottom: 12px;
+  }
+  .hero h1 { margin-bottom: 16px; }
+  .hero-sub {
+    font-size: 18px;
+    color: rgba(255,255,255,0.88);
+    max-width: 640px;
+    margin: 0 auto 28px;
+    line-height: 1.5;
+  }
+  .btn {
+    display: inline-block;
+    padding: 14px 32px;
+    background: var(--red-btn);
+    color: #ffffff;
+    font-family: "Barlow Condensed", sans-serif;
+    font-size: 18px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    border-radius: 6px;
+    border: none;
+    cursor: pointer;
+    text-decoration: none;
+    transition: background 0.2s;
+  }
+  .btn:hover { background: #c50d14; text-decoration: none; color: #fff; }
+  .btn-outline {
+    background: transparent;
+    border: 2px solid rgba(255,255,255,0.7);
+    margin-left: 12px;
+  }
+  .btn-outline:hover { background: rgba(255,255,255,0.1); }
+
+  /* ===== CALCULATOR CARD ===== */
+  .calc-section { background: var(--gray-light); padding: 48px 0; }
+  .calc-card {
+    background: #ffffff;
+    border-radius: 10px;
+    box-shadow: 0 4px 24px rgba(0,0,0,0.10);
+    padding: 36px 40px;
+    max-width: 780px;
+    margin: 0 auto;
+  }
+  .calc-card h2 {
+    text-align: center;
+    color: var(--navy);
+    margin-bottom: 8px;
+    font-size: 26px;
+  }
+  .calc-subtitle {
+    text-align: center;
+    color: var(--text-muted);
+    margin-bottom: 28px;
+    font-size: 15px;
+  }
+  .calc-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 28px;
+    margin-bottom: 24px;
+  }
+  .tire-panel {
+    background: var(--gray-light);
+    border-radius: 8px;
+    padding: 20px 22px;
+  }
+  .tire-panel h3 {
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--navy);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 14px;
+    padding-bottom: 8px;
+    border-bottom: 2px solid var(--red-btn);
+  }
+  .field-row { display: flex; gap: 10px; margin-bottom: 10px; }
+  .field-group { flex: 1; }
+  .field-group label {
+    display: block;
+    font-size: 12px;
+    font-weight: 600;
+    color: #555;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 4px;
+  }
+  .field-group input {
+    width: 100%;
+    padding: 9px 10px;
+    border: 1.5px solid var(--border);
+    border-radius: 5px;
+    font-size: 15px;
+    color: var(--text);
+    background: #fff;
+    transition: border-color 0.2s;
+  }
+  .field-group input:focus {
+    outline: none;
+    border-color: var(--red-btn);
+  }
+  .tire-size-display {
+    text-align: center;
+    font-family: "Barlow Condensed", sans-serif;
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--navy);
+    background: #fff;
+    border: 1.5px solid var(--border);
+    border-radius: 5px;
+    padding: 8px;
+    margin-top: 8px;
+  }
+  .calc-btn-row { text-align: center; margin-bottom: 24px; }
+  .calc-btn-row .btn { font-size: 17px; padding: 13px 40px; }
+  .result-panel {
+    background: var(--navy);
+    border-radius: 8px;
+    padding: 24px 28px;
+    display: none;
+  }
+  .result-panel.visible { display: block; }
+  .result-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-bottom: 16px; }
+  .result-box { text-align: center; }
+  .r-label {
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: rgba(255,255,255,0.65);
+    margin-bottom: 4px;
+  }
+  .r-value {
+    font-family: "Barlow Condensed", sans-serif;
+    font-size: 32px;
+    font-weight: 900;
+    color: #ffffff;
+    line-height: 1;
+    display: block;
+  }
+  .r-unit { font-size: 13px; color: rgba(255,255,255,0.6); }
+  .result-compare {
+    background: rgba(255,255,255,0.08);
+    border-radius: 6px;
+    padding: 14px 16px;
+  }
+  .compare-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 14px;
+    color: rgba(255,255,255,0.85);
+    padding: 6px 0;
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+  }
+  .compare-row:last-child { border-bottom: none; }
+  .compare-row .diff { font-weight: 700; }
+  .diff-neg { color: #ff6b6b; }
+  .diff-pos { color: #6bff8e; }
+  .diff-zero { color: rgba(255,255,255,0.6); }
+
+  /* OEM table */
+  .oem-table-wrap { overflow-x: auto; margin-top: 20px; }
+  .oem-table { width: 100%; border-collapse: collapse; font-size: 14px; }
+  .oem-table th {
+    background: var(--navy);
+    color: #fff;
+    padding: 10px 14px;
+    text-align: left;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+  .oem-table td { padding: 9px 14px; border-bottom: 1px solid var(--border); color: var(--text); }
+  .oem-table tr:nth-child(even) td { background: var(--gray-light); }
+  .oem-highlight td { font-weight: 700; color: var(--navy); }
+
+  /* ===== CONTENT SECTIONS ===== */
+  .section-white { background: var(--white); }
+  .section-gray  { background: var(--gray-light); }
+  .section-navy  { background: var(--navy); }
+
+  .section-navy h2 { color: #ffffff; }
+  .section-navy h3 { color: #ffffff; }
+  .section-navy p  { color: rgba(255,255,255,0.85); }
+
+  /* Koray 40-word answer block */
+  .koray-answer {
+    display: block;
+    background: #f0f4ff;
+    border-left: 4px solid var(--navy);
+    border-radius: 0 6px 6px 0;
+    padding: 14px 18px;
+    margin: 10px 0 22px;
+    font-size: 15px;
+    font-weight: 500;
+    color: var(--text);
+    line-height: 1.55;
+  }
+  .section-navy .koray-answer {
+    background: rgba(255,255,255,0.10);
+    border-left-color: var(--red-btn);
+    color: rgba(255,255,255,0.92);
+  }
+
+  /* Info cards */
+  .card-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 20px; margin-top: 24px; }
+  .info-card {
+    background: #fff;
+    border-radius: 8px;
+    padding: 22px;
+    border: 1.5px solid var(--border);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+  }
+  .section-navy .info-card {
+    background: rgba(255,255,255,0.08);
+    border-color: rgba(255,255,255,0.15);
+  }
+  .info-card h3 { font-size: 17px; margin-bottom: 8px; }
+  .section-navy .info-card h3 { color: #ffffff; }
+  .section-navy .info-card p { color: rgba(255,255,255,0.82); }
+
+  /* Number badge */
+  .number-badge {
+    display: inline-block;
+    background: var(--red-btn);
+    color: #fff;
+    font-family: "Barlow Condensed", sans-serif;
+    font-size: 28px;
+    font-weight: 900;
+    padding: 4px 14px;
+    border-radius: 4px;
+    margin-bottom: 8px;
+  }
+
+  /* Two-column layout */
+  .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 36px; align-items: start; }
+
+  /* Data table */
+  .data-table { width: 100%; border-collapse: collapse; margin: 16px 0; font-size: 14px; }
+  .data-table th {
+    background: var(--navy);
+    color: #fff;
+    padding: 9px 14px;
+    text-align: left;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.4px;
+  }
+  .data-table td { padding: 8px 14px; border-bottom: 1px solid var(--border); color: var(--text); }
+  .data-table tr:nth-child(even) td { background: var(--gray-light); }
+
+  /* Related links */
+  .related-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; margin-top: 20px; }
+  .related-card {
+    display: block;
+    background: #fff;
+    border: 1.5px solid var(--border);
+    border-radius: 8px;
+    padding: 18px 20px;
+    color: var(--text);
+    text-decoration: none;
+    transition: border-color 0.2s, box-shadow 0.2s;
+  }
+  .related-card:hover { border-color: var(--navy); box-shadow: 0 4px 12px rgba(26,31,110,0.12); text-decoration: none; }
+  .rc-label {
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    color: var(--red-btn);
+    margin-bottom: 6px;
+  }
+  .related-card h3 { font-size: 16px; color: var(--navy); margin-bottom: 4px; }
+  .related-card p { font-size: 13px; color: var(--text-muted); margin-bottom: 0; }
+
+  /* FAQ */
+  .faq-item { border-bottom: 1px solid var(--border); }
+  .faq-q {
+    width: 100%;
+    background: none;
+    border: none;
+    text-align: left;
+    padding: 16px 0;
+    font-family: "Barlow Condensed", sans-serif;
+    font-size: 19px;
+    font-weight: 700;
+    color: var(--navy);
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+  }
+  .faq-q::after { content: "+"; font-size: 22px; color: var(--red-btn); flex-shrink: 0; }
+  .faq-q.open::after { content: "\2212"; }
+  .faq-a { display: none; padding: 0 0 16px; color: var(--text); font-size: 15px; line-height: 1.6; }
+  .faq-a.open { display: block; }
+
+  /* Section label */
+  .section-label {
+    font-family: "Barlow Condensed", sans-serif;
+    font-size: 12px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: var(--red-btn);
+    margin-bottom: 8px;
+    display: block;
+  }
+
+  /* Code block */
+  .code-block {
+    background: #f8f8f8;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 16px 18px;
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 14px;
+    line-height: 1.8;
+    margin: 12px 0 16px;
+    color: #1A1F6E;
+  }
+
+  /* ===== FOOTER ===== */
+  .site-footer { background: var(--red-footer); padding: 20px 0; }
+  .site-footer .container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+  .footer-copy { font-size: 14px; color: rgba(255,255,255,0.8); }
+  .footer-links { display: flex; gap: 20px; list-style: none; }
+  .footer-links a { font-size: 14px; color: rgba(255,255,255,0.8); text-decoration: none; }
+  .footer-links a:hover { color: #fff; }
+
+  /* ===== RESPONSIVE ===== */
+  @media (max-width: 768px) {
+    .site-nav { display: none; flex-direction: column; position: absolute; top: 68px; left: 0; right: 0; background: var(--red-hero); z-index: 99; }
+    .site-nav.open { display: flex; }
+    .site-nav a { height: auto; line-height: 1; padding: 14px 20px; border-top: 1px solid rgba(255,255,255,0.1); }
+    .nav-toggle { display: block; }
+    .calc-grid { grid-template-columns: 1fr; }
+    .result-grid { grid-template-columns: 1fr 1fr; }
+    .two-col { grid-template-columns: 1fr; }
+    .section-pad { padding: 40px 0; }
+    .calc-card { padding: 24px 18px; }
+    .hero { padding: 40px 0 32px; }
+    .site-footer .container { justify-content: center; text-align: center; }
+    .footer-links { justify-content: center; }
+    .btn-outline { margin-left: 0; margin-top: 10px; }
+  }
+</style>
+</head>
+<body>
+
+
+
+<!-- ===== HERO ===== -->
+<section class="hero">
+  <div class="container">
+    <p class="hero-eyebrow">Free Online Tool</p>
+    <h1>Tire Revolutions Per Mile Calculator</h1>
+    <p class="hero-sub">Enter any tire size and instantly calculate how many revolutions per mile your tires make — and how a size change affects your speedometer.</p>
+    <a href="#calculator" class="btn">Calculate Now</a>
+    <a href="#what-is-rpm" class="btn btn-outline">Learn More</a>
+  </div>
+</section>
+
+<!-- ===== CALCULATOR ===== -->
+<section class="calc-section" id="calculator">
+  <div class="container">
+    <div class="calc-card">
+      <h2>How Do You Use the Tire Revolutions Per Mile Calculator?</h2>
+      <p class="calc-subtitle">Enter section width, aspect ratio, and rim diameter for each tire. Hit Calculate to see exact RPM, diameter, and speedometer error.</p>
+
+      <div class="calc-grid">
+        <!-- Tire 1 -->
+        <div class="tire-panel">
+          <h3>Tire 1 — Current</h3>
+          <div class="field-row">
+            <div class="field-group">
+              <label>Width (mm)</label>
+              <input type="number" id="t1_width" value="205" min="100" max="500">
+            </div>
+            <div class="field-group">
+              <label>Aspect Ratio</label>
+              <input type="number" id="t1_aspect" value="55" min="20" max="100">
+            </div>
+            <div class="field-group">
+              <label>Rim (in)</label>
+              <input type="number" id="t1_rim" value="16" min="10" max="30">
+            </div>
+          </div>
+          <div class="tire-size-display" id="t1_display">205/55R16</div>
+        </div>
+
+        <!-- Tire 2 -->
+        <div class="tire-panel">
+          <h3>Tire 2 — New Size</h3>
+          <div class="field-row">
+            <div class="field-group">
+              <label>Width (mm)</label>
+              <input type="number" id="t2_width" value="215" min="100" max="500">
+            </div>
+            <div class="field-group">
+              <label>Aspect Ratio</label>
+              <input type="number" id="t2_aspect" value="55" min="20" max="100">
+            </div>
+            <div class="field-group">
+              <label>Rim (in)</label>
+              <input type="number" id="t2_rim" value="16" min="10" max="30">
+            </div>
+          </div>
+          <div class="tire-size-display" id="t2_display">215/55R16</div>
+        </div>
+      </div>
+
+      <div class="calc-btn-row">
+        <button class="btn" onclick="calculate()">Calculate Revolutions Per Mile</button>
+      </div>
+
+      <!-- Results -->
+      <div class="result-panel" id="results">
+        <div class="result-grid">
+          <div class="result-box">
+            <div class="r-label">Tire 1 RPM</div>
+            <span class="r-value" id="r_t1_rpm">—</span>
+            <div class="r-unit">rev / mile</div>
+          </div>
+          <div class="result-box">
+            <div class="r-label">Tire 2 RPM</div>
+            <span class="r-value" id="r_t2_rpm">—</span>
+            <div class="r-unit">rev / mile</div>
+          </div>
+          <div class="result-box">
+            <div class="r-label">RPM Difference</div>
+            <span class="r-value" id="r_diff">—</span>
+            <div class="r-unit">rev / mile</div>
+          </div>
+        </div>
+        <div class="result-compare">
+          <div class="compare-row">
+            <span>Tire 1 overall diameter</span><span class="diff" id="r_t1_dia">—</span>
+          </div>
+          <div class="compare-row">
+            <span>Tire 2 overall diameter</span><span class="diff" id="r_t2_dia">—</span>
+          </div>
+          <div class="compare-row">
+            <span>Speedometer error at 60 mph</span><span class="diff" id="r_speedo">—</span>
+          </div>
+          <div class="compare-row">
+            <span>Actual speed when speedo shows 60 mph</span><span class="diff" id="r_actual">—</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- OEM Reference Table -->
+    <div style="max-width:780px;margin:32px auto 0;">
+      <h3 style="color:var(--navy);font-size:20px;margin-bottom:12px;">Common Tire Sizes — Revolutions Per Mile Reference Table</h3>
+      <div class="oem-table-wrap">
+        <table class="oem-table">
+          <thead>
+            <tr>
+              <th>Tire Size</th>
+              <th>Diameter (in)</th>
+              <th>Circumference (in)</th>
+              <th>Rev / Mile</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>175/65R14</td><td>23.0</td><td>72.3</td><td>877</td></tr>
+            <tr><td>195/65R15</td><td>25.0</td><td>78.5</td><td>808</td></tr>
+            <tr class="oem-highlight"><td>205/55R16</td><td>24.9</td><td>78.1</td><td>812</td></tr>
+            <tr><td>215/55R17</td><td>27.3</td><td>85.7</td><td>740</td></tr>
+            <tr><td>225/45R17</td><td>25.0</td><td>78.5</td><td>808</td></tr>
+            <tr><td>235/35R19</td><td>26.3</td><td>82.7</td><td>766</td></tr>
+            <tr><td>245/40R18</td><td>25.7</td><td>80.7</td><td>784</td></tr>
+            <tr><td>265/70R17</td><td>31.6</td><td>99.3</td><td>638</td></tr>
+            <tr><td>285/75R16</td><td>32.8</td><td>103.1</td><td>615</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== WHAT IS RPM (white) ===== -->
+<section class="section-white section-pad" id="what-is-rpm">
+  <div class="container">
+    <span class="section-label">Definition</span>
+    <h2>What Is Tire Revolutions Per Mile?</h2>
+    <span class="koray-answer">Tire revolutions per mile is the number of complete rotations a tire makes to travel exactly one mile. A 205/55R16 tire has an overall diameter of 24.9 inches and makes approximately 812 revolutions per mile.</span>
+
+    <div class="two-col">
+      <div>
+        <p>Every tire has a fixed outer circumference set by its section width, aspect ratio, and rim diameter. As the wheel rolls, the tire makes one complete revolution for each length of circumference it covers on the road surface.</p>
+        <p>Tire RPM determines how fast your wheel spins at any given road speed. At 60 mph, a tire making 812 revolutions per mile spins at 812 RPM. This number directly affects wheel bearing load, speedometer readings, and ABS sensor calculations.</p>
+        <p>Changing from a smaller tire to a larger one reduces revolutions per mile — the tire covers more ground per rotation. A smaller tire increases revolutions per mile. Both changes affect speedometer accuracy if your vehicle is calibrated for the original tire size.</p>
+        <p>For a full explanation of what tire revolutions per mile means and why it matters for your vehicle, read our dedicated guide: <a href="https://tiresizecalculator.pro/what-is-tire-revolutions-per-mile/">What Is Tire Revolutions Per Mile? — Full Guide</a>.</p>
+      </div>
+      <div>
+        <div class="info-card">
+          <h3>Typical RPM by Vehicle Type</h3>
+          <table class="data-table" style="margin-top:8px;">
+            <thead><tr><th>Tire Category</th><th>Typical RPM Range</th></tr></thead>
+            <tbody>
+              <tr><td>Small passenger (14–15″)</td><td>820–880 RPM</td></tr>
+              <tr><td>Standard passenger (16–17″)</td><td>750–830 RPM</td></tr>
+              <tr><td>Performance / low-profile</td><td>760–810 RPM</td></tr>
+              <tr><td>Truck / SUV (17–18″)</td><td>680–760 RPM</td></tr>
+              <tr><td>Off-road large (20″+)</td><td>580–660 RPM</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== FORMULA (gray) ===== -->
+<section class="section-gray section-pad">
+  <div class="container">
+    <span class="section-label">Math</span>
+    <h2>What Is the Formula for Tire Revolutions Per Mile?</h2>
+    <span class="koray-answer">Revolutions per mile = 63,360 ÷ (π × overall diameter in inches). For a 205/55R16 with a 24.88-inch diameter: 63,360 ÷ (3.14159 × 24.88) = 811 rev/mile.</span>
+
+    <div class="two-col" style="margin-top:20px;">
+      <div>
+        <p>The formula uses two steps. First calculate the overall tire diameter from the size code. Then divide 63,360 (inches in one mile) by the tire's circumference.</p>
+
+        <p><strong>Step 1 — Calculate overall diameter:</strong></p>
+        <div class="code-block">
+          Sidewall height (mm) = Aspect ratio ÷ 100 × Section width<br>
+          Overall diameter (in) = Rim diameter + 2 × (Sidewall ÷ 25.4)<br><br>
+          Example — 205/55R16:<br>
+          Sidewall = 55 ÷ 100 × 205 = 112.75 mm<br>
+          Diameter = 16 + 2 × (112.75 ÷ 25.4) = <strong>24.88 inches</strong>
+        </div>
+
+        <p><strong>Step 2 — Calculate revolutions per mile:</strong></p>
+        <div class="code-block">
+          RPM = 63,360 ÷ (π × Diameter)<br>
+          RPM = 63,360 ÷ (3.14159 × 24.88)<br>
+          RPM = 63,360 ÷ 78.17 = <strong>811 revolutions per mile</strong>
+        </div>
+
+        <p>For how section width, aspect ratio, and rim diameter each individually change RPM, see our detailed guide: <a href="https://tiresizecalculator.pro/how-tire-size-affects-rpm/">How Tire Size Affects Revolutions Per Mile</a>.</p>
+      </div>
+      <div>
+        <div class="info-card">
+          <h3>Effect of Each Input on RPM</h3>
+          <table class="data-table" style="margin-top:8px;">
+            <thead><tr><th>Change Made</th><th>RPM Impact</th></tr></thead>
+            <tbody>
+              <tr><td>+10 mm section width</td><td>−4 to −6 RPM</td></tr>
+              <tr><td>+5 aspect ratio points</td><td>−10 to −14 RPM</td></tr>
+              <tr><td>+1 inch rim diameter</td><td>−20 to −26 RPM</td></tr>
+              <tr><td>−10 mm section width</td><td>+4 to +6 RPM</td></tr>
+              <tr><td>−5 aspect ratio points</td><td>+10 to +14 RPM</td></tr>
+              <tr><td>−1 inch rim diameter</td><td>+20 to +26 RPM</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== NORMAL RANGE (navy) ===== -->
+<section class="section-navy section-pad">
+  <div class="container">
+    <span class="section-label" style="color:rgba(255,255,255,0.6);">Benchmark</span>
+    <h2>How Many Revolutions Per Mile Is Normal for a Tire?</h2>
+    <span class="koray-answer">Most passenger tires make 700–900 revolutions per mile. The OEM standard for a 205/55R16 is 812 RPM. Deviating more than 3% (roughly ±24 RPM from 812) from your OEM tire's RPM causes noticeable speedometer error.</span>
+
+    <div class="card-grid">
+      <div class="info-card">
+        <div class="number-badge">812</div>
+        <h3>Passenger Benchmark</h3>
+        <p>The 205/55R16 is one of the world's most common OEM tire sizes. Its 812 rev/mile is the standard reference for speedometer calibration across millions of vehicles.</p>
+      </div>
+      <div class="info-card">
+        <div class="number-badge">±3%</div>
+        <h3>Maximum Safe Deviation</h3>
+        <p>Tire engineers consider ±3% deviation from OEM RPM acceptable for speedometer accuracy. Beyond this, your odometer and ABS system accumulate meaningful error over time.</p>
+      </div>
+      <div class="info-card">
+        <div class="number-badge">638</div>
+        <h3>Truck / Off-Road Low</h3>
+        <p>A 265/70R17 all-terrain tire makes only 638 rev/mile — 174 fewer rotations per mile than the passenger benchmark. Fitting these on a car calibrated for a smaller tire causes a 21% speedo error.</p>
+      </div>
+      <div class="info-card">
+        <div class="number-badge">880</div>
+        <h3>Small Tire High</h3>
+        <p>A compact-car tire like 175/65R14 spins up to 877 times per mile. Fitting these on a vehicle calibrated for a larger tire causes the speedometer to read too high.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== SPEEDOMETER (white) ===== -->
+<section class="section-white section-pad">
+  <div class="container">
+    <span class="section-label">Speedometer Impact</span>
+    <h2>What Happens to Your Speedometer When Tire RPM Changes?</h2>
+    <span class="koray-answer">When tire RPM drops (larger tire), the speedometer reads lower than actual speed — you are traveling faster than the dash shows. When tire RPM rises (smaller tire), the speedometer reads higher — it shows you faster than you actually are.</span>
+
+    <div class="two-col" style="margin-top:20px;">
+      <div>
+        <p>Your speedometer works by counting wheel revolutions per second using a sensor on the transmission or ABS ring. It multiplies the revolution count by the factory-programmed circumference to calculate speed. Fit a different tire size and the circumference changes, but the programming does not.</p>
+
+        <h3 style="font-size:18px;margin-top:16px;">Speedometer Error Formula</h3>
+        <div class="code-block">
+          Error % = ((New circumference − OEM circumference) ÷ OEM circumference) × 100
+        </div>
+
+        <p>A 3% error at 60 mph means your actual speed is 61.8 mph while the dash shows 60. Over a 30-minute highway journey you travel an extra 0.9 miles. At 100,000 miles on the odometer, you have actually driven 103,000 miles — affecting service intervals, warranty, and resale accuracy.</p>
+
+        <p>For a full breakdown of how RPM errors compound over distance, read: <a href="https://tiresizecalculator.pro/tire-rpm-odometer-accuracy/">Tire RPM and Odometer Accuracy</a>.</p>
+      </div>
+      <div>
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Tire Change</th>
+              <th>RPM Δ</th>
+              <th>Actual speed at speedo 60 mph</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>+1 inch overall diameter</td><td>−20</td><td>62.4 mph</td></tr>
+            <tr><td>+2 inches overall diameter</td><td>−40</td><td>64.9 mph</td></tr>
+            <tr><td>+3 inches overall diameter</td><td>−60</td><td>67.2 mph</td></tr>
+            <tr><td>−1 inch overall diameter</td><td>+20</td><td>57.7 mph</td></tr>
+            <tr><td>−2 inches overall diameter</td><td>+40</td><td>55.5 mph</td></tr>
+            <tr><td>205/55R16 → 215/55R16</td><td>−8</td><td>60.9 mph</td></tr>
+            <tr><td>205/55R16 → 225/55R16</td><td>−16</td><td>61.9 mph</td></tr>
+            <tr><td>205/55R16 → 265/70R17</td><td>−174</td><td>78.3 mph</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== FAQ (gray) ===== -->
+<section class="section-gray section-pad">
+  <div class="container" style="max-width:820px;">
+    <span class="section-label">FAQ</span>
+    <h2>What Are the Most Asked Questions About Tire Revolutions Per Mile?</h2>
+    <span class="koray-answer">The most searched questions cover the RPM formula, normal ranges, speedometer effects, and what happens to ABS accuracy. All are answered with exact numbers below.</span>
+
+    <div class="faq-list" style="margin-top:24px;">
+      <div class="faq-item">
+        <button class="faq-q" onclick="toggleFaq(this)">What is a good number of revolutions per mile for a tire?</button>
+        <div class="faq-a">For a standard passenger car, 800–840 rev/mile is typical and considered OEM-standard. Truck and SUV tires range from 620 to 760 rev/mile. The key benchmark is staying within ±3% of your vehicle's factory-calibrated RPM to avoid meaningful speedometer error.</div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q" onclick="toggleFaq(this)">Does a larger tire mean fewer revolutions per mile?</button>
+        <div class="faq-a">Yes. A larger overall tire diameter means the tire covers more road surface per rotation. A tire with a 27-inch diameter makes approximately 746 rev/mile, while a 25-inch tire makes about 808 rev/mile — 62 fewer rotations per mile for the larger tire.</div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q" onclick="toggleFaq(this)">How many revolutions per mile does a 265/70R17 make?</button>
+        <div class="faq-a">A 265/70R17 tire has an overall diameter of approximately 31.6 inches. Using the RPM formula: 63,360 ÷ (π × 31.6) = 638 revolutions per mile. This is significantly fewer than a standard passenger tire, causing a speedometer to read roughly 21% low if fitted on a car calibrated for a smaller size.</div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q" onclick="toggleFaq(this)">Does tire pressure affect revolutions per mile?</button>
+        <div class="faq-a">Yes, but minimally. An underinflated tire has a slightly smaller rolling radius than a properly inflated tire, which increases revolutions per mile by roughly 0.5–1.5% at severely low pressures. At correctly inflated pressures the effect is negligible for speedometer calibration purposes.</div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q" onclick="toggleFaq(this)">How do I calculate tire revolutions per mile manually?</button>
+        <div class="faq-a">Step 1: Sidewall height (mm) = aspect ratio ÷ 100 × section width. Step 2: Overall diameter (in) = rim diameter + 2 × (sidewall ÷ 25.4). Step 3: RPM = 63,360 ÷ (3.14159 × diameter). Example for 205/55R16: sidewall = 112.75 mm, diameter = 24.88 in, RPM = 63,360 ÷ 78.16 = 811 rev/mile.</div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q" onclick="toggleFaq(this)">Will different tire RPM affect my ABS system?</button>
+        <div class="faq-a">Yes. ABS systems use wheel speed sensors that count revolutions to detect when a wheel locks. If one axle's tires have significantly different RPM from the other axle — for example, mixing tire sizes front and rear — the ABS control unit may misread wheel speed differences and trigger incorrectly. Manufacturers recommend keeping all four tires within 0.25 inches of overall diameter of each other.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== CLUSTER PAGES (white) ===== -->
+<section class="section-white section-pad-sm">
+  <div class="container">
+    <span class="section-label">Related Guides</span>
+    <h2>What Else Do You Need to Know About Tire Revolutions Per Mile?</h2>
+    <span class="koray-answer">Tire RPM connects directly to rolling circumference, odometer accuracy, and how each tire dimension changes your result. Each guide below covers one specific aspect with formulas, tables, and real-world numbers.</span>
+
+    <div class="related-grid" style="margin-top:24px;">
+      <a class="related-card" href="https://tiresizecalculator.pro/what-is-tire-revolutions-per-mile/">
+        <p class="rc-label">Cluster Guide 1</p>
+        <h3>What Is Tire Revolutions Per Mile?</h3>
+        <p>Full explanation of what RPM means, why it matters for your vehicle, and how it is measured — with worked examples for 10 common tire sizes.</p>
+      </a>
+      <a class="related-card" href="https://tiresizecalculator.pro/how-tire-size-affects-rpm/">
+        <p class="rc-label">Cluster Guide 2</p>
+        <h3>How Tire Size Affects Revolutions Per Mile</h3>
+        <p>How section width, aspect ratio, and rim diameter each change your tire's RPM — with a comparison table covering 30 sizes from 14-inch to 22-inch wheels.</p>
+      </a>
+      <a class="related-card" href="https://tiresizecalculator.pro/tire-rpm-odometer-accuracy/">
+        <p class="rc-label">Cluster Guide 3</p>
+        <h3>Tire RPM and Odometer Accuracy</h3>
+        <p>How RPM errors accumulate from 5,000 to 100,000 miles — and the real-world consequences for service intervals, warranty claims, and resale value.</p>
+      </a>
+      <a class="related-card" href="https://tiresizecalculator.pro/tire-rolling-circumference/">
+        <p class="rc-label">Cluster Guide 4</p>
+        <h3>Tire Rolling Circumference Explained</h3>
+        <p>Static vs rolling circumference, why they differ under load, and a 5-step chalk-mark method to physically measure your own tire's rolling circumference.</p>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- ===== MORE TOOLS (navy) ===== -->
+<section class="section-navy section-pad-sm">
+  <div class="container">
+    <span class="section-label" style="color:rgba(255,255,255,0.6);">More Tools</span>
+    <h2>More Free Calculators on TireSizeCalculator.pro</h2>
+    <div class="card-grid">
+      <a href="https://tiresizecalculator.pro/" style="text-decoration:none;">
+        <div class="info-card">
+          <h3>Tire Size Calculator</h3>
+          <p>Compare two tire and wheel combinations side-by-side: diameter, poke, inset, speedometer error, and ride height change.</p>
+        </div>
+      </a>
+      <a href="https://tiresizecalculator.pro/positive-negative-zero-offset/" style="text-decoration:none;">
+        <div class="info-card">
+          <h3>Positive vs Negative vs Zero Wheel Offset</h3>
+          <p>Understand how wheel offset (ET) determines poke and clearance — with diagrams and real fitment numbers for common setups.</p>
+        </div>
+      </a>
+      <a href="https://tiresizecalculator.pro/what-is-wheel-offset-et/" style="text-decoration:none;">
+        <div class="info-card">
+          <h3>What Is Wheel Offset (ET)?</h3>
+          <p>Full guide to reading and calculating wheel offset — what the ET number means and how it affects your fitment inside and out.</p>
+        </div>
+      </a>
+      <a href="https://tiresizecalculator.pro/poke-flush-tucked/" style="text-decoration:none;">
+        <div class="info-card">
+          <h3>Poke vs Flush vs Tucked</h3>
+          <p>Visual guide to wheel fitment styles — how offset and tire width determine whether your wheels poke, sit flush, or tuck inside the arch.</p>
+        </div>
+      </a>
+    </div>
+  </div>
+</section>
+
+
+<script>
+// Live tire size display update
+function updateDisplay(n) {
+  const w = document.getElementById('t'+n+'_width').value;
+  const a = document.getElementById('t'+n+'_aspect').value;
+  const r = document.getElementById('t'+n+'_rim').value;
+  document.getElementById('t'+n+'_display').textContent = w + '/' + a + 'R' + r;
+}
+['t1_width','t1_aspect','t1_rim'].forEach(function(id) {
+  document.getElementById(id).addEventListener('input', function() { updateDisplay(1); });
+});
+['t2_width','t2_aspect','t2_rim'].forEach(function(id) {
+  document.getElementById(id).addEventListener('input', function() { updateDisplay(2); });
+});
+
+function getTireData(n) {
+  var w = parseFloat(document.getElementById('t'+n+'_width').value);
+  var a = parseFloat(document.getElementById('t'+n+'_aspect').value);
+  var r = parseFloat(document.getElementById('t'+n+'_rim').value);
+  var sidewall_mm = (a / 100) * w;
+  var diameter_in = r + 2 * (sidewall_mm / 25.4);
+  var circumference_in = Math.PI * diameter_in;
+  var rpm = 63360 / circumference_in;
+  return { diameter_in: diameter_in, circumference_in: circumference_in, rpm: rpm };
+}
+
+function calculate() {
+  var t1 = getTireData(1);
+  var t2 = getTireData(2);
+  var diff = t2.rpm - t1.rpm;
+  var speedoErr = ((t2.circumference_in - t1.circumference_in) / t1.circumference_in) * 100;
+  var actual = 60 / (1 + speedoErr / 100);
+
+  document.getElementById('r_t1_rpm').textContent = Math.round(t1.rpm);
+  document.getElementById('r_t2_rpm').textContent = Math.round(t2.rpm);
+
+  var diffEl = document.getElementById('r_diff');
+  diffEl.textContent = (diff >= 0 ? '+' : '') + Math.round(diff);
+  diffEl.className = 'r-value ' + (diff > 1 ? 'diff-neg' : diff < -1 ? 'diff-pos' : 'diff-zero');
+
+  document.getElementById('r_t1_dia').textContent = t1.diameter_in.toFixed(2) + '"';
+  document.getElementById('r_t2_dia').textContent = t2.diameter_in.toFixed(2) + '"';
+
+  var speedoEl = document.getElementById('r_speedo');
+  speedoEl.textContent = (speedoErr >= 0 ? '+' : '') + speedoErr.toFixed(1) + '%';
+  speedoEl.className = 'diff ' + (speedoErr > 0.5 ? 'diff-pos' : speedoErr < -0.5 ? 'diff-neg' : 'diff-zero');
+
+  var actualEl = document.getElementById('r_actual');
+  actualEl.textContent = actual.toFixed(1) + ' mph';
+  actualEl.className = 'diff ' + (actual > 60.3 ? 'diff-pos' : actual < 59.7 ? 'diff-neg' : 'diff-zero');
+
+  document.getElementById('results').classList.add('visible');
+}
+
+// FAQ accordion
+function toggleFaq(btn) {
+  var answer = btn.nextElementSibling;
+  var isOpen = btn.classList.contains('open');
+  document.querySelectorAll('.faq-q').forEach(function(q) {
+    q.classList.remove('open');
+    q.nextElementSibling.classList.remove('open');
+  });
+  if (!isOpen) {
+    btn.classList.add('open');
+    answer.classList.add('open');
+  }
+}
+
+// Calculate on page load
+calculate();
+</script>
+
+</body>
+</html>				</div>

@@ -1,0 +1,902 @@
+
+<
+
+<!-- ═══ SCHEMA: FAQPage ═══ -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "What is wheel offset (ET)?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Wheel offset (ET) is the distance in millimeters from the wheel mounting face to its centerline. Positive ET pushes the wheel inward toward the suspension. Negative ET pushes the wheel outward toward the fender. ET stands for Einpresstiefe."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What is the difference between positive and negative wheel offset?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Positive offset (ET+) moves the wheel inward, increasing clearance at the fender. Negative offset (ET-) moves the wheel outward, creating more poke. Most front-wheel-drive cars use ET35 to ET50. Off-road trucks use ET0 to ET-25 for a wider stance."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How much wheel offset change is safe without rubbing?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "A safe offset change for most daily drivers is within plus or minus 10mm of stock ET. Changes beyond 15mm risk fender or suspension rubbing. Changes beyond 25mm typically require fender modification or aftermarket suspension to prevent tire contact."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What is the difference between wheel offset and backspacing?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Wheel offset (ET) measures the distance from the mounting face to the centerline in millimeters. Backspacing measures from the mounting face to the inner lip in inches. Both describe the same wheel position using different measurement references and unit systems."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What wheel offset do I need for my car?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Front-wheel-drive cars typically need ET35 to ET50. Rear-wheel-drive sports cars use ET20 to ET40. SUVs and crossovers use ET40 to ET55. Pickup trucks use ET18 to ET30. Always check your vehicle's stock ET as a baseline before choosing aftermarket wheels."
+      }
+    }
+  ]
+}
+</script>
+
+<style>
+/* ── RESET ── */
+.woc * { box-sizing: border-box; margin: 0; padding: 0; }
+
+/* ── BASE ── */
+.woc {
+  font-family: 'Inter', 'Segoe UI', Arial, sans-serif;
+  color: #1a1a1a;
+  background: #fff;
+  line-height: 1.7;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ═══════════════════════════
+   HERO — matches site dark gray
+═══════════════════════════ */
+.woc-hero {
+  background: #555555;
+  padding: 60px 20px 55px;
+  text-align: center;
+  position: relative;
+}
+
+.woc-breadcrumb {
+  font-size: 13px;
+  color: #ccc;
+  margin-bottom: 20px;
+  letter-spacing: 0.3px;
+}
+
+.woc-breadcrumb a {
+  color: #fff;
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.woc-breadcrumb a:hover { text-decoration: underline; }
+
+.woc-hero h1 {
+  font-size: clamp(34px, 5.5vw, 64px);
+  font-weight: 900;
+  color: #fff;
+  text-transform: uppercase;
+  letter-spacing: -1px;
+  line-height: 1.1;
+  margin-bottom: 18px;
+}
+
+.woc-hero h1 span { color: #cc0000; }
+
+.woc-hero-desc {
+  font-size: 16px;
+  color: #ddd;
+  max-width: 580px;
+  margin: 0 auto 26px;
+  line-height: 1.6;
+}
+
+.woc-hero-badge {
+  display: inline-block;
+  background: #cc0000;
+  color: #fff;
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  padding: 6px 18px;
+  border-radius: 30px;
+}
+
+/* ═══════════════════════════
+   CALCULATOR SECTION — white bg
+═══════════════════════════ */
+.woc-calc {
+  background: #fff;
+  padding: 50px 20px 40px;
+  border-bottom: 1px solid #eee;
+}
+
+.woc-wrap { max-width: 900px; margin: 0 auto; }
+
+.woc-calc-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+  margin-bottom: 22px;
+}
+
+@media (max-width: 600px) {
+  .woc-calc-grid { grid-template-columns: 1fr; }
+}
+
+/* Wheel cards */
+.woc-wheel-card {
+  border-radius: 10px;
+  overflow: hidden;
+  border: 1px solid #e0e0e0;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+}
+
+.woc-wheel-card-header {
+  padding: 13px 20px;
+  font-size: 13px;
+  font-weight: 800;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.woc-wheel-card-header .badge {
+  font-size: 10px;
+  background: rgba(255,255,255,0.25);
+  padding: 2px 8px;
+  border-radius: 20px;
+  letter-spacing: 1px;
+}
+
+.woc-card-stock .woc-wheel-card-header { background: #1a7cc8; }
+.woc-card-new   .woc-wheel-card-header { background: #a8122a; }
+
+.woc-wheel-card-body {
+  background: #fff;
+  padding: 20px;
+}
+
+.woc-field { margin-bottom: 14px; }
+.woc-field:last-child { margin-bottom: 0; }
+
+.woc-field label {
+  display: block;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  color: #666;
+  text-transform: uppercase;
+  margin-bottom: 6px;
+}
+
+.woc-field input {
+  width: 100%;
+  border: 1.5px solid #ddd;
+  border-radius: 6px;
+  font-size: 16px;
+  font-weight: 600;
+  color: #1a1a1a;
+  padding: 10px 14px;
+  background: #fafafa;
+  outline: none;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.woc-field input:focus {
+  border-color: #cc0000;
+  box-shadow: 0 0 0 3px rgba(204,0,0,0.08);
+  background: #fff;
+}
+
+/* Calculate button */
+.woc-btn {
+  width: 100%;
+  background: #cc0000;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  font-size: 15px;
+  font-weight: 800;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  padding: 17px 20px;
+  cursor: pointer;
+  transition: background 0.2s, transform 0.1s;
+  margin-bottom: 24px;
+  box-shadow: 0 4px 14px rgba(204,0,0,0.3);
+}
+
+.woc-btn:hover { background: #aa0000; transform: translateY(-1px); }
+.woc-btn:active { transform: translateY(0); }
+
+/* Results */
+.woc-results {
+  display: none;
+  border-radius: 10px;
+  overflow: hidden;
+  border: 1px solid #e0e0e0;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+}
+
+.woc-results.visible { display: block; }
+
+.woc-results-head {
+  background: #1a1a1a;
+  padding: 14px 22px;
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: #fff;
+}
+
+.woc-results-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  background: #fff;
+}
+
+@media (max-width: 560px) {
+  .woc-results-grid { grid-template-columns: 1fr; }
+}
+
+.woc-result-item {
+  padding: 22px 18px;
+  border-right: 1px solid #eee;
+  text-align: center;
+}
+
+.woc-result-item:last-child { border-right: none; }
+
+.woc-result-label {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: #999;
+  margin-bottom: 8px;
+}
+
+.woc-result-value {
+  font-size: 30px;
+  font-weight: 900;
+  color: #1a1a1a;
+  margin-bottom: 5px;
+  line-height: 1;
+}
+
+.woc-result-value.red  { color: #cc0000; }
+.woc-result-value.blue { color: #1a7cc8; }
+.woc-result-value.green{ color: #1a9a5a; }
+
+.woc-result-note {
+  font-size: 12px;
+  color: #888;
+}
+
+.woc-verdict {
+  background: #f8f8f8;
+  border-top: 1px solid #eee;
+  padding: 16px 22px;
+  font-size: 14px;
+  color: #444;
+  line-height: 1.6;
+}
+
+.woc-verdict strong { color: #1a1a1a; }
+
+/* ═══════════════════════════
+   CONTENT — white, Koray framework
+═══════════════════════════ */
+.woc-content {
+  background: #fff;
+  padding: 60px 20px 20px;
+}
+
+.woc-content h2 {
+  font-size: clamp(20px, 2.8vw, 26px);
+  font-weight: 900;
+  text-transform: uppercase;
+  color: #1a1a1a;
+  margin-bottom: 10px;
+  margin-top: 52px;
+  line-height: 1.25;
+  letter-spacing: -0.3px;
+}
+
+.woc-content h2:first-of-type { margin-top: 0; }
+
+/* Red underline — matches site style */
+.woc-content h2::after {
+  content: '';
+  display: block;
+  width: 44px;
+  height: 3px;
+  background: #cc0000;
+  margin-top: 8px;
+}
+
+/* 40-word answer block */
+.woc-answer {
+  background: #f9f9f9;
+  border-left: 4px solid #cc0000;
+  border-radius: 0 6px 6px 0;
+  padding: 15px 20px;
+  font-size: 15px;
+  color: #333;
+  margin: 14px 0 18px;
+  line-height: 1.7;
+}
+
+.woc-content p {
+  font-size: 15px;
+  color: #444;
+  margin-bottom: 16px;
+  line-height: 1.8;
+}
+
+.woc-content strong { color: #1a1a1a; }
+
+.woc-content a {
+  color: #cc0000;
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.woc-content a:hover { text-decoration: underline; }
+
+/* Feature cards — matches homepage style */
+.woc-feature-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+  margin: 22px 0;
+}
+
+@media (max-width: 580px) {
+  .woc-feature-grid { grid-template-columns: 1fr; }
+}
+
+.woc-feature-card {
+  border: 1px solid #e8e8e8;
+  border-left: 4px solid #cc0000;
+  border-radius: 0 8px 8px 0;
+  padding: 16px 18px;
+  background: #fff;
+}
+
+.woc-feature-card-title {
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: #cc0000;
+  margin-bottom: 6px;
+}
+
+.woc-feature-card p {
+  font-size: 13px;
+  color: #666;
+  margin-bottom: 0;
+}
+
+/* Data table */
+.woc-table-wrap {
+  overflow-x: auto;
+  margin: 22px 0;
+  border-radius: 8px;
+  border: 1px solid #e0e0e0;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+}
+
+.woc-table { width: 100%; border-collapse: collapse; font-size: 14px; }
+
+.woc-table thead { background: #1a1a1a; }
+
+.woc-table thead th {
+  padding: 13px 16px;
+  text-align: left;
+  font-weight: 800;
+  font-size: 11px;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: #fff;
+}
+
+.woc-table tbody tr { border-bottom: 1px solid #eee; }
+.woc-table tbody tr:last-child { border-bottom: none; }
+.woc-table tbody tr:nth-child(even) { background: #fafafa; }
+.woc-table tbody td { padding: 12px 16px; color: #555; }
+.woc-table tbody td:first-child { color: #1a1a1a; font-weight: 700; }
+.woc-table .tag-red  { color: #cc0000; font-weight: 700; }
+.woc-table .tag-blue { color: #1a7cc8; font-weight: 700; }
+
+/* Checklist box */
+.woc-check-box {
+  background: #f4f4f4;
+  border-radius: 8px;
+  padding: 20px 22px;
+  margin: 20px 0;
+}
+
+.woc-check-box ul {
+  list-style: none;
+  padding: 0;
+}
+
+.woc-check-box li {
+  font-size: 14px;
+  color: #333;
+  padding: 6px 0 6px 28px;
+  position: relative;
+  border-bottom: 1px solid #e4e4e4;
+}
+
+.woc-check-box li:last-child { border-bottom: none; }
+
+.woc-check-box li::before {
+  content: '✔';
+  color: #cc0000;
+  font-size: 13px;
+  font-weight: 700;
+  position: absolute;
+  left: 0;
+  top: 7px;
+}
+
+/* Related tools block */
+.woc-related {
+  background: #f4f4f4;
+  border-radius: 8px;
+  padding: 22px 24px;
+  margin: 44px 0 30px;
+}
+
+.woc-related-title {
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: #999;
+  margin-bottom: 14px;
+}
+
+.woc-related-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.woc-related-links a {
+  display: inline-block;
+  background: #fff;
+  border: 1.5px solid #ddd;
+  color: #cc0000;
+  text-decoration: none;
+  font-size: 13px;
+  font-weight: 700;
+  padding: 8px 16px;
+  border-radius: 6px;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.woc-related-links a:hover {
+  border-color: #cc0000;
+  box-shadow: 0 2px 8px rgba(204,0,0,0.12);
+  text-decoration: none;
+}
+
+/* ═══════════════════════════
+   FAQ SECTION
+═══════════════════════════ */
+.woc-faq-section {
+  background: #fff;
+  padding: 20px 20px 60px;
+}
+
+.woc-faq-section h2 {
+  font-size: clamp(20px, 2.8vw, 26px);
+  font-weight: 900;
+  text-transform: uppercase;
+  color: #1a1a1a;
+  margin-bottom: 10px;
+  line-height: 1.25;
+}
+
+.woc-faq-section h2::after {
+  content: '';
+  display: block;
+  width: 44px;
+  height: 3px;
+  background: #cc0000;
+  margin-top: 8px;
+  margin-bottom: 28px;
+}
+
+.woc-faq-list { max-width: 900px; margin: 0 auto; }
+
+.woc-faq-item {
+  border-bottom: 1px solid #eee;
+  padding: 20px 0;
+}
+
+.woc-faq-item:first-child { padding-top: 28px; }
+.woc-faq-item:last-child { border-bottom: none; }
+
+.woc-faq-q {
+  font-size: 16px;
+  font-weight: 800;
+  color: #1a1a1a;
+  margin-bottom: 10px;
+  line-height: 1.4;
+}
+
+.woc-faq-a {
+  font-size: 14px;
+  color: #555;
+  line-height: 1.75;
+}
+</style>
+
+<!-- ════════════════════════════════
+     HERO SECTION
+════════════════════════════════ -->
+<div class="woc">
+
+<section class="woc-hero">
+  <div class="woc-breadcrumb">
+    <a href="https://tiresizecalculator.pro/">Home</a> &rsaquo; Wheel Offset Calculator
+  </div>
+  <h1>Free <span>Wheel Offset</span> Calculator</h1>
+  <p class="woc-hero-desc">Enter your stock and new wheel ET to instantly calculate poke, tuck, and inner clearance change — in millimeters.</p>
+  <span class="woc-hero-badge">100% Free · No Sign Up Required</span>
+</section>
+
+<!-- ════════════════════════════════
+     CALCULATOR TOOL
+════════════════════════════════ -->
+<section class="woc-calc">
+  <div class="woc-wrap">
+
+    <div class="woc-calc-grid">
+
+      <!-- Stock Wheel -->
+      <div class="woc-wheel-card woc-card-stock">
+        <div class="woc-wheel-card-header">
+          Wheel 1 <span class="badge">STOCK</span>
+        </div>
+        <div class="woc-wheel-card-body">
+          <div class="woc-field">
+            <label>Wheel Width (inches)</label>
+            <input type="number" id="s-width" placeholder="e.g. 7.5" step="0.5" min="4" max="20">
+          </div>
+          <div class="woc-field">
+            <label>Offset / ET (mm)</label>
+            <input type="number" id="s-et" placeholder="e.g. 48" min="-100" max="120">
+          </div>
+        </div>
+      </div>
+
+      <!-- New Wheel -->
+      <div class="woc-wheel-card woc-card-new">
+        <div class="woc-wheel-card-header">
+          Wheel 2 <span class="badge">NEW</span>
+        </div>
+        <div class="woc-wheel-card-body">
+          <div class="woc-field">
+            <label>Wheel Width (inches)</label>
+            <input type="number" id="n-width" placeholder="e.g. 8.5" step="0.5" min="4" max="20">
+          </div>
+          <div class="woc-field">
+            <label>Offset / ET (mm)</label>
+            <input type="number" id="n-et" placeholder="e.g. 35" min="-100" max="120">
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <button class="woc-btn" onclick="wocCalc()">Calculate Wheel Offset</button>
+
+    <!-- Results panel -->
+    <div class="woc-results" id="woc-results">
+      <div class="woc-results-head">Your Results</div>
+      <div class="woc-results-grid">
+
+        <div class="woc-result-item">
+          <div class="woc-result-label">Outer Change</div>
+          <div class="woc-result-value" id="r-outer">—</div>
+          <div class="woc-result-note" id="r-outer-note">Poke / Tuck</div>
+        </div>
+
+        <div class="woc-result-item">
+          <div class="woc-result-label">Inner Clearance</div>
+          <div class="woc-result-value" id="r-inner">—</div>
+          <div class="woc-result-note" id="r-inner-note">vs stock</div>
+        </div>
+
+        <div class="woc-result-item">
+          <div class="woc-result-label">Fitment Status</div>
+          <div class="woc-result-value" id="r-status">—</div>
+          <div class="woc-result-note" id="r-status-note">—</div>
+        </div>
+
+      </div>
+      <div class="woc-verdict" id="r-verdict"></div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ════════════════════════════════
+     SEO CONTENT — KORAY FRAMEWORK
+     Rule: One topic per page
+     Rule: Every H2 = question
+     Rule: 40-word answer after every H2
+     Rule: Numbers, no vague language
+     Rule: No fluff sentences
+════════════════════════════════ -->
+<section class="woc-content">
+  <div class="woc-wrap">
+
+    <h2>What is wheel offset (ET)?</h2>
+    <div class="woc-answer">
+      Wheel offset (ET) is the distance in millimeters from the wheel's mounting face to its centerline. Positive ET moves the wheel inward toward the suspension. Negative ET moves the wheel outward toward the fender. ET stands for Einpresstiefe.
+    </div>
+    <p>The ET value is stamped on the back of almost every aftermarket wheel. A wheel that is <strong>8 inches wide</strong> has its centerline at 101.6mm from either edge. If the mounting face sits 45mm ahead of that centerline, the offset is <strong>ET45</strong>. Changing from ET45 to ET35 moves the outer edge of the wheel <strong>10mm further out</strong> — this is called poke.</p>
+
+    <div class="woc-feature-grid">
+      <div class="woc-feature-card">
+        <div class="woc-feature-card-title">Positive Offset (ET+)</div>
+        <p>Mounting face sits in front of centerline. Wheel sits closer to the engine and suspension. Typical range: ET35 to ET55 on front-wheel-drive cars.</p>
+      </div>
+      <div class="woc-feature-card">
+        <div class="woc-feature-card-title">Negative Offset (ET−)</div>
+        <p>Mounting face sits behind the centerline. Wheel extends outward toward the fender. Typical range: ET0 to ET−25 on off-road trucks and aggressive stance builds.</p>
+      </div>
+    </div>
+
+    <h2>How does positive offset affect wheel fitment?</h2>
+    <div class="woc-answer">
+      Positive offset pushes the wheel inward toward the suspension and brakes. Higher ET values — ET45, ET50 — create more fender clearance and less poke. Most factory front-wheel-drive cars run ET35 to ET55 to keep wheels flush inside the wheel arch.
+    </div>
+    <p>Increasing ET by 10mm (e.g. ET35 to ET45) moves the wheel 10mm inward. This gains fender clearance but reduces the gap between the wheel and suspension parts — particularly the control arm, strut, and brake caliper. ET values above <strong>ET55 on a wide wheel</strong> can cause the inner tire edge to contact the inner fender liner.</p>
+
+    <h2>How does negative offset affect wheel fitment?</h2>
+    <div class="woc-answer">
+      Negative offset pushes the wheel outward past the fender line. ET0 means the mounting face is exactly at the centerline. ET−25 moves the wheel 25mm further out than ET0. Negative offset is used on lifted trucks and off-road builds to widen the vehicle's track width.
+    </div>
+    <p>Switching from a factory ET45 to ET0 moves the outer face of the wheel <strong>45mm outward</strong>. On most stock vehicles this causes fender contact, requiring rolling or trimming. Negative offset also increases the scrub radius, which makes steering feel heavier and increases stress on wheel bearings and CV joints over time.</p>
+
+    <h2>What is the standard wheel offset for most cars?</h2>
+    <div class="woc-answer">
+      Most front-wheel-drive cars use ET35 to ET50. Rear-wheel-drive performance cars use ET20 to ET40. SUVs and crossovers use ET40 to ET55. Pickup trucks run ET18 to ET30. Off-road and lifted trucks use ET0 to ET−25 depending on fender clearance and lift height.
+    </div>
+
+    <div class="woc-table-wrap">
+      <table class="woc-table">
+        <thead>
+          <tr>
+            <th>Vehicle Type</th>
+            <th>Typical ET Range</th>
+            <th>Fitment Style</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>Front-Wheel-Drive Cars</td><td class="tag-blue">ET35 – ET55</td><td>Flush to tucked</td></tr>
+          <tr><td>Rear-Wheel-Drive Sports Cars</td><td class="tag-blue">ET20 – ET40</td><td>Slight poke to flush</td></tr>
+          <tr><td>SUVs &amp; Crossovers</td><td class="tag-blue">ET40 – ET55</td><td>Tucked</td></tr>
+          <tr><td>Pickup Trucks (stock)</td><td class="tag-blue">ET18 – ET30</td><td>Near flush</td></tr>
+          <tr><td>Lifted Trucks / Off-Road</td><td class="tag-red">ET0 – ET−25</td><td>Aggressive poke</td></tr>
+          <tr><td>JDM / Stance Builds</td><td class="tag-red">ET−10 – ET−40</td><td>Aggressive poke</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h2>What is the difference between wheel offset and backspacing?</h2>
+    <div class="woc-answer">
+      Wheel offset (ET) measures from the mounting face to the wheel centerline in millimeters. Backspacing measures from the mounting face to the inner wheel edge in inches. Both describe the same wheel position but use different reference points and measurement units.
+    </div>
+    <p>To convert backspacing to ET: <strong>ET (mm) = (Backspacing × 25.4) − (Width × 25.4 ÷ 2)</strong>. Example: an 8-inch wide wheel with 5.5 inches of backspacing = (5.5 × 25.4) − (8 × 25.4 ÷ 2) = 139.7 − 101.6 = <strong>ET38</strong>. The American truck and off-road market commonly uses backspacing. ET is the global standard used by European and Asian manufacturers.</p>
+
+    <h2>How much wheel offset change is safe without rubbing?</h2>
+    <div class="woc-answer">
+      A safe offset change for most daily drivers is within ±10mm of stock ET. Changes of ±15mm may require fender rolling. Changes beyond ±25mm typically need fender modification, wheel spacers, or suspension changes to prevent tire contact with fender or suspension parts.
+    </div>
+    <div class="woc-check-box">
+      <ul>
+        <li><strong>±0–10mm from stock ET</strong> — Safe for most vehicles, no modification needed</li>
+        <li><strong>±11–15mm from stock ET</strong> — Check clearance; fender rolling may be needed</li>
+        <li><strong>±16–25mm from stock ET</strong> — Fender rolling or trimming likely required</li>
+        <li><strong>±25mm+ from stock ET</strong> — Fender modification or aftermarket suspension required</li>
+      </ul>
+    </div>
+
+    <h2>What happens if wheel offset is too high?</h2>
+    <div class="woc-answer">
+      If offset is too high (too positive), the inner tire edge rubs against the suspension, brake caliper, or inner fender liner. Symptoms include rubbing noise during cornering or at full steering lock, uneven inner tire wear, and reduced steering angle on some vehicles.
+    </div>
+
+    <h2>What happens if wheel offset is too low?</h2>
+    <div class="woc-answer">
+      If offset is too low (too negative), the outer tire edge rubs against the fender lip — especially during suspension compression or hard cornering. This causes fender scraping, tire sidewall damage, and in most countries places the wheel outside legal fender coverage limits.
+    </div>
+
+    <h2>How does wheel offset affect handling and steering?</h2>
+    <div class="woc-answer">
+      Wheel offset changes the scrub radius — the distance between the steering axis and the tire contact patch. Lower ET increases scrub radius, making steering feel heavier and more reactive. Higher ET reduces scrub radius, giving lighter and more stable steering at the expense of stance width.
+    </div>
+    <p>On <strong>front-wheel-drive vehicles</strong>, lowering ET significantly below stock can cause torque steer — pulling during hard acceleration. On <strong>rear-wheel-drive vehicles</strong>, lower ET widens the track which improves cornering grip but increases bearing and CV joint stress. Stay within <strong>±15mm of stock ET</strong> to keep handling characteristics safe for daily driving.</p>
+    <p>Use the <a href="https://tiresizecalculator.pro/">tire size calculator on our homepage</a> to also check how your new tire size affects speedometer error and ride height alongside your offset change.</p>
+
+    <!-- Related calculators -->
+    <div class="woc-related">
+      <div class="woc-related-title">Related Calculators &amp; Guides</div>
+      <div class="woc-related-links">
+        <a href="https://tiresizecalculator.pro/">Tire Size Calculator</a>
+        <a href="https://tiresizecalculator.pro/speedometer-error-calculator/">Speedometer Error Calculator</a>
+        <a href="https://tiresizecalculator.pro/tire-diameter-calculator/">Tire Diameter Calculator</a>
+        <a href="https://tiresizecalculator.pro/guides/wheel-offset-vs-backspacing/">Wheel Offset vs Backspacing</a>
+        <a href="https://tiresizecalculator.pro/guides/what-is-wheel-offset/">What is Wheel Offset? Guide</a>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ════════════════════════════════
+     FAQ SECTION — Schema matches above FAQPage JSON-LD
+════════════════════════════════ -->
+<section class="woc-faq-section">
+  <div class="woc-wrap">
+
+    <h2>Frequently Asked Questions</h2>
+
+    <div class="woc-faq-list">
+
+      <div class="woc-faq-item">
+        <div class="woc-faq-q">What is wheel offset (ET)?</div>
+        <div class="woc-faq-a">Wheel offset (ET) is the distance in millimeters from the wheel mounting face to its centerline. Positive ET pushes the wheel inward toward the suspension. Negative ET pushes it outward toward the fender. ET stands for Einpresstiefe — a German term meaning press depth.</div>
+      </div>
+
+      <div class="woc-faq-item">
+        <div class="woc-faq-q">What is the difference between positive and negative wheel offset?</div>
+        <div class="woc-faq-a">Positive offset (ET+) moves the wheel inward, increasing clearance at the fender. Negative offset (ET−) moves the wheel outward, creating more poke. Most front-wheel-drive cars use ET35 to ET50. Off-road trucks use ET0 to ET−25 for a wider stance and aggressive look.</div>
+      </div>
+
+      <div class="woc-faq-item">
+        <div class="woc-faq-q">How much wheel offset change is safe without rubbing?</div>
+        <div class="woc-faq-a">A safe offset change for most daily drivers is within ±10mm of stock ET. Changes beyond ±15mm risk fender or suspension rubbing. Changes beyond ±25mm typically require fender modification or aftermarket suspension to prevent tire contact.</div>
+      </div>
+
+      <div class="woc-faq-item">
+        <div class="woc-faq-q">What is the difference between wheel offset and backspacing?</div>
+        <div class="woc-faq-a">Wheel offset (ET) measures from the mounting face to the centerline in millimeters. Backspacing measures from the mounting face to the inner lip in inches. Both describe the same wheel position using different measurement references and unit systems.</div>
+      </div>
+
+      <div class="woc-faq-item">
+        <div class="woc-faq-q">What wheel offset do I need for my car?</div>
+        <div class="woc-faq-a">Front-wheel-drive cars need ET35 to ET50. Rear-wheel-drive sports cars use ET20 to ET40. SUVs use ET40 to ET55. Pickup trucks use ET18 to ET30. Always check your vehicle's stock ET as a baseline before selecting aftermarket wheels. Use our calculator above to compare sizes.</div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+</div><!-- end .woc -->
+
+<!-- ════════════════════════════════
+     CALCULATOR JAVASCRIPT
+════════════════════════════════ -->
+<script>
+function wocCalc() {
+  var sw = parseFloat(document.getElementById('s-width').value);
+  var se = parseFloat(document.getElementById('s-et').value);
+  var nw = parseFloat(document.getElementById('n-width').value);
+  var ne = parseFloat(document.getElementById('n-et').value);
+
+  if (isNaN(sw) || isNaN(se) || isNaN(nw) || isNaN(ne)) {
+    alert('Please fill in all four fields.');
+    return;
+  }
+
+  var swMM = sw * 25.4;
+  var nwMM = nw * 25.4;
+
+  // Outer face position from hub center (positive = sticks out more)
+  var stockOuter = (swMM / 2) - se;
+  var newOuter   = (nwMM / 2) - ne;
+  var outerDiff  = newOuter - stockOuter;
+
+  // Inner face position from hub center
+  var stockInner = (swMM / 2) + se;
+  var newInner   = (nwMM / 2) + ne;
+  var innerDiff  = newInner - stockInner;
+
+  // Outer result
+  var oEl = document.getElementById('r-outer');
+  var oN  = document.getElementById('r-outer-note');
+  if (outerDiff > 0) {
+    oEl.textContent = '+' + outerDiff.toFixed(1) + ' mm';
+    oEl.className   = 'woc-result-value red';
+    oN.textContent  = 'More Poke — sticks out further';
+  } else if (outerDiff < 0) {
+    oEl.textContent = outerDiff.toFixed(1) + ' mm';
+    oEl.className   = 'woc-result-value blue';
+    oN.textContent  = 'More Tuck — sits further inward';
+  } else {
+    oEl.textContent = '0 mm';
+    oEl.className   = 'woc-result-value';
+    oN.textContent  = 'No change in outer position';
+  }
+
+  // Inner result
+  var iEl = document.getElementById('r-inner');
+  var iN  = document.getElementById('r-inner-note');
+  if (innerDiff > 0) {
+    iEl.textContent = '+' + innerDiff.toFixed(1) + ' mm';
+    iEl.className   = 'woc-result-value red';
+    iN.textContent  = 'Less inner clearance vs stock';
+  } else if (innerDiff < 0) {
+    iEl.textContent = innerDiff.toFixed(1) + ' mm';
+    iEl.className   = 'woc-result-value green';
+    iN.textContent  = 'More inner clearance vs stock';
+  } else {
+    iEl.textContent = '0 mm';
+    iEl.className   = 'woc-result-value';
+    iN.textContent  = 'No inner clearance change';
+  }
+
+  // Status
+  var sEl  = document.getElementById('r-status');
+  var sN   = document.getElementById('r-status-note');
+  var abs  = Math.abs(outerDiff);
+  if (abs <= 10) {
+    sEl.textContent = 'Safe';
+    sEl.className   = 'woc-result-value green';
+    sN.textContent  = 'Within ±10mm safe zone';
+  } else if (abs <= 20) {
+    sEl.textContent = 'Caution';
+    sEl.className   = 'woc-result-value';
+    sN.textContent  = 'Check fender clearance';
+  } else {
+    sEl.textContent = 'Risk';
+    sEl.className   = 'woc-result-value red';
+    sN.textContent  = 'Fender work likely needed';
+  }
+
+  // Verdict
+  var v = document.getElementById('r-verdict');
+  var dir = outerDiff >= 0 ? 'stick out <strong>' + Math.abs(outerDiff).toFixed(1) + 'mm more</strong>' : 'sit <strong>' + Math.abs(outerDiff).toFixed(1) + 'mm further inward</strong>';
+  var ic  = innerDiff > 0 ? '<strong>' + Math.abs(innerDiff).toFixed(1) + 'mm less</strong> inner clearance' : '<strong>' + Math.abs(innerDiff).toFixed(1) + 'mm more</strong> inner clearance';
+  var safe = abs <= 10 ? 'This is within the safe range for most vehicles — no fender modification expected.'
+           : abs <= 20 ? 'Check fender clearance before driving. Fender rolling may be required.'
+           : 'Significant offset change — fender modification or aftermarket suspension is likely required.';
+  v.innerHTML = '<strong>Result:</strong> Your new wheel will ' + dir + ' compared to stock. You will have ' + ic + '. ' + safe;
+
+  document.getElementById('woc-results').classList.add('visible');
+}
+</script>
