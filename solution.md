@@ -221,7 +221,7 @@ Keep the current look and section order. Only make these quality fixes, which do
 - ✅ No AdSense. ✅ **Keep Google Analytics** with the same tag `GT-MBT5TB3W` (owner, 2026-09-29). Add it as a plain `gtag.js` snippet in `BaseLayout` (async, production builds only) so historical data continues. This is the only third-party script allowed.
 - ✅ Speedo error: use `(New − Original) ÷ Original` (see §4).
 - ✅ About, Privacy and Terms: write new, distinct meta descriptions (done in §8a). Check that the Privacy Policy body mentions Google Analytics cookies.
-- ℹ️ Legacy wheel-offset widget CSS had unclosed `@media` blocks, so most calculator styles applied only below 600px on the live site. The port closes them, so desktop now gets the intended styling. The browser `alert()` for empty fields is replaced by an inline message.
+- ℹ️ The wheel-offset calculator's browser `alert()` for empty fields is replaced by an inline message.
 - ⚠️ **Broken internal links on the live site, fixed in the port** (`src/lib/legacyHtml.ts`): `/wheel-offset-calculator/`→`/wheel-offset/`, `/what-is-wheel-offset/` and `/guides/what-is-wheel-offset/`→`/what-is-wheel-offset-et/`, `/guides/poke-flush-tucked/`, `/guides/wheel-offset-vs-backspacing/`, `/revolutions-per-mile-calculator/`, `/tire-diameter-calculator/`→`/`. These paths also get 301s in `vercel.json` (task 3.2).
 - ⚠️ **Linked but never published** (text kept, link removed; possible future articles): `/what-is-tire-revolutions-per-mile/`, `/tire-rpm-odometer-accuracy/`, `/how-tire-size-affects-rpm/`, `/tire-rolling-circumference/`, `/speedometer-error-after-tire-change/`, `/how-to-fix-speedometer-error/`, `/how-much-speedometer-error-is-legal/`.
 - ℹ️ Posts are verbatim legacy HTML (`src/content/posts/*.html`) served by `src/pages/[slug].astro`, with metadata in `src/data/posts.ts`. `positive-negative-zero-offset` is bylined **Jake Harmon**; the others are bylined mike.themechanic. The live category archive layout was broken (huge gaps), so it has a clean card grid now.
@@ -230,6 +230,11 @@ Keep the current look and section order. Only make these quality fixes, which do
   - "Speedo error at common tire size changes" was an empty box on the live site. It now shows a computed table of 5 size changes that the site already mentions.
   - The Fitment Guide card titled "iOS (Apple Books)" (a CMS slip) is now "What is Poke?".
   - Eyebrow labels ("Free Online Tool", "Fitment Guide" …) are styled text, not H2/H5 headings, so there is one H1 per page with a clean heading outline.
+- ⚠️ **Calculator page content fixes (please review):**
+  - Speedometer page: the worked example (205/55R16 → 225/50R17) said 25.98 in, 2,070 mm, +4.4%, 62.6 mph. It is really 25.86 in, 2,063 mm, +3.9%, 62.4 mph, which matches the calculator on the same page. The "by common size change" table had 7 wrong rows (e.g. 205/55R16→215/55R16 said +0.8%, really +1.7%). Both are now computed.
+  - Speedometer page reuses the homepage FAQ, same as live (its FAQ schema was identical). Note that the FAQ intro text promises questions about MOT and fixing error that the FAQ doesn't contain.
+  - RPM page: the live FAQPage schema listed 3 questions that were not the 6 shown on the page. The schema is now generated from the visible FAQ.
+  - RPM page prose/tables were kept verbatim and not recomputed (e.g. "265/70R17 … 21% speedo error" is really ~27%). Worth a copy review.
 - 🚫 **Never modify the live WordPress site** (no edits through connectors, MCP tools, wp-admin or the REST API). Only read from it by fetching public pages.
 - Later (not v1): add the 3 extra calculators to the nav, shareable URL params, tire-code input, programmatic size-comparison pages.
 
@@ -260,7 +265,7 @@ Mark `[x]` only when the task's **Done when** is verified.
 
 ### Phase 2 — Pages & content
 - [x] **2.1** Home page: all 14 sections in live order, chart data in `src/data/`, FAQ + JSON-LD.
-- [ ] **2.2** The 3 calculator pages with their full content + FAQ JSON-LD.
+- [x] **2.2** The 3 calculator pages with their full content + FAQ JSON-LD.
 - [x] **2.3** Content collection + 4 posts + `PostLayout` (Article + Breadcrumb JSON-LD).
 - [x] **2.4** `/blog/` listing (cards) + `/category/wheel-offset-calculator/`.
 - [ ] **2.5** About, Privacy, Terms.

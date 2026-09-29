@@ -17,3 +17,11 @@ test('json-ld is extracted', () => {
   expect(r.html).toBe('<p>a</p>');
   expect(r.schema).toEqual([{ '@type': 'FAQPage', url: '/x/' }]);
 });
+
+import { faqSchemaFromHtml, faqToDetails } from './legacyHtml';
+
+test('faq accordion → details + schema', () => {
+  const html = faqToDetails('<div class="faq-item">\n <button class="faq-q" onclick="toggleFaq(this)">Q1?</button>\n <div class="faq-a">A <b>1</b>.</div>\n</div>');
+  expect(html).toBe('<details class="faq-item"><summary class="faq-q">Q1?</summary><div class="faq-a">A <b>1</b>.</div></details>');
+  expect(faqSchemaFromHtml(html).mainEntity).toEqual([{ '@type': 'Question', name: 'Q1?', acceptedAnswer: { '@type': 'Answer', text: 'A 1.' } }]);
+});

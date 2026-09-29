@@ -1,0 +1,234 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import SpeedoCalculator from '../components/calculators/SpeedoCalculator.astro';
+import SectionHead from '../components/SectionHead.astro';
+import Faq from '../components/Faq.astro';
+import PostGrid from '../components/PostGrid.astro';
+import { FAQ } from '../data/home';
+import { POSTS } from '../data/posts';
+import { SITE } from '../data/site';
+import faqSchema from '../data/homeFaqSchema.json';
+import { circumference, speedoResult, type TireSize } from '../lib/calc/speedo';
+
+const tire = (s: string): TireSize => {
+  const [, w, a, r] = s.match(/^(\d+)\/(\d+)R(\d+)$/)!;
+  return { w: Number(w), a: Number(a), r: Number(r) };
+};
+
+// Worked example and table are computed (the live copy had wrong numbers — solution.md §10).
+const exO = tire('205/55R16'), exN = tire('225/50R17');
+const inches = (t: TireSize) => t.r + (2 * t.w * t.a) / 100 / 25.4;
+const exOc = Math.round(circumference(exO)), exNc = Math.round(circumference(exN));
+const ex = speedoResult(exO, exN);
+const fmtInt = (n: number) => n.toLocaleString('en-US');
+
+const CHANGES: [string, string][] = [
+  ['205/55R16', '215/55R16'], ['205/55R16', '225/55R16'], ['205/55R16', '225/50R17'], ['205/55R16', '235/40R18'],
+  ['205/55R16', '265/70R17'], ['225/45R17', '215/45R17'], ['225/45R17', '235/40R18'],
+];
+const changeRows = CHANGES.map(([a, b]) => {
+  const r = speedoResult(tire(a), tire(b));
+  return { a, b, err: r.errText.replace('-', '−'), at60: r.speeds.find((s) => s.indicated === 60)!.actual };
+});
+
+const SPEED_ROWS = [
+  [5, 'large upsizing'], [4, 'plus 2 sizing'], [3, '±limit'], [2, 'plus 1 sizing'], [1, 'minor change'],
+  [0, 'OEM size'], [-1, 'slightly smaller'], [-2, 'smaller tire'], [-3, '±limit'],
+] as const;
+const SPEEDS = [30, 50, 60, 70, 80];
+const pct = (p: number) => (p > 0 ? `+${p}%` : p < 0 ? `−${-p}%` : '0%');
+
+const LIMITS = [
+  { badge: '±3%', title: 'Engineering Tolerance', desc: "Tire engineers design OEM tire sizes so the vehicle's speedometer reads within ±1–2% of actual speed. A ±3% tolerance is the common threshold used by most automotive standards and legal regulations worldwide." },
+  { badge: 'US Law', title: 'United States — No Maximum', desc: 'The US has no federal law specifying maximum speedometer error for private vehicles. However, all new vehicles must meet FMVSS 101 — speedometers must show speeds up to 85 mph. Dealers and states may impose different standards for modified vehicles.' },
+  { badge: 'EU Law', title: 'European Union — ECE R39', desc: 'ECE Regulation 39 (adopted by EU and UK) requires that speedometers must never read lower than actual speed, and the positive error must not exceed V1 = 1.1 × V2 + 6.25 mph (where V2 is actual speed). At 60 mph actual, the speedometer may show up to 72.25 mph but never below 60 mph.' },
+  { badge: 'ABS Risk', title: 'ABS & Traction Control Accuracy', desc: "Your ABS and ESC systems use the same wheel speed sensors as the speedometer. If tire size changes alter the sensor's revolution count by more than 3%, these safety systems may trigger incorrectly or fail to trigger when needed — a genuine safety risk beyond just speedo accuracy." },
+];
+
+const app = {
+  '@context': 'https://schema.org',
+  '@type': 'WebApplication',
+  name: 'Speedometer Error Calculator',
+  url: `${SITE.url}/speedometer-error-calculator/`,
+  applicationCategory: 'UtilitiesApplication',
+  operatingSystem: 'Any',
+  offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },
+};
+---
+<BaseLayout
+  title="Speedometer Error Calculator - Tire Size Calculator"
+  description="Enter your original (OEM) tire size, then your new tire size. Hit Calculate to see exact error %, real speed at every indicated speed, and odometer drift."
+  schema={[app, faqSchema]}
+>
+  <section class="spd-hero">
+    <div class="container">
+      <p class="hero-eyebrow">Free Online Tool</p>
+      <h1>Speedometer Error Calculator</h1>
+      <p class="hero-text">Changed tire size? Calculate the exact speedometer error in seconds. See your real speed at every indicated speed and how much your odometer drifts over time.</p>
+      <a class="cta" href="#calculate">Calculate Now</a>
+      <ul class="pills">
+        <li>Free — No Sign-Up</li><li>Exact % Error</li><li>Real Speed at Every MPH</li><li>Odometer Drift Table</li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="section section--gray" id="calculate">
+    <div class="container"><SpeedoCalculator /></div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <SectionHead eyebrow="Definition" title="What Is Speedometer Error?" />
+      <p class="answer">Speedometer error is the percentage difference between the speed your dashboard shows and your actual road speed. It occurs when a tire size change alters rolling circumference without recalibrating the vehicle’s wheel speed sensor system.</p>
+      <div class="split">
+        <div class="prose">
+          <p>Your speedometer counts wheel revolutions per second using a sensor on the ABS ring or transmission output shaft. It multiplies that count by a fixed circumference value programmed at the factory — the rolling circumference of your OEM tire.</p>
+          <p>When you fit a different tire size, the actual rolling circumference changes but the ECU’s programmed value stays the same. The result is a permanent, systematic error on every speed reading and every odometer increment.</p>
+          <p>A larger tire has a greater circumference. It covers more distance per revolution. The ECU undercounts distance covered, so the speedometer reads lower than actual speed — you are going faster than the dashboard shows. A smaller tire has the opposite effect: it causes the speedometer to read higher than actual speed.</p>
+        </div>
+        <div class="card">
+          <h3>Error Direction — Quick Reference</h3>
+          <div class="table-wrap">
+            <table class="data">
+              <thead><tr><th scope="col">Tire Change</th><th scope="col">Speedo Reads</th><th scope="col">Actual Speed</th></tr></thead>
+              <tbody>
+                <tr><td>Larger diameter</td><td>LOW (under)</td><td>FASTER than shown</td></tr>
+                <tr><td>Smaller diameter</td><td>HIGH (over)</td><td>SLOWER than shown</td></tr>
+                <tr><td>Same diameter</td><td>Accurate</td><td>Same as shown</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <p class="note">A speedo reading LOW is dangerous — you may be unknowingly exceeding speed limits.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section section--gray">
+    <div class="container">
+      <SectionHead eyebrow="Root Cause" title="What Causes Speedometer Error When You Change Tire Size?" />
+      <p class="answer">Speedometer error is caused by the mismatch between your OEM tire’s rolling circumference (programmed into the ECU) and your new tire’s actual rolling circumference. Every millimetre of circumference difference creates a proportional speed reading error.</p>
+      <div class="split">
+        <div class="prose">
+          <p>The speedometer error formula is:</p>
+          <div class="formula-card">
+            <p class="formula">Error % = ((New circumference − OEM circumference) ÷ OEM circumference) × 100</p>
+            <p class="ex-title">Example — 205/55R16 → 225/50R17:</p>
+            <p>OEM circumference: π × {inches(exO).toFixed(2)} in × 25.4 mm = {fmtInt(exOc)} mm</p>
+            <p>New circumference: π × {inches(exN).toFixed(2)} in × 25.4 mm = {fmtInt(exNc)} mm</p>
+            <p>Error = ({fmtInt(exNc)} − {fmtInt(exOc)}) ÷ {fmtInt(exOc)} × 100 = {ex.errText}</p>
+            <p>At 60 mph indicated → actual {ex.speeds.find((s) => s.indicated === 60)!.actual} mph</p>
+          </div>
+          <p>The three tire dimensions that drive error are section width, aspect ratio, and rim diameter. Increasing any of them increases overall diameter and circumference, reducing speedometer reading relative to actual speed.</p>
+        </div>
+        <div class="card">
+          <h3>Speedometer Error by Common Size Change</h3>
+          <div class="table-wrap">
+            <table class="data">
+              <thead><tr><th scope="col">Change</th><th scope="col">Error %</th><th scope="col">Real speed at 60 mph</th></tr></thead>
+              <tbody>
+                {changeRows.map((r) => <tr><td>{r.a} → {r.b}</td><td>{r.err}</td><td>{r.at60} mph</td></tr>)}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section section--navy limits">
+    <div class="container">
+      <SectionHead eyebrow="Safe Limits" title="How Much Speedometer Error Is Acceptable?" />
+      <p class="answer answer--dark">Most automotive engineers and legal standards consider ±3% speedometer error acceptable. At 60 mph, ±3% means real speed between 58.2 and 61.8 mph. Beyond ±3%, your ABS, traction control, and odometer also become meaningfully inaccurate.</p>
+      <div class="limit-grid">
+        {LIMITS.map((l) => (
+          <div class="limit">
+            <span class="badge">{l.badge}</span>
+            <h3>{l.title}</h3>
+            <p>{l.desc}</p>
+          </div>
+        ))}
+      </div>
+      <p class="legal-note">For full legal details by country, see: <strong>How Much Speedometer Error Is Legal? US, UK &amp; EU Laws.</strong></p>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <SectionHead eyebrow="Speed Reference" title="What Does Your Speedometer Actually Show at Each Speed?" />
+      <p class="answer">When your speedometer shows 60 mph with a +4% tire size error, your actual speed is 62.4 mph. Use the calculator above to find your exact values, or use this table for the most common error percentages.</p>
+      <div class="table-wrap">
+        <table class="data data--wide">
+          <thead><tr><th scope="col">Speedo Error</th>{SPEEDS.map((s) => <th scope="col">At {s} mph</th>)}</tr></thead>
+          <tbody>
+            {SPEED_ROWS.map(([p, label]) => (
+              <tr><td>{pct(p)} ({label})</td>{SPEEDS.map((s) => <td>{(s * (1 + p / 100)).toFixed(1)} mph</td>)}</tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+      <p class="after-table">Positive error: speedometer reads LOW — you are faster than shown. Negative error: speedometer reads HIGH — you appear faster than you are. Use the speedometer error fix guide if your error exceeds ±3%.</p>
+    </div>
+  </section>
+
+  <section class="section section--gray">
+    <div class="container">
+      <SectionHead eyebrow="FAQ" title="What Are the Most Asked Questions About Speedometer Error?" />
+      <p class="answer">The most searched speedometer error questions ask about which direction the error goes, whether it affects fuel economy, if it causes MOT or inspection failures, and how to fix it. All answered with exact numbers below.</p>
+      <Faq items={FAQ} />
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <SectionHead eyebrow="In-Depth Guides" title="What Else Should You Know About Speedometer Error and Tire Size?" />
+      <p class="answer">These four guides cover every dimension of speedometer error in detail: why it happens technically, what the laws say in each country, how it affects your odometer over time, and exactly how to fix it.</p>
+      <PostGrid posts={POSTS} />
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .spd-hero { background: var(--red); padding: 60px 0; text-align: center; color: #fff; }
+  .hero-eyebrow { margin: 0 0 14px; font: 700 12px/1.4 var(--font-body); letter-spacing: 1.5px; text-transform: uppercase; color: rgb(255 255 255 / .85); }
+  h1 { margin: 0 0 18px; font: 900 52px/1.1 var(--font-display); color: #fff; }
+  .hero-text { max-width: 620px; margin: 0 auto 26px; font-size: 16px; color: rgb(255 255 255 / .9); }
+  .cta { display: inline-block; padding: 16px 38px; border-radius: 3px; background: var(--red-bright); color: #fff; text-decoration: none; font: 700 17px/1 var(--font-display); letter-spacing: .5px; box-shadow: 0 4px 14px rgb(0 0 0 / .15); }
+  .cta:hover { background: #c50d14; color: #fff; }
+  .pills { list-style: none; margin: 30px 0 0; padding: 0; display: flex; flex-wrap: wrap; justify-content: center; gap: 12px; }
+  .pills li { padding: 8px 16px; border: 1px solid rgb(255 255 255 / .6); border-radius: 30px; font: 700 12px/1 var(--font-body); }
+  @media (max-width: 767px) { h1 { font-size: 36px; } .spd-hero { padding: 44px 0; } }
+
+  .answer { margin: -14px 0 30px; padding: 16px 24px; background: #f0eff8; border-left: 4px solid var(--navy); border-radius: 0 4px 4px 0; font-size: 15px; font-weight: 500; line-height: 1.7; color: var(--ink); }
+  .section--gray .answer { background: #e8e7f0; }
+  .answer--dark { background: rgb(255 255 255 / .08) !important; border-left-color: var(--red-bright); color: #fff !important; }
+  .split { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; align-items: start; }
+  @media (max-width: 900px) { .split { grid-template-columns: 1fr; } }
+  .prose p { margin: 0 0 12px; font-size: 16px; line-height: 1.6; }
+  .card { background: #fff; border: 1px solid #ccc; border-radius: 10px; padding: 24px 20px; }
+  .card h3 { margin: 0 0 20px; font: 700 18px/1.3 var(--font-display); color: var(--ink); }
+  .note { margin: 16px 0 0; font-size: 13px; }
+  .table-wrap { overflow-x: auto; }
+  .data { width: 100%; border-collapse: collapse; font-size: 13px; color: var(--ink); }
+  .data th { padding: 18px 15px; background: #221e63; color: #fff; text-align: left; font: 700 13px/1.3 var(--font-display); letter-spacing: .5px; text-transform: uppercase; }
+  .data td { padding: 14px 15px; border-bottom: 1px solid #ddd; }
+  .data tbody tr:nth-child(even) td { background: #f4f4f4; }
+  .data--wide { min-width: 640px; font-size: 13px; }
+  .formula-card { margin: 16px 0 24px; padding: 20px 16px; background: #fff; border: 1px solid #ccc; border-radius: 10px; color: var(--ink); }
+  .formula-card p { margin: 0 0 12px; font-size: 14px; }
+  .formula-card p:last-child { margin-bottom: 0; }
+  .formula-card .formula { font-size: 16px; margin-bottom: 24px; }
+  .formula-card .ex-title { font-size: 16px; font-weight: 600; }
+  .after-table { margin: 20px 0 0; font-size: 15px; }
+
+  .limits { background: #221e63; }
+  .limit-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; }
+  @media (max-width: 1024px) { .limit-grid { grid-template-columns: repeat(2, 1fr); } }
+  @media (max-width: 560px) { .limit-grid { grid-template-columns: 1fr; } }
+  .limit { padding: 16px 15px 24px; background: rgb(255 255 255 / .06); border: 1px solid rgb(255 255 255 / .12); border-radius: 5px; }
+  .badge { display: inline-block; margin-bottom: 22px; padding: 10px 11px; background: var(--red-bright); border-radius: 3px; font: 900 22px/1 var(--font-display); letter-spacing: 1px; color: #fff; }
+  .limit h3 { margin: 0 0 12px; font: 700 18px/1.3 var(--font-display); color: #fff; }
+  .limit p { margin: 0; font-size: 14px; line-height: 1.65; color: rgb(255 255 255 / .75); }
+  .legal-note { margin: 30px 0 0; font-size: 15px; color: rgb(255 255 255 / .75) !important; }
+  .legal-note strong { color: #fff; }
+</style>

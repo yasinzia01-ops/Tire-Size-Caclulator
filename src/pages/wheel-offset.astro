@@ -1,0 +1,32 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import WheelOffsetCalculator from '../components/calculators/WheelOffsetCalculator.astro';
+import { cleanLegacyHtml } from '../lib/legacyHtml';
+import raw from '../content/pages/wheel-offset.html?raw';
+import '../styles/legacy/wheel-offset.css';
+import { SITE } from '../data/site';
+
+// Verbatim legacy page; the calculator markup is replaced by the ported component.
+const { html, schema } = cleanLegacyHtml(raw);
+const [before, after] = html.split('<!--CALCULATOR-->');
+const app = {
+  '@context': 'https://schema.org',
+  '@type': 'WebApplication',
+  name: 'Wheel Offset Calculator',
+  url: `${SITE.url}/wheel-offset/`,
+  applicationCategory: 'UtilitiesApplication',
+  operatingSystem: 'Any',
+  offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },
+};
+---
+<BaseLayout
+  title="Wheel Offset Calculator - Free ET, Poke & Backspacing Tool"
+  description="Free wheel offset calculator. Enter your ET, width & tire size to instantly calculate poke, inset & backspacing. Works for all cars, trucks & SUVs."
+  schema={[app, ...schema]}
+>
+  <div class="woc">
+    <Fragment set:html={before} />
+    <section class="woc-calc"><div class="woc-wrap"><WheelOffsetCalculator /></div></section>
+    <Fragment set:html={after} />
+  </div>
+</BaseLayout>

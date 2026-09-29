@@ -61,3 +61,21 @@ export function cleanLegacyHtml(html: string) {
   const { html: body, schema } = extractJsonLd(html);
   return { html: fixLinks(body), schema };
 }
+
+/** Legacy JS accordions (button.faq-q + div.faq-a) → native <details>, no script needed. */
+export function faqToDetails(html: string): string {
+  return html.replace(
+    /<div class="faq-item">\s*<button class="faq-q"[^>]*>([\s\S]*?)<\/button>\s*<div class="faq-a">([\s\S]*?)<\/div>\s*<\/div>/g,
+    '<details class="faq-item"><summary class="faq-q">$1</summary><div class="faq-a">$2</div></details>',
+  );
+}
+
+/** FAQPage JSON-LD built from the questions actually shown on the page. */
+export function faqSchemaFromHtml(html: string) {
+  const mainEntity = [...html.matchAll(/<summary class="faq-q">([\s\S]*?)<\/summary>\s*<div class="faq-a">([\s\S]*?)<\/div>/g)].map(([, q, a]) => ({
+    '@type': 'Question',
+    name: q!.replace(/<[^>]+>/g, '').trim(),
+    acceptedAnswer: { '@type': 'Answer', text: a!.replace(/<[^>]+>/g, '').replace(/\s+/g, ' ').trim() },
+  }));
+  return { '@context': 'https://schema.org', '@type': 'FAQPage', mainEntity };
+}
